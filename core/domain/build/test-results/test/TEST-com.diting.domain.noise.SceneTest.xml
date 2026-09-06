@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.diting.domain.noise.SceneTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:42:03.824Z" hostname="vm" time="0.005">
+  <properties/>
+  <testcase name="scene detection picks the best-scoring cue match()" classname="com.diting.domain.noise.SceneTest" time="0.002"/>
+  <testcase name="a time window that does not wrap behaves normally()" classname="com.diting.domain.noise.SceneTest" time="0.0"/>
+  <testcase name="a disabled rule stops applying()" classname="com.diting.domain.noise.SceneTest" time="0.001"/>
+  <testcase name="solo thinking skips speaker separation()" classname="com.diting.domain.noise.SceneTest" time="0.001"/>
+  <testcase name="the customer call scene turns commitments into todos and imperatives into tasks()" classname="com.diting.domain.noise.SceneTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

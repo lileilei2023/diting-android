@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.diting.domain.memory.RetentionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:42:03.745Z" hostname="vm" time="0.005">
+  <properties/>
+  <testcase name="cited audio has no expiry date to show the user()" classname="com.diting.domain.memory.RetentionTest" time="0.001"/>
+  <testcase name="a graph node goes cold at 180 days but is never deleted()" classname="com.diting.domain.memory.RetentionTest" time="0.001"/>
+  <testcase name="audio survives 29 days and is deleted at 30()" classname="com.diting.domain.memory.RetentionTest" time="0.0"/>
+  <testcase name="the minimal policy shortens every tier()" classname="com.diting.domain.memory.RetentionTest" time="0.001"/>
+  <testcase name="transcript is compressed at 90 days and deleted at a year()" classname="com.diting.domain.memory.RetentionTest" time="0.001"/>
+  <testcase name="anything cited is exempt from every tier()" classname="com.diting.domain.memory.RetentionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

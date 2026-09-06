@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.diting.ai.parse.StructuredOutputTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:47:19.303Z" hostname="vm" time="0.02">
+  <properties/>
+  <testcase name="unlabelled fence()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.002"/>
+  <testcase name="fenced json block()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.001"/>
+  <testcase name="malformed JSON that cannot be repaired fails loudly()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.002"/>
+  <testcase name="braces inside a string value do not truncate the match()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.001"/>
+  <testcase name="explanation after the JSON()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.001"/>
+  <testcase name="an escaped quote inside a string does not confuse the scanner()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.001"/>
+  <testcase name="no JSON at all fails loudly()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.001"/>
+  <testcase name="chinese preamble before the JSON()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.0"/>
+  <testcase name="an array response is extracted too()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.0"/>
+  <testcase name="chinese typographic quotes inside a value survive untouched()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.0"/>
+  <testcase name="unterminated JSON is not silently accepted()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.0"/>
+  <testcase name="bare JSON()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.001"/>
+  <testcase name="trailing comma is repaired()" classname="com.diting.ai.parse.StructuredOutputTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.diting.ai.AiClientTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:47:18.492Z" hostname="vm" time="0.806">
+  <properties/>
+  <testcase name="classification drops labels the domain does not know()" classname="com.diting.ai.AiClientTest" time="0.332"/>
+  <testcase name="sends the model, the bearer token and the messages()" classname="com.diting.ai.AiClientTest" time="0.014"/>
+  <testcase name="ASR falls back to one whole-file segment when the server ignores verbose_json()" classname="com.diting.ai.AiClientTest" time="0.032"/>
+  <testcase name="a vendor endpoint with no key refuses before making a request()" classname="com.diting.ai.AiClientTest" time="0.007"/>
+  <testcase name="401 maps to Unauthorized and is not retried()" classname="com.diting.ai.AiClientTest" time="0.014"/>
+  <testcase name="a self-hosted endpoint may legitimately have no key()" classname="com.diting.ai.AiClientTest" time="0.014"/>
+  <testcase name="a missing audio file fails before the network call()" classname="com.diting.ai.AiClientTest" time="0.008"/>
+  <testcase name="known hotwords are excluded from the prompt's ask()" classname="com.diting.ai.AiClientTest" time="0.012"/>
+  <testcase name="an out-of-range segment index yields no citation rather than a wrong jump()" classname="com.diting.ai.AiClientTest" time="0.014"/>
+  <testcase name="429 is retried and then succeeds()" classname="com.diting.ai.AiClientTest" time="0.055"/>
+  <testcase name="hotword candidates that change nothing are discarded()" classname="com.diting.ai.AiClientTest" time="0.013"/>
+  <testcase name="unknown response fields are ignored()" classname="com.diting.ai.AiClientTest" time="0.015"/>
+  <testcase name="summary resolves segment indices into citations()" classname="com.diting.ai.AiClientTest" time="0.015"/>
+  <testcase name="the scene prompt is appended, never substituted()" classname="com.diting.ai.AiClientTest" time="0.014"/>
+  <testcase name="json mode asks for a json object()" classname="com.diting.ai.AiClientTest" time="0.01"/>
+  <testcase name="a length finish reason is surfaced as truncation()" classname="com.diting.ai.AiClientTest" time="0.008"/>
+  <testcase name="a 400 is not retried()" classname="com.diting.ai.AiClientTest" time="0.009"/>
+  <testcase name="ASR uploads the file and asks for segment timestamps()" classname="com.diting.ai.AiClientTest" time="0.011"/>
+  <testcase name="extra headers are sent()" classname="com.diting.ai.AiClientTest" time="0.009"/>
+  <testcase name="404 points at the endpoint so a stale base url is diagnosable()" classname="com.diting.ai.AiClientTest" time="0.011"/>
+  <testcase name="a missing segment index yields no citation()" classname="com.diting.ai.AiClientTest" time="0.011"/>
+  <testcase name="reads content, usage and finish reason()" classname="com.diting.ai.AiClientTest" time="0.008"/>
+  <testcase name="a 5xx that never recovers is reported as unavailable()" classname="com.diting.ai.AiClientTest" time="0.098"/>
+  <testcase name="an empty choices array is a clear error, not a null pointer()" classname="com.diting.ai.AiClientTest" time="0.009"/>
+  <testcase name="a trailing slash in the base url does not double up the path()" classname="com.diting.ai.AiClientTest" time="0.009"/>
+  <testcase name="an empty ASR result is an error, not an empty transcript()" classname="com.diting.ai.AiClientTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
