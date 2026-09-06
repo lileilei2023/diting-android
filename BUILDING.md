@@ -21,11 +21,16 @@ that speaks it, the Wi-Fi trailer handling across arbitrary packet boundaries,
 the task gate state machine, the retention rules, the noise gates, and the LLM /
 ASR clients against a mock HTTP server.
 
-**Not verified** — the `:app` module has never been compiled. The environment
-this was written in blocks `dl.google.com` at the network policy, which is where
-both the Android SDK and every androidx artifact live (`maven.google.com` is a
-301 to the same host). Expect to fix compile errors on your first build; the
-shape of the code is sound but nothing has typechecked it.
+**Also verified** — `:app` compiles and packages. `./gradlew :app:assembleDebug`
+produces `app/build/outputs/apk/debug/app-debug.apk` (~23 MB, `com.diting.app.debug`,
+minSdk 26, targetSdk 35) against SDK platform 35 and build-tools 35.0.0. That
+covers KSP (Room and Hilt code generation), the Kotlin compilation of all 22
+Compose screens, Dagger's graph validation, and dexing.
+
+**Still not verified** — nothing has *run*. The APK has never been installed on a
+device or an emulator, so no screen has been rendered, no BLE session opened
+against a real MR20, and no Room query executed. Compilation and a valid Dagger
+graph rule out a large class of failures; they say nothing about behaviour.
 
 ## Building
 
@@ -34,6 +39,13 @@ shape of the code is sound but nothing has typechecked it.
 echo "sdk.dir=$ANDROID_HOME" > local.properties
 ./gradlew :app:assembleDebug
 ```
+
+Without an SDK, install one with `sdkmanager "platforms;android-35"
+"build-tools;35.0.0" "platform-tools"`. Both the Android SDK and every androidx
+artifact come from `dl.google.com` (`maven.google.com` is a 301 to the same
+host), so a network policy that blocks it blocks the `:app` build entirely — the
+core modules still build and test, which is what the conditional include in
+`settings.gradle.kts` is for.
 
 `settings.gradle.kts` only includes `:app` when it can find an SDK, which is what
 lets the core modules build in environments without one. With no SDK the build
@@ -127,7 +139,10 @@ configuration in DataStore.
   nothing generates them yet — that is the memory-graph extraction pass.
 - Voiceprint enrolment in onboarding collects scenes and hotwords; the voiceprint
   itself is not computed.
-- No migrations yet. `AppModule` deliberately omits
+- No migrations yet. The version-1 schema is now exported to
+  `app/schemas/com.diting.app.data.db.DitingDatabase/1.json` and checked in, which
+  is what a future `Migration` will be diffed against — keep it in git.
+  `AppModule` deliberately omits
   `fallbackToDestructiveMigration` — these are the user's recordings, and dropping
   them on a schema change is not an acceptable failure mode. Ship a `Migration`
   before changing the schema.

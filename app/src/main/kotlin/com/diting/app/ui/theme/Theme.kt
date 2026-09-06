@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 
 /**
  * Colour tokens transcribed from the Stitch mockups in
- * `project/uploads/stitch_ai/*/code.html`, which all share one Material 3 scheme.
+ * `project/uploads/stitch_ai/<screen>/code.html`, which all share one Material 3 scheme.
  * Values are copied verbatim — do not "round" them.
  */
 private val Primary = Color(0xFF006B5F)

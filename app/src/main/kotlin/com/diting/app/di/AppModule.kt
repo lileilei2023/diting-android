@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.first
 import okhttp3.OkHttpClient
 import java.io.File
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import javax.inject.Qualifier
 import javax.inject.Singleton
 

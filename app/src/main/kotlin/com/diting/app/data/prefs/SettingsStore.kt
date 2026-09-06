@@ -16,8 +16,10 @@ import com.diting.ai.AsrEndpoint
 import com.diting.domain.memory.RetentionPolicy
 import com.diting.domain.scene.GlobalIgnoreRules
 import com.diting.domain.scene.Scene
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,7 +38,9 @@ private val SettingsJson = Json { ignoreUnknownKeys = true; encodeDefaults = tru
  * DataStore where it is easy to observe.
  */
 @Singleton
-class SettingsStore @Inject constructor(private val context: Context) {
+class SettingsStore @Inject constructor(
+    @ApplicationContext private val context: Context,
+) {
 
     private val secure: SharedPreferences by lazy {
         val masterKey = MasterKey.Builder(context)
