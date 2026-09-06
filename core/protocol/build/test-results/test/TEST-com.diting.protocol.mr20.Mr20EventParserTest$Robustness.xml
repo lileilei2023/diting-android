@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="robustness" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:36:39.658Z" hostname="vm" time="0.005">
+<testsuite name="robustness" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:50:37.964Z" hostname="vm" time="0.006">
   <properties/>
-  <testcase name="a non-numeric count is unknown rather than zero()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.0"/>
-  <testcase name="parses from raw ASCII bytes()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.001"/>
-  <testcase name="tolerates NUL padding and CRLF()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.001"/>
-  <testcase name="an unknown message is preserved, not dropped()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.0"/>
-  <testcase name="a foreign prefix is unknown()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.0"/>
+  <testcase name="a non-numeric count is unknown rather than zero()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.001"/>
+  <testcase name="parses from raw ASCII bytes()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.0"/>
+  <testcase name="tolerates NUL padding and CRLF()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.0"/>
+  <testcase name="an unknown message is preserved, not dropped()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.001"/>
+  <testcase name="a foreign prefix is unknown()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Robustness" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

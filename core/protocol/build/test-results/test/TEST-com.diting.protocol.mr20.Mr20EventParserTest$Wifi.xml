@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="Wi-Fi" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:36:39.690Z" hostname="vm" time="0.021">
+<testsuite name="Wi-Fi" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:50:37.992Z" hostname="vm" time="0.02">
   <properties/>
-  <testcase name="[1] AA_DEV&amp;WIFIS&amp;0, OFF" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.001"/>
+  <testcase name="[1] AA_DEV&amp;WIFIS&amp;0, OFF" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.003"/>
   <testcase name="[2] AA_DEV&amp;WIFIS&amp;1, CONNECTED" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.0"/>
   <testcase name="[3] AA_DEV&amp;WIFIS&amp;2, NOT_CONNECTED" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.001"/>
-  <testcase name="[4] AA_DEV&amp;WIFIS&amp;3, WAITING_TO_OPEN" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.001"/>
+  <testcase name="[4] AA_DEV&amp;WIFIS&amp;3, WAITING_TO_OPEN" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.0"/>
   <testcase name="[5] AA_DEV&amp;WIFIS&amp;4, CHANGING_PASSWORD" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.001"/>
   <testcase name="[6] AA_DEV&amp;WIFIS&amp;5, OTA" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.0"/>
   <testcase name="[7] AA_DEV&amp;WIFIS&amp;6, PASSWORD_CHANGED_AWAITING_RESET" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.001"/>
@@ -12,8 +12,8 @@
   <testcase name="reads open and close acks()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.002"/>
   <testcase name="state 2 is when the phone may associate()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.001"/>
   <testcase name="a password containing the separator survives()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.001"/>
-  <testcase name="states 4 5 and 6 inhibit closing()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.001"/>
-  <testcase name="reads credentials()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.001"/>
+  <testcase name="states 4 5 and 6 inhibit closing()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.0"/>
+  <testcase name="reads credentials()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Wifi" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

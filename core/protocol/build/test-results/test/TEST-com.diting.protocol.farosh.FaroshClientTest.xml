@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.diting.protocol.farosh.FaroshClientTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:50:36.850Z" hostname="vm" time="0.633">
+  <properties/>
+  <testcase name="login does not require a token and stores the one it receives()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.317"/>
+  <testcase name="translate returns a bare result object()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.019"/>
+  <testcase name="creating an online record passes deviceType and recordName as query parameters()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.016"/>
+  <testcase name="rename sends the name as a query parameter and the record as a header()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.011"/>
+  <testcase name="delete uses the DELETE verb()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.01"/>
+  <testcase name="voice chunks are posted as raw bytes against the objectId()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.012"/>
+  <testcase name="authenticated requests carry the AIMT-TOKEN header()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.011"/>
+  <testcase name="recordId travels as a header()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.015"/>
+  <testcase name="an HTTP error is reported with its status()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.018"/>
+  <testcase name="an authenticated call without a token fails before touching the network()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.004"/>
+  <testcase name="record list, summary and todo endpoints match the documented paths()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.109"/>
+  <testcase name="the documented non-REST channels are recorded()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.003"/>
+  <testcase name="the waveform endpoint returns a bare array, not an envelope()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.011"/>
+  <testcase name="deviceModel is sent when configured()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.008"/>
+  <testcase name="the audio stream URL is built for the player rather than fetched()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.002"/>
+  <testcase name="a business error code becomes an exception, not a null payload()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.01"/>
+  <testcase name="every request carries requestSourceType 2()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.01"/>
+  <testcase name="unknown envelope fields are tolerated()" classname="com.diting.protocol.farosh.FaroshClientTest" time="0.017"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
