@@ -113,6 +113,25 @@ class SessionRepository @Inject constructor(
         return id
     }
 
+    /**
+     * Stored summaries for a date range, keyed by session id.
+     *
+     * A row whose JSON no longer parses (an older schema, a truncated write) is
+     * dropped rather than failing the whole screen — one bad summary must not
+     * blank out 今日谛听.
+     */
+    fun observeSummariesBetween(
+        fromEpochMs: Long,
+        toEpochMs: Long,
+    ): Flow<Map<String, StoredSummary>> =
+        sessionDao.observeSummariesBetween(fromEpochMs, toEpochMs).map { rows ->
+            rows.mapNotNull { row ->
+                runCatching { RepoJson.decodeFromString<StoredSummary>(row.summaryJson) }
+                    .getOrNull()
+                    ?.let { row.id to it }
+            }.toMap()
+        }
+
     /** Device paths already synced, with the byte count, so transfers can resume. */
     suspend fun syncedBytesByDevicePath(device: DeviceKind): Map<String, Long> =
         sessionDao.syncedByDevice(device).associate { it.path to it.bytes }
@@ -244,6 +263,21 @@ class SessionRepository @Inject constructor(
 
     suspend fun search(query: String): List<Segment> =
         segmentDao.search(query).map { it.toDomain() }
+
+    /**
+     * The transcript text a citation points at.
+     *
+     * Prefers the exact segment id; falls back to every segment overlapping the
+     * cited span, which is what a citation spanning a re-transcribed session
+     * degrades to.
+     */
+    suspend fun textFor(citation: Citation): String? {
+        citation.segmentId?.let { id -> segmentDao.find(id)?.let { return it.text } }
+        return segmentDao.forSession(citation.sessionId)
+            .filter { it.endMs > citation.startMs && it.startMs < citation.endMs }
+            .joinToString("") { it.text }
+            .takeIf { it.isNotBlank() }
+    }
 
     /** Marks every cited segment and session so retention leaves them alone. */
     suspend fun markCited(citations: List<Citation>) {

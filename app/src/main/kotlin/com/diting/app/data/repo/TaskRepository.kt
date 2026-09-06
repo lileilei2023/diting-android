@@ -123,17 +123,22 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao) {
 
     private fun now() = System.currentTimeMillis()
 
-    /**
-     * Normalises a goal into a de-duplication key.
-     *
-     * Whitespace and punctuation are dropped so "把导出方案发给李总" and
-     * "把导出方案，发给李总。" collapse to one intent. Deliberately crude: an
-     * over-eager key would merge genuinely different asks, so it only catches
-     * near-identical phrasing and leaves the rest to the user.
-     */
-    private fun intentKeyFor(goal: String): String =
-        goal.filter { it.isLetterOrDigit() }.lowercase()
+    private fun intentKeyFor(goal: String): String = normalizeIntent(goal)
 }
+
+/**
+ * Normalises a goal into a de-duplication key.
+ *
+ * Whitespace and punctuation are dropped so "把导出方案发给李总" and
+ * "把导出方案，发给李总。" collapse to one intent. Deliberately crude: an
+ * over-eager key would merge genuinely different asks, so it only catches
+ * near-identical phrasing and leaves the rest to the user.
+ *
+ * Public because the weekly commitment ledger has to decide whether a published
+ * task covers a promise, and it must use exactly the same rule the de-duplicator
+ * used when the task was created — otherwise the two disagree.
+ */
+fun normalizeIntent(goal: String): String = goal.filter { it.isLetterOrDigit() }.lowercase()
 
 // -- mapping --------------------------------------------------------------------
 

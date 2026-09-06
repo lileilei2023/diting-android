@@ -77,6 +77,24 @@ interface SessionDao {
     )
     suspend fun syncedByDevice(device: DeviceKind): List<SyncedFileRow>
 
+    /**
+     * Summaries only. 今日谛听 needs every summarised session in a day but not
+     * their transcripts, and pulling whole rows for that would drag the stored
+     * JSON of every session through the UI thread's diffing.
+     */
+    @Query(
+        """
+        SELECT id, summaryJson FROM sessions
+        WHERE startedAtEpochMs >= :fromEpochMs AND startedAtEpochMs < :toEpochMs
+          AND summaryJson IS NOT NULL
+        ORDER BY startedAtEpochMs
+        """
+    )
+    fun observeSummariesBetween(
+        fromEpochMs: Long,
+        toEpochMs: Long,
+    ): Flow<List<SessionSummaryRow>>
+
     @Query("SELECT COUNT(*) FROM sessions")
     fun observeCount(): Flow<Int>
 
@@ -86,6 +104,9 @@ interface SessionDao {
 
 /** Projection for [SessionDao.syncedByDevice]. */
 data class SyncedFileRow(val path: String, val bytes: Long)
+
+/** Projection for [SessionDao.observeSummariesBetween]. */
+data class SessionSummaryRow(val id: String, val summaryJson: String)
 
 @Dao
 interface SegmentDao {

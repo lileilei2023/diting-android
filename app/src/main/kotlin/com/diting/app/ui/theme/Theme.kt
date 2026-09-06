@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+
 package com.diting.app.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
