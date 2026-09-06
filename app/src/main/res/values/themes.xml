@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Compose paints everything; this exists only so the window has the right
+      background before the first frame, avoiding a white flash on the paper-root
+      colour scheme.
+    -->
+    <style name="Theme.Diting" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/paper_root</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

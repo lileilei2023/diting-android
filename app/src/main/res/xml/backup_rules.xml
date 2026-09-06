@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!--
+      Recordings and transcripts are the user's private audio; they are excluded
+      from cloud backup deliberately. The retention policy is the only thing that
+      should decide how long they live.
+    -->
+    <exclude domain="database" path="diting.db" />
+    <exclude domain="file" path="recordings/" />
+    <exclude domain="sharedpref" path="secure_settings.xml" />
+</full-backup-content>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The mint listening dot from the design's cover slide. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#12A594"
+        android:pathData="M54,30 m-16,0 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0" />
+    <path
+        android:fillColor="#12A594"
+        android:pathData="M38,52 h4 a12,12 0 0,0 24,0 h4 a16,16 0 0,1 -14,15.8 V74 h-4 v-6.2 A16,16 0 0,1 38,52 Z" />
+</vector>

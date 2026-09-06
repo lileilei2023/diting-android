@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">谛听</string>
+    <string name="channel_device_name">设备与同步</string>
+    <string name="channel_device_desc">连接录音卡、同步录音文件时显示</string>
+    <string name="channel_capture_name">快速捕捉</string>
+    <string name="channel_capture_desc">用手机麦克风录音时显示</string>
+</resources>
