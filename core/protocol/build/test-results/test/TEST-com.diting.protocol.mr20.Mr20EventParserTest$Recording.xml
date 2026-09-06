@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="recording" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:36:39.607Z" hostname="vm" time="0.049">
+  <properties/>
+  <testcase name="[1] AA_DEV&amp;STE&amp;1, true" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.003"/>
+  <testcase name="[2] AA_DEV&amp;STE&amp;0, false" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.001"/>
+  <testcase name="[1] AA_DEV&amp;REC&amp;CALL, CALL" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.002"/>
+  <testcase name="[2] AA_DEV&amp;REC&amp;CON, CONVERSATION" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.002"/>
+  <testcase name="reads started file name()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.0"/>
+  <testcase name="[1] AA_DEV&amp;KBPS&amp;OK, true" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.001"/>
+  <testcase name="[2] AA_DEV&amp;KBPS&amp;ERR, false" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.001"/>
+  <testcase name="AA_EV REC ERR is a recording error()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.001"/>
+  <testcase name="AA_DEV DISK ERR is disk full()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.001"/>
+  <testcase name="reads stopped()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.0"/>
+  <testcase name="reads in-progress name and elapsed seconds()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Recording" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

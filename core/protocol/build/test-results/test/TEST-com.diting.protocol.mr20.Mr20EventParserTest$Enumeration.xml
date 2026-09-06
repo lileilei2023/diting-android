@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="enumeration" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:36:39.575Z" hostname="vm" time="0.008">
+  <properties/>
+  <testcase name="reads a file count()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Enumeration" time="0.001"/>
+  <testcase name="reads a file entry()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Enumeration" time="0.001"/>
+  <testcase name="reads a directory entry()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Enumeration" time="0.001"/>
+  <testcase name="DIRS_SUM is a count, not a directory named SUM()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Enumeration" time="0.001"/>
+  <testcase name="a file name containing the separator survives()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Enumeration" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

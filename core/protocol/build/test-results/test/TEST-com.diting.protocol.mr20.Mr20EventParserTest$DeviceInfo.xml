@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="device info" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:36:39.442Z" hostname="vm" time="0.13">
+  <properties/>
+  <testcase name="reads wifi firmware version()" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.001"/>
+  <testcase name="AA_DEV T OK is a time ack()" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.002"/>
+  <testcase name="reads battery percent()" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.0"/>
+  <testcase name="rejects a malformed device time()" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.004"/>
+  <testcase name="reads mac address()" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.001"/>
+  <testcase name="reads firmware version verbatim()" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.001"/>
+  <testcase name="reads device time and converts it()" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.002"/>
+  <testcase name="reads free and total space in MB()" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.001"/>
+  <testcase name="clamps an out-of-range battery percent()" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.0"/>
+  <testcase name="[1] AA_DEV&amp;USB&amp;1, true" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.026"/>
+  <testcase name="[2] AA_DEV&amp;USB&amp;0, false" classname="com.diting.protocol.mr20.Mr20EventParserTest$DeviceInfo" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

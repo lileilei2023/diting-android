@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.diting.protocol.mr20.Mr20ClientTest" tests="24" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:36:39.074Z" hostname="vm" time="0.332">
+  <properties/>
+  <testcase name="reads battery, space, versions, time and mode()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.163"/>
+  <testcase name="a directory enumeration whose count does not match is rejected()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.009"/>
+  <testcase name="a missing file fails instead of hanging()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.021"/>
+  <testcase name="closeWifi is a no-op when Wi-Fi is already off()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.005"/>
+  <testcase name="live audio is separated from file data()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.004"/>
+  <testcase name="commands before pairing report NotAuthenticated, not a bare timeout()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.007"/>
+  <testcase name="OTA rejects a frame delay below the spec floor()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.003"/>
+  <testcase name="readDeviceInfo gathers everything in one pass()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.006"/>
+  <testcase name="OTA reports progress per frame()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.01"/>
+  <testcase name="unsolicited events reach subscribers()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.005"/>
+  <testcase name="lists directories and files across the device()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.012"/>
+  <testcase name="progress is reported while pulling()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.005"/>
+  <testcase name="OTA sends 244-byte frames between the begin and finish commands()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.004"/>
+  <testcase name="the Wi-Fi OTA command carries the WIFI keyword()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.005"/>
+  <testcase name="pulls a file over BLE byte for byte()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.005"/>
+  <testcase name="closeWifi refuses while the device is changing its password()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.007"/>
+  <testcase name="requesting a file over Wi-Fi returns the announced length()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.004"/>
+  <testcase name="resuming a partial file asks only for the remainder()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.005"/>
+  <testcase name="audio frames during a file sync go to the file, not the live stream()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.006"/>
+  <testcase name="a wrong key is surfaced as PairingRejected()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.007"/>
+  <testcase name="start and stop recording()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.005"/>
+  <testcase name="openWifiAndAwaitAp polls until the AP accepts clients()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.009"/>
+  <testcase name="authenticate sends the key and reports the truncated form()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.002"/>
+  <testcase name="a file enumeration whose count does not match is rejected()" classname="com.diting.protocol.mr20.Mr20ClientTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

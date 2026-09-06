@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.diting.protocol.mr20.Mr20CommandTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:36:39.410Z" hostname="vm" time="0.029">
+  <properties/>
+  <testcase name="bitrate accepts only 32 and 64()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.002"/>
+  <testcase name="bind key may not be empty()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="set time rejects a malformed literal()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.002"/>
+  <testcase name="OTA rejects a size that does not fit in six digits()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="bind key longer than 16 chars is truncated the way the firmware does()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="OTA length is zero-padded to exactly six digits()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="list names the directory()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="device time round-trips()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="set time uses yyyyMMddHHmmss()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.0"/>
+  <testcase name="bind key may not contain the field separator()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="pull without a local copy uses the four-field form()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="encodes as plain ASCII()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.0"/>
+  <testcase name="bind key shorter than 16 chars is sent as-is()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.0"/>
+  <testcase name="delete names the directory and the file()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="commands the device never answers are marked as such()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.002"/>
+  <testcase name="usb toggle uses 1 and 0()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="pull with a local copy appends the size()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <testcase name="simple commands match the spec verbatim()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.002"/>
+  <testcase name="the Wi-Fi form uses W instead of U()" classname="com.diting.protocol.mr20.Mr20CommandTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

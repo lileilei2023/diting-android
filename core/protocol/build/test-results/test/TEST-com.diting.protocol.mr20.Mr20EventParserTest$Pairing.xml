@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pairing" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-09-06T16:36:39.589Z" hostname="vm" time="0.003">
+  <properties/>
+  <testcase name="accepts AA_DEV SK OK()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Pairing" time="0.001"/>
+  <testcase name="accepts AA_DEV SK ERR()" classname="com.diting.protocol.mr20.Mr20EventParserTest$Pairing" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
