@@ -1,0 +1,525 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>我的 · 个人与设备中心 - 谛听 DiTing</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Serif+SC:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#85959f",
+            "on-primary-fixed-variant": "#005047",
+            "on-error-container": "#93000a",
+            "secondary-fixed": "#ffdcc0",
+            "inverse-surface": "#30312e",
+            "surface-bright": "#faf9f4",
+            "surface-container-high": "#e9e8e3",
+            "on-tertiary-fixed": "#0e1d25",
+            "error": "#ba1a1a",
+            "on-secondary-fixed-variant": "#6b3b00",
+            "secondary-fixed-dim": "#ffb876",
+            "inverse-primary": "#5fdac7",
+            "on-tertiary": "#ffffff",
+            "primary-fixed-dim": "#5fdac7",
+            "on-primary-fixed": "#00201c",
+            "tertiary": "#516169",
+            "surface-container-highest": "#e3e3de",
+            "secondary": "#8d4f00",
+            "tertiary-fixed-dim": "#b9c9d3",
+            "on-secondary-fixed": "#2d1600",
+            "on-primary-container": "#00322c",
+            "surface": "#faf9f4",
+            "on-primary": "#ffffff",
+            "on-tertiary-container": "#1f2e35",
+            "primary-container": "#12a594",
+            "surface-container-low": "#f5f4ef",
+            "secondary-container": "#ffa449",
+            "surface-dim": "#dbdad5",
+            "on-surface-variant": "#3d4946",
+            "on-surface": "#1b1c19",
+            "on-error": "#ffffff",
+            "outline-variant": "#bcc9c5",
+            "surface-container": "#efeee9",
+            "on-background": "#1b1c19",
+            "error-container": "#ffdad6",
+            "on-secondary-container": "#6f3d00",
+            "background": "#faf9f4",
+            "tertiary-fixed": "#d5e5ef",
+            "primary": "#006b5f",
+            "surface-tint": "#006b5f",
+            "on-tertiary-fixed-variant": "#3a4951",
+            "outline": "#6d7a76",
+            "inverse-on-surface": "#f2f1ec",
+            "surface-container-lowest": "#ffffff",
+            "surface-variant": "#e3e3de",
+            "on-secondary": "#ffffff",
+            "primary-fixed": "#7ef7e3"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "1.5rem",
+            "space-sm": "0.75rem",
+            "space-xxs": "0.25rem",
+            "space-3xl": "3rem",
+            "space-2xl": "2rem",
+            "card-pad-mobile": "1rem",
+            "space-xs": "0.5rem",
+            "gutter-mobile": "1rem",
+            "space-md": "1rem",
+            "gutter-desktop": "1.5rem",
+            "space-lg": "1.25rem",
+            "card-pad-desktop": "1.5rem"
+          },
+          "fontFamily": {
+            "code-stat": ["JetBrains Mono"],
+            "body-md-medium": ["Plus Jakarta Sans"],
+            "display-lg": ["Noto Serif SC", "Noto Serif"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Noto Serif SC", "Noto Serif"],
+            "caption": ["Plus Jakarta Sans"],
+            "display-lg-mobile": ["Noto Serif SC", "Noto Serif"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Noto Serif SC", "Noto Serif"],
+            "code-timestamp": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "code-stat": [
+              "11px",
+              {
+                "lineHeight": "14px",
+                "letterSpacing": "0.04em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-md-medium": [
+              "14px",
+              {
+                "lineHeight": "22px",
+                "letterSpacing": "0",
+                "fontWeight": "500"
+              }
+            ],
+            "display-lg": [
+              "32px",
+              {
+                "lineHeight": "40px",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-lg": [
+              "16px",
+              {
+                "lineHeight": "26px",
+                "letterSpacing": "-0.005em",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-md": [
+              "22px",
+              {
+                "lineHeight": "30px",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "600"
+              }
+            ],
+            "caption": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "letterSpacing": "0.01em",
+                "fontWeight": "400"
+              }
+            ],
+            "display-lg-mobile": [
+              "26px",
+              {
+                "lineHeight": "34px",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-md": [
+              "14px",
+              {
+                "lineHeight": "22px",
+                "letterSpacing": "0",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-sm": [
+              "18px",
+              {
+                "lineHeight": "26px",
+                "letterSpacing": "0",
+                "fontWeight": "600"
+              }
+            ],
+            "code-timestamp": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "letterSpacing": "0.02em",
+                "fontWeight": "500"
+              }
+            ]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .tactile-card {
+      background-color: #faf9f5;
+      border: 1px solid rgba(43, 58, 66, 0.08);
+      box-shadow: 0 2px 8px -2px rgba(29, 36, 35, 0.04), 0 1px 2px rgba(29, 36, 35, 0.02);
+      border-radius: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .sunken-panel {
+      background-color: #f0eee7;
+      box-shadow: inset 0 1px 2px rgba(29, 36, 35, 0.06);
+    }
+    .rail-mint { border-left: 3px solid #12a594; }
+    .rail-insight { border-left: 3px solid #516169; }
+    .rail-amber { border-left: 3px solid #c9781e; }
+    .rail-accent { border-left: 3px solid #006b5f; }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased font-body-md min-h-screen flex flex-col justify-between selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- Top App Bar (Semantic Shell from JSON) -->
+<header class="fixed top-0 left-0 w-full z-40 bg-surface flex justify-between items-center px-gutter-mobile h-14 max-w-lg mx-auto right-0 shadow-[0_1px_3px_rgba(43,58,66,0.03)]">
+<div class="flex items-center gap-space-xs">
+<button aria-label="返回笔记" class="p-space-xs rounded-full hover:bg-surface-container-high transition-colors duration-150 active:scale-95 text-on-surface flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-primary text-xl">notes</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold ml-1">我的</h1>
+</div>
+<!-- Right Cluster: Hardware Status Pill & Voice Settings -->
+<div class="flex items-center gap-space-xs">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant/40">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-code-stat text-code-stat text-primary font-semibold">MR20 在线 92%</span>
+</div>
+<button aria-label="语音设置" class="p-space-xs rounded-full hover:bg-surface-container-high transition-colors duration-150 active:scale-95 text-on-surface-variant flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-xl">settings_voice</span>
+</button>
+</div>
+</header>
+<!-- Main Scrollable Canvas -->
+<main class="w-full max-w-lg mx-auto pt-16 pb-24 px-gutter-mobile flex-1 flex flex-col gap-space-md">
+<!-- 1. Hero Card: User & Companion Growth Profile -->
+<section class="tactile-card rail-accent p-space-md mt-1">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="relative w-14 h-14 rounded-full overflow-hidden p-0.5 bg-surface-container border border-outline-variant/50 shadow-sm flex-shrink-0">
+<img class="w-full h-full object-cover rounded-full" data-alt="A refined portrait of a thoughtful Chinese product architect named Lin Xi in a minimalist sunlit Tokyo studio, wearing an off-white linen collar, warm natural lighting, soft film grain, quiet editorial atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpb26iAk7sAMxDptcoZSYZcOyD6gfHd00hGu02KVxuID4LoKhODwSITXv_v7Yu0Cmy4CHoxJVvtXskWwwTM5CxHJ8DXNo3sH9yV_T2ai9B3iN5D9WIosTrgdMXeTbt0cd1YQ5Hcni8uzfNy1_s6-aT3lIirBvJwnnI3IY81EySi1xIMDk0VZjLkNy8vXOUQqVNUbupqwol_xbo-BpA-eVsXp7A_lKm07vjayO-c5Yx6rRT36EnLQ-LeQ">
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-primary-container border-2 border-surface rounded-full"></span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">林溪</h2>
+<span class="text-caption font-caption px-2 py-0.5 rounded-full bg-surface-container-high text-tertiary font-medium">产品架构师</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-primary">hearing</span>
+              已共同听见 42 天 · <span class="font-code-stat font-semibold text-primary">1,480 BP</span>
+</p>
+</div>
+</div>
+<!-- Identity Code / Share QR Button -->
+<button aria-label="分享专属档案名片" class="p-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-xl">qr_code_2</span>
+</button>
+</div>
+<!-- Growth Progression Well -->
+<div class="mt-4 pt-3 border-t border-outline-variant/30">
+<div class="flex justify-between items-baseline mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="font-caption font-semibold text-on-surface bg-secondary-fixed/50 text-secondary px-2 py-0.5 rounded">Lv.3 敏锐行者</span>
+<span class="font-caption text-caption text-outline">74%</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant">下阶目标: 洞察导师 (Lv.4)</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 74%;"></div>
+</div>
+<!-- Daily Growth Summary -->
+<div class="mt-2.5 flex items-center justify-between text-caption text-on-surface-variant">
+<span class="inline-flex items-center gap-1 font-body-md-medium text-caption text-primary">
+<span class="material-symbols-outlined text-xs">trending_up</span> 今日增长 +35 BP
+          </span>
+<span class="font-caption text-caption text-outline">3 场会议拆解 · 1 份工件沉淀</span>
+</div>
+</div>
+</section>
+<!-- 2. AI Persona & Co-Pilot Settings Card -->
+<section class="tactile-card rail-insight p-space-md">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-base">neurology</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-sm font-bold text-on-surface">小谛 · 伴写共生人格</h3>
+<span class="font-caption text-[11px] text-primary font-medium">严谨架构师 / 敏锐提炼模式</span>
+</div>
+</div>
+<!-- Toggle: 极简克制 -->
+<div class="flex items-center gap-1.5 bg-surface-container px-2 py-1 rounded-full border border-outline-variant/30">
+<span class="text-[11px] font-caption text-on-surface-variant">极简克制</span>
+<div class="w-7 h-4 bg-primary-container rounded-full relative p-0.5 cursor-pointer">
+<div class="w-3 h-3 bg-white rounded-full shadow-sm ml-auto"></div>
+</div>
+</div>
+</div>
+<!-- 3-Column Stats Tile -->
+<div class="grid grid-cols-3 gap-2 py-2.5 px-3 bg-surface-container-low rounded-xl border border-outline-variant/20 text-center">
+<div>
+<div class="font-code-stat text-sm font-semibold text-on-surface">128<span class="text-[11px] font-normal text-on-surface-variant">万</span></div>
+<div class="font-caption text-[11px] text-tertiary mt-0.5">累计转写(字)</div>
+</div>
+<div class="border-x border-outline-variant/30">
+<div class="font-code-stat text-sm font-semibold text-primary">342</div>
+<div class="font-caption text-[11px] text-tertiary mt-0.5">记忆脉络节点</div>
+</div>
+<div>
+<div class="font-code-stat text-sm font-semibold text-secondary">18<span class="text-[11px] font-normal text-on-surface-variant">次</span></div>
+<div class="font-caption text-[11px] text-tertiary mt-0.5">拦截风险阻断</div>
+</div>
+</div>
+<!-- Alignment Metric Footer -->
+<div class="mt-3 pt-2.5 border-t border-outline-variant/25 flex items-center justify-between text-caption">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="">认知对齐度: <strong class="font-code-stat text-primary font-semibold">96.4%</strong></span>
+<span class="text-[11px] text-outline">(本周微调优化完成)</span>
+</div>
+<button class="text-primary font-body-md-medium text-caption flex items-center hover:opacity-80 transition-opacity" type="button">
+          人格微调 <span class="material-symbols-outlined text-xs">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- 3. Hardware Management Section: MR20 Pro Card -->
+<section class="tactile-card rail-mint p-space-md">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-code-stat text-[11px] text-outline font-medium tracking-wide">BLE 5.3 · ID: DT-MR20-892F</span>
+</div>
+<h3 class="font-headline-sm text-base font-bold text-on-surface mt-0.5">谛听 MR20 智慧录音卡 PRO</h3>
+</div>
+<span class="px-2 py-0.5 rounded text-[11px] font-code-stat bg-primary/10 text-primary font-semibold">
+          固件 v2.4.1 (最新)
+        </span>
+</div>
+<!-- Hardware Telemetry Bento Grid -->
+<div class="grid grid-cols-4 gap-2 mt-3.5">
+<div class="p-2 sunken-panel rounded-lg text-center">
+<div class="text-caption text-[11px] text-outline">卡体电量</div>
+<div class="font-code-stat text-xs font-semibold text-primary mt-1">92% 充足</div>
+</div>
+<div class="p-2 sunken-panel rounded-lg text-center">
+<div class="text-caption text-[11px] text-outline">蓝牙连接</div>
+<div class="font-code-stat text-xs font-semibold text-on-surface mt-1">SVC-01</div>
+</div>
+<div class="p-2 sunken-panel rounded-lg text-center">
+<div class="text-caption text-[11px] text-outline">5G Wi-Fi</div>
+<div class="font-code-stat text-xs font-semibold text-on-surface mt-1">待机空闲</div>
+</div>
+<div class="p-2 sunken-panel rounded-lg text-center">
+<div class="text-caption text-[11px] text-outline">端侧闪存</div>
+<div class="font-code-stat text-xs font-semibold text-on-surface mt-1">48.2/64G</div>
+</div>
+</div>
+<!-- Device Configuration Rows -->
+<div class="mt-3.5 divide-y divide-outline-variant/25 text-caption">
+<div class="py-2.5 flex items-center justify-between cursor-pointer hover:bg-surface-container-low/50 px-1 rounded transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-tertiary">mic</span>
+<span class="text-on-surface-variant">录音拾音模式</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface font-body-md-medium">
+<span class="">会议双流定向 + 智能降噪 VAD</span>
+<span class="material-symbols-outlined text-xs text-outline">chevron_right</span>
+</div>
+</div>
+<div class="py-2.5 flex items-center justify-between cursor-pointer hover:bg-surface-container-low/50 px-1 rounded transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-tertiary">touch_app</span>
+<span class="text-on-surface-variant">卡体动作映射</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface font-body-md-medium">
+<span class="">长按 1.5s 盲录 · 双击打标记</span>
+<span class="material-symbols-outlined text-xs text-outline">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Action Button Area -->
+<div class="mt-3 pt-2.5 border-t border-outline-variant/25 flex gap-2">
+<button class="flex-1 py-2 px-3 rounded-full bg-surface-container-high text-on-surface font-body-md-medium text-caption flex items-center justify-center gap-1.5 active:scale-98 transition-transform" type="button">
+<span class="material-symbols-outlined text-sm text-secondary">sync</span>
+<span class="">同步离线录音包 (2)</span>
+</button>
+<button class="py-2 px-4 rounded-full border border-outline-variant/40 text-tertiary font-body-md-medium text-caption hover:bg-surface-container-low active:scale-98 transition-transform" type="button">
+          设备重命名
+        </button>
+</div>
+</section>
+<!-- 4. Cognitive Graph & Knowledge Assets -->
+<section class="tactile-card rail-amber p-space-md">
+<div class="flex items-center justify-between mb-3">
+<div>
+<h3 class="font-headline-sm text-base font-bold text-on-surface">认知图谱与记忆资产</h3>
+<p class="font-caption text-caption text-on-surface-variant">伴写实时沉淀的个人长期思考网络</p>
+</div>
+<button class="text-caption font-body-md-medium text-secondary hover:underline inline-flex items-center gap-0.5" type="button">
+          全屏星系网 <span class="material-symbols-outlined text-xs">north_east</span>
+</button>
+</div>
+<!-- 3-Tile Asset Counter -->
+<div class="grid grid-cols-3 gap-2 mb-3">
+<div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col items-center">
+<span class="material-symbols-outlined text-tertiary text-lg">diversity_3</span>
+<span class="font-headline-sm text-sm font-bold text-on-surface mt-1">54<span class="text-xs font-normal text-outline"> 位</span></span>
+<span class="font-caption text-[11px] text-tertiary">人脉关系</span>
+</div>
+<div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col items-center">
+<span class="material-symbols-outlined text-tertiary text-lg">folder_special</span>
+<span class="font-headline-sm text-sm font-bold text-on-surface mt-1">8<span class="text-xs font-normal text-outline"> 个</span></span>
+<span class="font-caption text-[11px] text-tertiary">跟踪项目</span>
+</div>
+<div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col items-center">
+<span class="material-symbols-outlined text-tertiary text-lg">policy</span>
+<span class="font-headline-sm text-sm font-bold text-on-surface mt-1">12<span class="text-xs font-normal text-outline"> 条</span></span>
+<span class="font-caption text-[11px] text-tertiary">决策红线</span>
+</div>
+</div>
+<!-- Artifact Archive Folder Row -->
+<div class="p-2.5 bg-surface-container-low rounded-xl border border-outline-variant/30 flex items-center justify-between cursor-pointer hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-secondary-fixed/40 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-lg">inventory_2</span>
+</div>
+<div>
+<div class="font-body-md-medium text-caption text-on-surface font-semibold">衍生工件档案库</div>
+<div class="font-caption text-[11px] text-outline">46 份已归档交付物: 复盘 / 纪要 / 提案邮件</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-sm">chevron_right</span>
+</div>
+</section>
+<!-- 5. Subscription & Security / System Settings -->
+<section class="tactile-card rail-accent p-space-md mb-2">
+<!-- Pro Plan Active Banner -->
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/25">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">workspace_premium</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-sm font-bold text-on-surface">谛听 Pro · 年度智脑</span>
+<span class="bg-primary-container text-white text-[10px] px-1.5 py-0.2 rounded font-caption">生效中</span>
+</div>
+<p class="font-caption text-[11px] text-outline mt-0.5">有效期至 2025.04.18 (自动续保中)</p>
+</div>
+</div>
+<button class="text-caption text-on-surface-variant font-body-md-medium border border-outline-variant/50 px-2.5 py-1 rounded-full hover:bg-surface-container-high transition-colors" type="button">
+          续订管理
+        </button>
+</div>
+<!-- Cloud Quota Indicator -->
+<div class="py-3 border-b border-outline-variant/25">
+<div class="flex justify-between items-center text-caption mb-1.5">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-primary">cloud_sync</span> Hermes Realtime 双流转写额度
+          </span>
+<span class="font-code-stat text-on-surface font-semibold">剩余 184 / 200 小时</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 92%;"></div>
+</div>
+</div>
+<!-- Security / Enclave Notice -->
+<div class="py-2.5 flex items-start gap-2.5">
+<span class="material-symbols-outlined text-base text-primary mt-0.5">verified_user</span>
+<div class="flex-1">
+<div class="font-body-md-medium text-caption text-on-surface font-semibold">端侧硬件密钥保护 (Secure Enclave)</div>
+<div class="font-caption text-[11px] text-tertiary mt-0.5 leading-relaxed">
+            端到端本地哈希脱敏，仅自身设备离线授权密钥可解密全量声纹记忆。
+          </div>
+</div>
+</div>
+<!-- System General Settings Link -->
+<div class="pt-2 border-t border-outline-variant/25">
+<button class="w-full py-2 flex items-center justify-between text-caption text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">tune</span>
+            系统通用设置与开发者实验室
+          </span>
+<span class="material-symbols-outlined text-sm text-outline">chevron_right</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Semantic Shell strictly from JSON - 4 tabs: 今日谛听, 记录, 任务, 我的) -->
+<!-- '我的' is ACTIVE (style_active_navigation applied: text-primary dark:text-inverse-primary font-body-md-medium py-1) -->
+<!-- Others are INACTIVE (style_inactive_navigation: text-on-surface-variant dark:text-on-surface-variant font-body-md py-1) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-xs pb-safe h-16 max-w-lg mx-auto right-0 bg-surface border-t border-outline-variant/30 shadow-[0_-2px_8px_rgba(43,58,66,0.03)]"><!-- Tab 1: 今日谛听 (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-body-md py-1 hover:text-primary transition-colors duration-150 active:scale-95 flex-1" href="#">
+  <span class="material-symbols-outlined text-xl mb-0.5">auto_stories</span>
+  <span class="font-caption text-[11px]">今日谛听</span>
+</a>
+<!-- Tab 2: 记录 (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-body-md py-1 hover:text-primary transition-colors duration-150 active:scale-95 flex-1" href="#">
+  <span class="material-symbols-outlined text-xl mb-0.5">graphic_eq</span>
+  <span class="font-caption text-[11px]">记录</span>
+</a>
+<!-- Center Action: 即刻聆听 (Elevated Primary Round Button) -->
+<div class="flex flex-col items-center justify-center relative -top-3 flex-1">
+  <button aria-label="即刻聆听" class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center shadow-sm active:scale-95 transition-transform relative" type="button">
+    <span class="material-symbols-outlined text-2xl">mic</span>
+    <span class="absolute top-3 right-3 w-2 h-2 rounded-full bg-error border border-white animate-pulse"></span>
+  </button>
+  <span class="font-caption text-[10px] text-on-surface-variant mt-0.5 font-medium">即刻聆听</span>
+</div>
+<!-- Tab 4: 任务 (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-body-md py-1 hover:text-primary transition-colors duration-150 active:scale-95 flex-1" href="#">
+  <span class="material-symbols-outlined text-xl mb-0.5">check_circle</span>
+  <span class="font-caption text-[11px]">任务</span>
+</a>
+<!-- Tab 5: 我的 (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-primary font-body-md-medium py-1 active:scale-95 flex-1" href="#">
+  <span class="material-symbols-outlined text-xl mb-0.5" style="font-variation-settings: 'FILL' 1;">person</span>
+  <span class="font-caption text-[11px] font-bold">我的</span>
+</a></nav>
+
+
+</body></html>

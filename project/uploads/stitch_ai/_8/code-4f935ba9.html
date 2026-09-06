@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>战略与业务 (12) - 谛听 DiTing</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&amp;family=Noto+Serif+SC:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-variant": "#e3e3de",
+            "surface": "#faf9f4",
+            "on-error-container": "#93000a",
+            "primary-fixed-dim": "#5fdac7",
+            "secondary-container": "#ffa449",
+            "tertiary-fixed": "#d5e5ef",
+            "on-tertiary-container": "#1f2e35",
+            "surface-container": "#efeee9",
+            "surface-container-low": "#f5f4ef",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed": "#0e1d25",
+            "tertiary-container": "#85959f",
+            "background": "#faf9f4",
+            "surface-bright": "#faf9f4",
+            "secondary-fixed-dim": "#ffb876",
+            "on-tertiary-fixed-variant": "#3a4951",
+            "outline": "#6d7a76",
+            "error-container": "#ffdad6",
+            "surface-tint": "#006b5f",
+            "surface-container-lowest": "#ffffff",
+            "on-background": "#1b1c19",
+            "secondary": "#8d4f00",
+            "on-primary-fixed": "#00201c",
+            "surface-container-highest": "#e3e3de",
+            "primary": "#006b5f",
+            "surface-container-high": "#e9e8e3",
+            "secondary-fixed": "#ffdcc0",
+            "on-surface": "#1b1c19",
+            "on-secondary-fixed-variant": "#6b3b00",
+            "on-secondary": "#ffffff",
+            "inverse-primary": "#5fdac7",
+            "surface-dim": "#dbdad5",
+            "primary-fixed": "#7ef7e3",
+            "inverse-on-surface": "#f2f1ec",
+            "tertiary-fixed-dim": "#b9c9d3",
+            "error": "#ba1a1a",
+            "on-tertiary": "#ffffff",
+            "on-surface-variant": "#3d4946",
+            "on-error": "#ffffff",
+            "tertiary": "#516169",
+            "on-secondary-container": "#6f3d00",
+            "primary-container": "#12a594",
+            "outline-variant": "#bcc9c5",
+            "on-secondary-fixed": "#2d1600",
+            "inverse-surface": "#30312e",
+            "on-primary-fixed-variant": "#005047",
+            "on-primary-container": "#00322c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-desktop": "1.5rem",
+            "space-2xl": "2rem",
+            "space-md": "1rem",
+            "space-xxs": "0.25rem",
+            "card-pad-desktop": "1.5rem",
+            "space-lg": "1.25rem",
+            "space-sm": "0.75rem",
+            "space-3xl": "3rem",
+            "space-xs": "0.5rem",
+            "gutter-mobile": "1rem",
+            "card-pad-mobile": "1rem",
+            "space-xl": "1.5rem"
+          },
+          "fontFamily": {
+            "display-lg": ["Noto Serif SC", "Noto Serif", "serif"],
+            "code-stat": ["JetBrains Mono", "monospace"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-sm": ["Noto Serif SC", "Noto Serif", "serif"],
+            "body-md-medium": ["Plus Jakarta Sans", "sans-serif"],
+            "caption": ["Plus Jakarta Sans", "sans-serif"],
+            "display-lg-mobile": ["Noto Serif SC", "Noto Serif", "serif"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "code-timestamp": ["JetBrains Mono", "monospace"],
+            "headline-md": ["Noto Serif SC", "Noto Serif", "serif"]
+          },
+          "fontSize": {
+            "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "code-stat": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "0", "fontWeight": "600" }],
+            "body-md-medium": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "500" }],
+            "caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "display-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "code-timestamp": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Paper Tactile Texture and Physical Card Elevation */
+    body {
+      background-color: #faf9f4;
+      color: #1b1c19;
+      -webkit-tap-highlight-color: transparent;
+      letter-spacing: -0.01em;
+    }
+    
+    .paper-card {
+      background-color: #faf9f5;
+      border: 1px solid rgba(43, 58, 66, 0.07);
+      box-shadow: 0 2px 8px -2px rgba(29, 36, 35, 0.04), 0 1px 2px rgba(29, 36, 35, 0.02);
+    }
+
+    .paper-sunken {
+      background-color: #ebe9e1;
+      box-shadow: inset 0 1px 2px rgba(29, 36, 35, 0.06);
+    }
+
+    .paper-floating {
+      background-color: #ffffff;
+      box-shadow: 0 8px 24px -4px rgba(29, 36, 35, 0.08), 0 2px 6px -1px rgba(29, 36, 35, 0.04);
+      border: 1px solid rgba(43, 58, 66, 0.09);
+    }
+
+    /* Pulse for AI state */
+    @keyframes breathing {
+      0%, 100% { transform: scale(0.96); opacity: 0.85; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+    .animate-breathing {
+      animation: breathing 3.2s ease-in-out infinite;
+    }
+
+    /* Custom scrollbar suppression for tactile mobile horizontal lists */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen pb-28">
+<!-- ================= TOP APP BAR (FOCUSED DESTINATION) ================= -->
+<!-- Note: Task-focused subpage navigation hides generic bottom nav, focusing strictly on this topic canvas -->
+<header class="fixed top-0 left-0 w-full z-40 bg-surface/95 backdrop-blur-md transition-colors duration-150">
+<div class="max-w-xl mx-auto px-gutter-mobile h-14 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<a class="p-1.5 -ml-1.5 rounded-full text-on-surface hover:bg-surface-container-high transition-transform duration-150 active:scale-95 flex items-center justify-center" href="javascript:history.back()">
+<span class="material-symbols-outlined text-[22px]" data-icon="arrow_back">arrow_back</span>
+</a>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold">战略与业务</h1>
+<span class="px-1.5 py-0.2 text-[11px] font-code-stat font-semibold rounded-full bg-surface-container-high text-primary tracking-wide">12</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant text-[11px]">跨度 30 天 · 12 场高频共识会话</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 active:scale-95 flex items-center justify-center" title="专题检索">
+<span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+</button>
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 active:scale-95 flex items-center justify-center" title="时间线过滤">
+<span class="material-symbols-outlined text-[20px]" data-icon="tune">tune</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Wrapper -->
+<main class="max-w-xl mx-auto pt-16 px-gutter-mobile space-y-space-lg">
+<!-- ================= 1. TOPIC MACRO DIGEST (小谛智囊全景综述) ================= -->
+<section class="paper-card rounded-2xl relative overflow-hidden p-space-md">
+<!-- 3px Solid Rail (Semantic: Summary & Insight Rail #5B7380 / Tertiary) -->
+<div class="absolute left-0 top-0 bottom-0 w-[3.5px] bg-[#5B7380]"></div>
+<div class="pl-1.5">
+<!-- Header with AI Breathing Orb Indicator -->
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/25">
+<div class="flex items-center gap-2">
+<div class="relative w-3.5 h-3.5 flex items-center justify-center">
+<span class="absolute w-full h-full rounded-full bg-primary/20 animate-ping"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary animate-breathing"></span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">小谛战略智囊综述</h2>
+</div>
+<span class="font-code-timestamp text-code-timestamp text-outline text-[11px]">4月17日 19:40 归纳</span>
+</div>
+<!-- Digest Paragraph -->
+<p class="font-body-md text-body-md text-on-surface-variant mt-2.5 leading-relaxed">
+          跨 12 场会话，核心共识已全面收敛：<strong class="text-on-surface font-body-md-medium">Q2 硬件伴侣防线坚守端侧极简便签形态</strong>，坚决杜绝重型文档膨胀。当前关键商务张力聚焦于 <span class="text-secondary font-body-md-medium underline decoration-secondary-container decoration-2 underline-offset-2">4月30日前验收 Checklist 第 4 条款</span>，涉及华东客户回款付款账期争议。
+        </p>
+<!-- Metric Tiles (3 Bento Cubes) -->
+<div class="grid grid-cols-3 gap-2 mt-3.5 pt-1">
+<div class="paper-sunken rounded-xl p-2.5 flex flex-col justify-between">
+<span class="font-caption text-caption text-on-surface-variant text-[11px]">战略对齐</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-primary font-bold">12</span>
+<span class="font-caption text-caption text-outline">场</span>
+</div>
+</div>
+<div class="paper-sunken rounded-xl p-2.5 flex flex-col justify-between">
+<span class="font-caption text-caption text-on-surface-variant text-[11px]">核心红线</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">4</span>
+<span class="font-caption text-caption text-outline">条</span>
+</div>
+</div>
+<div class="paper-sunken rounded-xl p-2.5 flex flex-col justify-between border-l-2 border-secondary/60">
+<span class="font-caption text-caption text-secondary font-body-md-medium text-[11px]">待推商务卡点</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-secondary font-bold">3</span>
+<span class="font-caption text-caption text-secondary">项</span>
+</div>
+</div>
+</div>
+<!-- Quick Summary Action Bar -->
+<div class="mt-3.5 flex items-center justify-between text-[12px] pt-2 border-t border-outline-variant/15 text-outline">
+<span class="flex items-center gap-1 font-caption text-caption">
+<span class="material-symbols-outlined text-[15px] text-primary" data-icon="auto_awesome">auto_awesome</span>
+            已综合融合全部录音关键标注
+          </span>
+<button class="font-body-md-medium text-caption text-primary hover:text-on-primary-fixed-variant flex items-center gap-0.5">
+            展开全貌考证
+            <span class="material-symbols-outlined text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- ================= 2. KEY STAKEHOLDERS (关键决策人阵列) ================= -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface text-[15px] font-semibold">关键参会与决策者</h3>
+</div>
+<span class="font-code-stat text-code-stat text-outline">3 位高频发言人</span>
+</div>
+<!-- Horizontal Stakeholder Carousel -->
+<div class="flex gap-2.5 overflow-x-auto no-scrollbar py-1 -mx-gutter-mobile px-gutter-mobile">
+<!-- Stakeholder 1 -->
+<div class="paper-card min-w-[210px] rounded-xl p-3 flex-shrink-0 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold border border-outline-variant/30 font-headline-sm">
+            李
+          </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-body-md-medium text-body-md text-on-surface font-semibold">李总</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] font-code-stat bg-secondary-fixed text-on-secondary-fixed-variant font-medium">回款决策</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant text-[11px] mt-0.5">业务线负责人 · 出场 7 次</span>
+</div>
+</div>
+<!-- Stakeholder 2 -->
+<div class="paper-card min-w-[210px] rounded-xl p-3 flex-shrink-0 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-secondary font-bold border border-outline-variant/30 font-headline-sm">
+            王
+          </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-body-md-medium text-body-md text-on-surface font-semibold">王总</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] font-code-stat bg-surface-container-highest text-on-surface-variant font-medium">安全红线</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant text-[11px] mt-0.5">总裁办 · 出场 4 次</span>
+</div>
+</div>
+<!-- Stakeholder 3 -->
+<div class="paper-card min-w-[210px] rounded-xl p-3 flex-shrink-0 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-tertiary font-bold border border-outline-variant/30 font-headline-sm">
+            林
+          </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-body-md-medium text-body-md text-on-surface font-semibold">林溪</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] font-code-stat bg-primary-fixed/50 text-on-primary-fixed-variant font-medium">产品架构</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant text-[11px] mt-0.5">方案把控 · 出场 11 次</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= 3. SESSION TIMELINE (会话时间线) ================= -->
+<section class="space-y-space-md pt-1">
+<!-- Section Header with Sorting Filter -->
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">会话时间线记录</h3>
+<span class="font-caption text-caption text-outline">共 12 篇纪要</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-high px-2 py-1 rounded-full text-[12px] text-on-surface-variant">
+<span class="font-body-md-medium text-primary">按发生时间</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</div>
+</div>
+<!-- SESSION CARD 1: 4月16日 (CRITICAL / BLOCKER RAIL #C9781E) -->
+<article class="paper-card rounded-2xl relative overflow-hidden p-space-md transition-all hover:shadow-md">
+<!-- 3px Amber Rail indicating Action/Risk Blocker -->
+<div class="absolute left-0 top-0 bottom-0 w-[3.5px] bg-[#C9781E]"></div>
+<div class="pl-1.5 space-y-2.5">
+<!-- Session Header & Meta -->
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded text-[11px] font-code-stat font-semibold bg-secondary-fixed text-on-secondary-fixed-variant">商业决策</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] font-code-stat font-medium bg-surface-container-high text-on-surface-variant">核心焦点</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] font-code-stat font-medium bg-error-container text-on-error-container">金额卡点</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-1 leading-snug">
+                客户 Q2 预算审批决策及安全白皮书
+              </h4>
+</div>
+<button class="text-outline hover:text-on-surface p-1 -mr-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="bookmark_border">bookmark_border</span>
+</button>
+</div>
+<!-- Time & Hardware specs -->
+<div class="flex items-center gap-3 font-code-timestamp text-code-timestamp text-outline text-[11px]">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-primary" data-icon="calendar_today">calendar_today</span>
+              4月16日
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="schedule">schedule</span>
+              32:40
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="mic">mic</span>
+              DITING MR20
+            </span>
+</div>
+<!-- Key Decision Extraction -->
+<div class="bg-surface-container-low rounded-xl p-3 border border-outline-variant/20">
+<div class="text-[11px] font-body-md-medium text-primary flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified">verified</span>
+              提炼关键句
+            </div>
+<p class="font-body-md text-body-md text-on-surface text-[13px] leading-relaxed">
+              采购意向明确达成，首付款取决于下周二电汇发起；合同前必须由法务补充《端侧数据安全白皮书》双印盖章版本。
+            </p>
+</div>
+<!-- Amber Warning / Blocker Alert Callout -->
+<div class="bg-[#FAF2E8] border border-secondary-container/40 rounded-xl p-2.5 flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5" data-icon="warning">warning</span>
+<div class="text-[12px] leading-snug">
+<strong class="font-body-md-medium text-secondary">付款节点风险待确认：</strong>
+<span class="text-on-secondary-container">客户提出验收后 60 天付款，与我方「见票 30 天付讫」红线冲突，需李总邮件特批。</span>
+</div>
+</div>
+<!-- Action Buttons & Audio Well Reference -->
+<div class="pt-1 flex items-center justify-between">
+<a class="inline-flex items-center gap-1.5 text-[12px] font-code-timestamp text-primary bg-primary/10 hover:bg-primary/15 px-2.5 py-1.5 rounded-full transition-colors" href="#">
+<span class="material-symbols-outlined text-[14px]" data-icon="play_arrow">play_arrow</span>
+              回到原声 15:40
+            </a>
+<button class="inline-flex items-center gap-1 text-[13px] font-body-md-medium text-on-surface hover:text-primary transition-colors py-1">
+              查看决策纪要
+              <span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</article>
+<!-- SESSION CARD 2: 4月17日 (TRANSCRIPT / INSIGHT RAIL #12A594) -->
+<article class="paper-card rounded-2xl relative overflow-hidden p-space-md transition-all hover:shadow-md">
+<!-- 3px Mint Verdant Rail for Insight & Transcript -->
+<div class="absolute left-0 top-0 bottom-0 w-[3.5px] bg-[#12A594]"></div>
+<div class="pl-1.5 space-y-2.5">
+<!-- Session Header & Meta -->
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded text-[11px] font-code-stat font-semibold bg-primary-fixed/60 text-on-primary-fixed-variant">战略对齐</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] font-code-stat font-medium bg-surface-container-high text-on-surface-variant">竞品 PLAUD 防护线</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-1 leading-snug">
+                产品定位与竞品边界会议
+              </h4>
+</div>
+<button class="text-outline hover:text-on-surface p-1 -mr-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="bookmark_border">bookmark_border</span>
+</button>
+</div>
+<div class="flex items-center gap-3 font-code-timestamp text-code-timestamp text-outline text-[11px]">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-primary" data-icon="calendar_today">calendar_today</span>
+              4月17日
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="schedule">schedule</span>
+              45:10
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="group">group</span>
+              全员研发线
+            </span>
+</div>
+<!-- Key Resolution -->
+<div class="bg-surface-container-low rounded-xl p-3 border border-outline-variant/20">
+<div class="text-[11px] font-body-md-medium text-tertiary flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="flag">flag</span>
+              核心决议共识
+            </div>
+<p class="font-body-md text-body-md text-on-surface text-[13px] leading-relaxed">
+              明确不跟进全量重度排版与富文本编辑生态，保持端侧「即录即忘、自动重整」的极简卡片便签感，核心护城河在动手执行力提炼与非侵入式情境记忆。
+            </p>
+</div>
+<!-- Actions & Mindmap Preview -->
+<div class="pt-1 flex items-center justify-between">
+<a class="inline-flex items-center gap-1.5 text-[12px] font-code-timestamp text-primary bg-primary/10 hover:bg-primary/15 px-2.5 py-1.5 rounded-full transition-colors" href="#">
+<span class="material-symbols-outlined text-[14px]" data-icon="play_arrow">play_arrow</span>
+              回到原声 14:32
+            </a>
+<button class="inline-flex items-center gap-1 text-[13px] font-body-md-medium text-on-surface hover:text-primary transition-colors py-1">
+<span class="material-symbols-outlined text-[15px] text-primary" data-icon="account_tree">account_tree</span>
+              查看思维导图
+            </button>
+</div>
+</div>
+</article>
+<!-- SESSION CARD 3: 4月10日 (MILESTONE & DELIVERY #5B7380) -->
+<article class="paper-card rounded-2xl relative overflow-hidden p-space-md transition-all hover:shadow-md">
+<!-- 3px Slate Gray Rail for Operational Architecture -->
+<div class="absolute left-0 top-0 bottom-0 w-[3.5px] bg-[#5B7380]"></div>
+<div class="pl-1.5 space-y-2.5">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded text-[11px] font-code-stat font-semibold bg-surface-container-highest text-on-surface">里程碑</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] font-code-stat font-medium bg-surface-container-high text-on-surface-variant">华东区客户</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-1 leading-snug">
+                Q2 季度营收目标与交付里程碑拆解
+              </h4>
+</div>
+<button class="text-outline hover:text-on-surface p-1 -mr-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="bookmark_border">bookmark_border</span>
+</button>
+</div>
+<div class="flex items-center gap-3 font-code-timestamp text-code-timestamp text-outline text-[11px]">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-primary" data-icon="calendar_today">calendar_today</span>
+              4月10日
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="schedule">schedule</span>
+              58:20
+            </span>
+</div>
+<!-- Key Deliverables -->
+<div class="bg-surface-container-low rounded-xl p-3 border border-outline-variant/20">
+<div class="text-[11px] font-body-md-medium text-tertiary flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="inventory_2">inventory_2</span>
+              交付要点
+            </div>
+<p class="font-body-md text-body-md text-on-surface text-[13px] leading-relaxed">
+              确定在 <strong class="text-primary font-body-md-medium">5月1日前</strong> 交付首批 500 台 MR20 封闭灰度试用版。华东大区负责人承诺在封样确认后启动第二批 1,200 台采购合同。
+            </p>
+</div>
+<!-- Bottom bar -->
+<div class="pt-1 flex items-center justify-between">
+<a class="inline-flex items-center gap-1.5 text-[12px] font-code-timestamp text-primary bg-primary/10 hover:bg-primary/15 px-2.5 py-1.5 rounded-full transition-colors" href="#">
+<span class="material-symbols-outlined text-[14px]" data-icon="play_arrow">play_arrow</span>
+              回到原声 28:10
+            </a>
+<button class="inline-flex items-center gap-1 text-[13px] font-body-md-medium text-on-surface hover:text-primary transition-colors py-1">
+              查看交付甘特明细
+              <span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</article>
+<!-- All Loaded End State Notice -->
+<div class="pt-4 pb-2 text-center">
+<div class="inline-flex items-center gap-2 text-outline text-[12px] font-caption">
+<span class="h-[1px] w-8 bg-outline-variant/40"></span>
+<span>已加载本分类全部 12 份会话记录</span>
+<span class="h-[1px] w-8 bg-outline-variant/40"></span>
+</div>
+</div>
+</section>
+</main>
+<!-- ================= BOTTOM ACTION DUAL CAPSULE (固定悬浮快捷操作栏) ================= -->
+<!-- Designed strictly as a floating companion bar for this aggregated synthesis page -->
+<aside class="fixed bottom-4 left-0 w-full z-40 px-gutter-mobile pointer-events-none">
+<div class="max-w-xl mx-auto flex items-center justify-center gap-2 pointer-events-auto">
+<!-- Primary Mint Action: Generate Full Narrative Map -->
+<button class="flex-1 max-w-[240px] h-11 bg-primary-container hover:bg-primary text-on-primary rounded-full px-4 flex items-center justify-center gap-2 shadow-lg shadow-primary-container/20 transition-transform active:scale-95 text-[13px] font-body-md-medium">
+<span class="material-symbols-outlined text-[18px]" data-icon="auto_stories">auto_stories</span>
+<span>生成脉络全景图</span>
+</button>
+<!-- Amber Secondary Action: Discuss Strategic Tension with DiTing -->
+<button class="flex-1 max-w-[240px] h-11 bg-paper-floating border border-[#C9781E]/30 hover:border-[#C9781E] text-secondary rounded-full px-4 flex items-center justify-center gap-2 shadow-md transition-transform active:scale-95 text-[13px] font-body-md-medium">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="forum">forum</span>
+<span>研讨战略张力</span>
+</button>
+</div>
+</aside>
+<!-- Micro-interaction script -->
+<script>
+    document.querySelectorAll('button, a').forEach(el => {
+      el.addEventListener('click', (e) => {
+        // Prevent default if hash link
+        if (el.getAttribute('href') === '#') {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+</body></html>

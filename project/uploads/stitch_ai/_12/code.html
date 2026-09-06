@@ -1,0 +1,574 @@
+<!DOCTYPE html><html class="h-full" lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>谛听 - 会话详情 · 思维导图</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts: Noto Serif SC, Plus Jakarta Sans, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Serif+SC:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "#faf9f4",
+            "on-tertiary": "#ffffff",
+            "surface-container-high": "#e9e8e3",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#6b3b00",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#b9c9d3",
+            "primary": "#006b5f",
+            "inverse-surface": "#30312e",
+            "secondary": "#8d4f00",
+            "on-secondary-fixed": "#2d1600",
+            "on-primary-container": "#00322c",
+            "primary-fixed-dim": "#5fdac7",
+            "surface-container-lowest": "#ffffff",
+            "error": "#ba1a1a",
+            "on-secondary": "#ffffff",
+            "on-secondary-container": "#6f3d00",
+            "tertiary": "#516169",
+            "secondary-fixed": "#ffdcc0",
+            "primary-fixed": "#7ef7e3",
+            "on-primary": "#ffffff",
+            "on-error-container": "#93000a",
+            "secondary-container": "#ffa449",
+            "surface-dim": "#dbdad5",
+            "on-background": "#1b1c19",
+            "surface-container-low": "#f5f4ef",
+            "surface-tint": "#006b5f",
+            "tertiary-container": "#85959f",
+            "on-primary-fixed": "#00201c",
+            "tertiary-fixed": "#d5e5ef",
+            "on-tertiary-fixed-variant": "#3a4951",
+            "on-tertiary-fixed": "#0e1d25",
+            "outline": "#6d7a76",
+            "on-surface": "#1b1c19",
+            "outline-variant": "#bcc9c5",
+            "primary-container": "#12a594",
+            "on-primary-fixed-variant": "#005047",
+            "secondary-fixed-dim": "#ffb876",
+            "on-surface-variant": "#3d4946",
+            "surface-container-highest": "#e3e3de",
+            "surface-container": "#efeee9",
+            "surface-variant": "#e3e3de",
+            "background": "#faf9f4",
+            "inverse-primary": "#5fdac7",
+            "inverse-on-surface": "#f2f1ec",
+            "surface-bright": "#faf9f4",
+            "on-tertiary-container": "#1f2e35"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.5rem",
+            "card-pad-desktop": "1.5rem",
+            "space-xl": "1.5rem",
+            "space-2xl": "2rem",
+            "space-xxs": "0.25rem",
+            "gutter-desktop": "1.5rem",
+            "card-pad-mobile": "1rem",
+            "space-sm": "0.75rem",
+            "space-3xl": "3rem",
+            "space-lg": "1.25rem",
+            "space-md": "1rem",
+            "gutter-mobile": "1rem"
+          },
+          "fontFamily": {
+            "body-md-medium": ["Plus Jakarta Sans", "Noto Serif SC", "sans-serif"],
+            "display-lg": ["Noto Serif SC", "serif"],
+            "body-lg": ["Plus Jakarta Sans", "Noto Serif SC", "sans-serif"],
+            "display-lg-mobile": ["Noto Serif SC", "serif"],
+            "caption": ["Plus Jakarta Sans", "Noto Serif SC", "sans-serif"],
+            "headline-sm": ["Noto Serif SC", "serif"],
+            "code-stat": ["JetBrains Mono", "monospace"],
+            "headline-md": ["Noto Serif SC", "serif"],
+            "body-md": ["Plus Jakarta Sans", "Noto Serif SC", "sans-serif"],
+            "code-timestamp": ["JetBrains Mono", "monospace"]
+          },
+          "fontSize": {
+            "body-md-medium": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "500" }],
+            "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "0", "fontWeight": "600" }],
+            "code-stat": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "400" }],
+            "code-timestamp": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #f4f3ee;
+      color: #1b1c19;
+      -webkit-tap-highlight-color: transparent;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+
+    /* Tactile paper card shadows */
+    .tactile-card {
+      background-color: #faf9f5;
+      border: 1px solid rgba(43, 58, 66, 0.08);
+      box-shadow: 0 2px 8px -2px rgba(29, 36, 35, 0.04), 0 1px 2px rgba(29, 36, 35, 0.02);
+    }
+
+    .tactile-floating {
+      background-color: #ffffff;
+      border: 1px solid rgba(43, 58, 66, 0.1);
+      box-shadow: 0 10px 28px -6px rgba(29, 36, 35, 0.09), 0 3px 8px -2px rgba(29, 36, 35, 0.04);
+    }
+
+    .paper-sunken {
+      background-color: #ebe9e1;
+      box-shadow: inset 0 1px 2px rgba(29, 36, 35, 0.07);
+    }
+
+    /* Mindmap connecting lines (Curved branch paths) */
+    .tree-line {
+      stroke: #bcc9c5;
+      stroke-width: 1.5;
+      fill: none;
+      stroke-linecap: round;
+    }
+    .tree-line-active {
+      stroke: #c9781e;
+      stroke-width: 2;
+      stroke-dasharray: 4 2;
+    }
+
+    /* Ambient AI Breathing animation */
+    @keyframes orb-breathe {
+      0%, 100% {
+        transform: scale(0.96);
+        opacity: 0.85;
+      }
+      50% {
+        transform: scale(1.06);
+        opacity: 1;
+      }
+    }
+    .animate-orb {
+      animation: orb-breathe 3.4s ease-in-out infinite;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-body-md text-on-surface antialiased selection:bg-primary/20">
+<!-- Mobile Shell Wrapper -->
+<div class="relative w-full max-w-lg mx-auto min-h-full flex flex-col bg-[#f4f3ee] pb-24 shadow-2xl">
+<!-- 1. TOP APP BAR (Customized for Session Details with Shared Component Tokens) -->
+<header class="sticky top-0 z-40 flex items-center justify-between px-gutter-mobile h-14 bg-surface/95 backdrop-blur-md border-b border-outline-variant/30">
+<div class="flex items-center space-x-2">
+<button aria-label="返回" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px] text-on-surface">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<div class="flex items-center space-x-1.5">
+<h1 class="font-headline-sm text-[16px] text-on-surface leading-tight font-semibold tracking-tight">4月17日 产品技术对齐会</h1>
+<span class="inline-block w-2 h-2 rounded-full bg-primary-container"></span>
+</div>
+<div class="flex items-center space-x-1.5 font-caption text-caption text-on-surface-variant">
+<span class="material-symbols-outlined text-[12px] text-primary">sensors</span>
+<span class="">硬件同步完成</span>
+<span class="">·</span>
+<span class="font-code-stat text-code-stat">45:10</span>
+</div>
+</div>
+</div>
+<div class="flex items-center space-x-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 text-on-surface-variant" title="分享">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 text-on-surface-variant" title="更多">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</header>
+<!-- 2. MINI AUDIO DOCKED SCRUBBER & CONTROLLER -->
+<div class="bg-surface px-gutter-mobile border-b border-outline-variant/30 flex items-center justify-between overflow-x-auto whitespace-nowrap gap-3">
+<div class="flex items-center space-x-5 shrink-0 whitespace-nowrap">
+<!-- Tab 1 -->
+<button class="py-2.5 font-body-md text-on-surface-variant hover:text-on-surface inline-flex flex-row items-center gap-1.5 shrink-0 whitespace-nowrap">
+<span class="material-symbols-outlined text-[16px]">notes</span>
+<span class="whitespace-nowrap">转写</span>
+<span class="font-code-stat text-[11px] px-1 rounded bg-surface-container text-outline whitespace-nowrap">3.4k</span>
+</button>
+<!-- Tab 2 -->
+<button class="py-2.5 font-body-md text-on-surface-variant hover:text-on-surface inline-flex flex-row items-center gap-1.5 shrink-0 whitespace-nowrap">
+<span class="material-symbols-outlined text-[16px]">summarize</span>
+<span class="whitespace-nowrap">总结</span>
+</button>
+<!-- Tab 3 (Active) -->
+<button class="py-2.5 font-body-md-medium text-primary font-semibold border-b-2 border-primary-container inline-flex flex-row items-center gap-1.5 relative shrink-0 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+<span class="whitespace-nowrap">思维导图</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container inline-block"></span>
+</button>
+</div>
+<!-- Quick AI synthesis status badge -->
+<div class="flex items-center space-x-1 text-caption font-caption text-primary bg-primary-fixed/40 px-2 py-0.5 rounded-full border border-primary/20 shrink-0 whitespace-nowrap">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-medium text-[11px] whitespace-nowrap">结构已提炼</span>
+</div>
+</div>
+<!-- 3. SEGMENTED TABS (Active: 思维导图) -->
+<div class="bg-surface px-gutter-mobile border-b border-outline-variant/30 flex items-center justify-between overflow-x-auto whitespace-nowrap gap-3">
+<div class="flex items-center space-x-5 shrink-0 whitespace-nowrap">
+<!-- Tab 1 -->
+<button class="py-2.5 font-body-md text-on-surface-variant hover:text-on-surface inline-flex flex-row items-center gap-1.5 shrink-0 whitespace-nowrap">
+<span class="material-symbols-outlined text-[16px]">notes</span>
+<span class="whitespace-nowrap">转写</span>
+<span class="font-code-stat text-[11px] px-1 rounded bg-surface-container text-outline whitespace-nowrap">3.4k</span>
+</button>
+<!-- Tab 2 -->
+<button class="py-2.5 font-body-md text-on-surface-variant hover:text-on-surface inline-flex flex-row items-center gap-1.5 shrink-0 whitespace-nowrap">
+<span class="material-symbols-outlined text-[16px]">summarize</span>
+<span class="whitespace-nowrap">总结</span>
+</button>
+<!-- Tab 3 (Active) -->
+<button class="py-2.5 font-body-md-medium text-primary font-semibold border-b-2 border-primary-container inline-flex flex-row items-center gap-1.5 relative shrink-0 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+<span class="whitespace-nowrap">思维导图</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container inline-block"></span>
+</button>
+</div>
+<!-- Quick AI synthesis status badge -->
+<div class="flex items-center space-x-1 text-caption font-caption text-primary bg-primary-fixed/40 px-2 py-0.5 rounded-full border border-primary/20 shrink-0 whitespace-nowrap">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-medium text-[11px] whitespace-nowrap">结构已提炼</span>
+</div>
+</div>
+<!-- 4. TOOLBAR & VIEW CONTROLLER -->
+<section class="px-gutter-mobile pt-3 pb-2 flex flex-col gap-2 bg-[#f4f3ee]">
+<div class="flex items-center justify-between">
+<!-- Capsule View Switcher -->
+<div class="inline-flex p-0.5 bg-surface-container-high rounded-full border border-outline-variant/30">
+<button class="px-3 py-1 rounded-full text-[12px] font-body-md-medium font-medium bg-surface text-primary shadow-xs flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">account_tree</span>
+<span class="">结构脑图 (树状)</span>
+</button>
+<button class="px-3 py-1 rounded-full text-[12px] font-body-md text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">view_carousel</span>
+<span class="">Deck 简报卡</span>
+</button>
+</div>
+<!-- Auxiliary Action Icons -->
+<div class="flex items-center space-x-1">
+<button class="w-7 h-7 flex items-center justify-center rounded-lg bg-surface border border-outline-variant/30 text-on-surface-variant hover:text-primary active:scale-95" title="适应画布">
+<span class="material-symbols-outlined text-[16px]">filter_center_focus</span>
+</button>
+<button class="w-7 h-7 flex items-center justify-center rounded-lg bg-surface border border-outline-variant/30 text-on-surface-variant hover:text-primary active:scale-95" title="全屏查看">
+<span class="material-symbols-outlined text-[16px]">fullscreen</span>
+</button>
+<button class="w-7 h-7 flex items-center justify-center rounded-lg bg-surface border border-outline-variant/30 text-on-surface-variant hover:text-primary active:scale-95" title="导出">
+<span class="material-symbols-outlined text-[16px]">download</span>
+</button>
+</div>
+</div>
+<!-- Tactile hint banner -->
+<div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/20 text-caption font-caption text-on-surface-variant">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-primary">touch_app</span>
+<span class="">轻按任一节点可直接定位原声音频；拖拽可漫游。</span>
+</div>
+<span class="font-code-stat text-[11px] text-outline">9个关键节点</span>
+</div>
+</section>
+<!-- 5. CORE CANVAS: HIGH-FIDELITY MIND MAP TREE VIEW -->
+<main class="flex-1 px-gutter-mobile py-2 relative overflow-x-hidden">
+<!-- Mind Map Tree Canvas -->
+<div class="relative min-h-[480px] w-full pt-1 pb-4">
+<!-- ROOT NODE -->
+<div class="relative z-10 mb-6 flex justify-start">
+<div class="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#004d44] to-[#006b5f] text-on-primary shadow-md border border-[#5fdac7]/30 max-w-full">
+<div class="w-7 h-7 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[18px] text-primary-fixed">hub</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-[15px] font-semibold tracking-tight text-surface">4月17日 产品技术对齐会</span>
+<span class="font-caption text-[10px] px-1.5 py-0.2 rounded bg-primary-fixed/20 text-primary-fixed border border-primary-fixed/30">主旨</span>
+</div>
+<p class="font-caption text-[12px] text-[#e3e3de] tracking-wide mt-0.5">MR20 硬件协议升级与端云协同架构</p>
+</div>
+<div class="ml-2 w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold text-white">−</div>
+</div>
+</div>
+<!-- TREE STRUCTURE CONTAINER WITH CONNECTORS -->
+<div class="relative pl-4 space-y-7">
+<!-- Branch 1: 硬件底层流式协议 (Mint Theme #12A594) -->
+<div class="relative">
+<!-- Left Connecting Guide Rail -->
+<div class="absolute -left-3 top-4 bottom-2 w-px bg-[#12A594]/30"></div>
+<div class="absolute -left-3 top-4 w-3 h-px bg-[#12A594]/60"></div>
+<!-- Level 2 Parent Node -->
+<div class="tactile-card rounded-xl pl-3 pr-3.5 py-2 inline-flex items-center justify-between gap-3 relative overflow-hidden border-l-[3px] border-l-[#12A594]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary-container">memory</span>
+<span class="font-body-md-medium text-[13px] font-semibold text-on-surface">MR20 协议重构 (双向流)</span>
+</div>
+<span class="font-code-stat text-[10px] text-outline bg-surface-container px-1 rounded">3个结论</span>
+</div>
+<!-- Level 3 Children Container -->
+<div class="mt-2.5 pl-5 space-y-2 relative">
+<!-- Sub-connector lines -->
+<div class="absolute left-2.5 top-0 bottom-4 w-px bg-outline-variant/40"></div>
+<!-- Child 1.1 -->
+<div class="relative flex items-center group">
+<div class="absolute -left-2.5 top-3.5 w-2.5 h-px bg-outline-variant/50"></div>
+<div class="tactile-card rounded-lg px-3 py-1.5 flex flex-wrap items-center gap-2 max-w-full hover:border-primary transition-colors cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container flex-shrink-0"></span>
+<span class="text-[13px] text-on-surface">淘汰单工轮询，固件协议打包</span>
+<button class="font-code-timestamp text-[11px] text-primary hover:underline inline-flex items-center gap-0.5 bg-primary/5 px-1.5 py-0.5 rounded border border-primary/20">
+<span class="material-symbols-outlined text-[12px]">play_circle</span>
+<span class="">08:24</span>
+</button>
+</div>
+</div>
+<!-- Child 1.2 -->
+<div class="relative flex items-center">
+<div class="absolute -left-2.5 top-3.5 w-2.5 h-px bg-outline-variant/50"></div>
+<div class="tactile-card rounded-lg px-3 py-1.5 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-outline flex-shrink-0"></span>
+<span class="text-[13px] text-on-surface">长文本缓冲区溢出保护 (Ring Buffer)</span>
+</div>
+</div>
+<!-- Child 1.3 -->
+<div class="relative flex items-center">
+<div class="absolute -left-2.5 top-3.5 w-2.5 h-px bg-outline-variant/50"></div>
+<div class="tactile-card rounded-lg px-3 py-1.5 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container flex-shrink-0"></span>
+<span class="text-[13px] text-on-surface">弱网断点录音拼接准确率验证</span>
+<span class="font-caption text-[10px] px-1.5 py-0.5 rounded bg-surface-container text-tertiary font-medium">Alpha-2 封测</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Branch 2: AI Agent 自动化边界 (Amber Alert Theme #C9781E - ACTIVE SELECTED) -->
+<div class="relative">
+<!-- Left Connecting Guide Rail -->
+<div class="absolute -left-3 top-4 bottom-2 w-px bg-[#c9781e]/40"></div>
+<div class="absolute -left-3 top-4 w-3 h-px bg-[#c9781e]/80"></div>
+<!-- Level 2 Parent Node (Amber Focus Glow) -->
+<div class="tactile-floating rounded-xl pl-3 pr-3.5 py-2.5 inline-flex items-center justify-between gap-3 relative overflow-hidden border-l-[3px] border-l-[#c9781e] ring-2 ring-[#c9781e]/30 shadow-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-[#c9781e]" style="font-variation-settings: 'FILL' 1;">security</span>
+<span class="font-body-md-medium text-[13.5px] font-bold text-on-surface">【红线机制】Agent 执行人工二次确认</span>
+</div>
+<span class="font-caption text-[10px] px-1.5 py-0.5 rounded-full bg-[#ffdcc0] text-[#6b3b00] font-semibold">核心焦点</span>
+</div>
+<!-- Level 3 Children Container -->
+<div class="mt-2.5 pl-5 space-y-2 relative">
+<div class="absolute left-2.5 top-0 bottom-4 w-px bg-[#c9781e]/30"></div>
+<!-- Child 2.1 (Active Anchor) -->
+<div class="relative flex items-center">
+<div class="absolute -left-2.5 top-3.5 w-2.5 h-px bg-[#c9781e]"></div>
+<div class="tactile-card rounded-lg px-3 py-1.5 flex flex-wrap items-center gap-2 bg-[#fbf1e4] border-[#c9781e]/40 cursor-pointer shadow-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-[#c9781e] flex-shrink-0 animate-pulse"></span>
+<span class="text-[13px] font-medium text-on-surface">禁止静默代发：日历/邮件/工单草稿化</span>
+<button class="font-code-timestamp text-[11px] text-[#6b3b00] font-semibold inline-flex items-center gap-0.5 bg-[#ffa449]/30 px-1.5 py-0.5 rounded border border-[#c9781e]/30">
+<span class="material-symbols-outlined text-[13px] text-[#c9781e]">volume_up</span>
+<span class="">21:15</span>
+</button>
+</div>
+</div>
+<!-- Child 2.2 -->
+<div class="relative flex items-center">
+<div class="absolute -left-2.5 top-3.5 w-2.5 h-px bg-[#c9781e]/40"></div>
+<div class="tactile-card rounded-lg px-3 py-1.5 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-[#c9781e] flex-shrink-0"></span>
+<span class="text-[13px] text-on-surface">人机协同确认闸门</span>
+<span class="font-caption text-[10px] px-1.5 py-0.5 rounded-full bg-secondary-container/20 text-secondary border border-secondary/20">待确认工件流转</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Branch 3: 成本控制与端侧降级 (Dark Teal Theme #516169 / #006b5f) -->
+<div class="relative">
+<!-- Left Connecting Guide Rail -->
+<div class="absolute -left-3 top-4 bottom-2 w-px bg-outline-variant/40"></div>
+<div class="absolute -left-3 top-4 w-3 h-px bg-outline-variant/60"></div>
+<!-- Level 2 Parent Node -->
+<div class="tactile-card rounded-xl pl-3 pr-3.5 py-2 inline-flex items-center justify-between gap-3 relative overflow-hidden border-l-[3px] border-l-[#516169]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary">tune</span>
+<span class="font-body-md-medium text-[13px] font-semibold text-on-surface">端侧 Silero VAD 与离线转写</span>
+</div>
+<span class="font-code-stat text-[10px] text-outline bg-surface-container px-1 rounded">2个策略</span>
+</div>
+<!-- Level 3 Children Container -->
+<div class="mt-2.5 pl-5 space-y-2 relative">
+<div class="absolute left-2.5 top-0 bottom-4 w-px bg-outline-variant/40"></div>
+<!-- Child 3.1 -->
+<div class="relative flex items-center">
+<div class="absolute -left-2.5 top-3.5 w-2.5 h-px bg-outline-variant/50"></div>
+<div class="tactile-card rounded-lg px-3 py-1.5 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary flex-shrink-0"></span>
+<span class="text-[13px] text-on-surface">非指令场景避免频繁开 Hermes 实时通道</span>
+</div>
+</div>
+<!-- Child 3.2 -->
+<div class="relative flex items-center">
+<div class="absolute -left-2.5 top-3.5 w-2.5 h-px bg-outline-variant/50"></div>
+<div class="tactile-card rounded-lg px-3 py-1.5 flex flex-wrap items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary flex-shrink-0"></span>
+<span class="text-[13px] text-on-surface">PCM16 解码在端侧优先处理</span>
+<button class="font-code-timestamp text-[11px] text-tertiary hover:underline inline-flex items-center gap-0.5 bg-surface-container-high px-1.5 py-0.5 rounded border border-outline-variant/30">
+<span class="material-symbols-outlined text-[12px]">play_circle</span>
+<span class="">39:04</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 6. NODE FOCUS / AUDIO SNIPPET FLOATING INSPECTOR CARD -->
+<section class="mt-4 tactile-floating rounded-2xl p-4 border border-outline-variant/40 relative overflow-hidden">
+<!-- Station rail indicator (Amber for action red-line) -->
+<div class="absolute left-0 top-0 bottom-0 w-[3.5px] bg-[#c9781e]"></div>
+<div class="pl-1">
+<!-- Card Header & Timestamp -->
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center space-x-1.5">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-[#ffdcc0] text-[#6b3b00] text-[11px] font-bold">02</span>
+<span class="font-caption text-caption text-secondary font-semibold">选中节点详情与音频切片</span>
+</div>
+<div class="flex items-center gap-1 font-code-timestamp text-[12px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[13px] text-[#c9781e]">podcasts</span>
+<span class="">21:15 ~ 22:40</span>
+</div>
+</div>
+<!-- Node Title Context -->
+<h4 class="font-headline-sm text-[15px] font-semibold text-on-surface leading-snug">
+            确立「AI Agent 自动化执行必须有明确人工二次确认」的红线机制
+          </h4>
+<p class="font-body-md text-[12.5px] text-on-surface-variant mt-1 leading-relaxed">
+            产品与前端团队一致确认：小谛不可在未经用户点击确认情况下，静默触发日历建立、群发协同邮件及向 Jira 提交工单，必须以可撤销草稿形态留存。
+          </p>
+<!-- Audio Slice Mini-Scrubber -->
+<div class="mt-3 paper-sunken rounded-xl p-2.5 flex items-center space-x-3">
+<button class="w-8 h-8 rounded-full bg-[#c9781e] text-on-secondary flex items-center justify-center flex-shrink-0 shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex-1">
+<div class="flex justify-between font-code-stat text-[10px] text-outline-variant mb-1">
+<span class="text-[#c9781e] font-semibold">李工 发言原声切片</span>
+<span class="">01:25 片段</span>
+</div>
+<!-- Simulated Mini Waveform for Clip -->
+<div class="h-2 flex items-center space-x-1">
+<span class="h-full w-1 rounded bg-[#c9781e]"></span>
+<span class="h-1/2 w-1 rounded bg-[#c9781e]"></span>
+<span class="h-3/4 w-1 rounded bg-[#c9781e]"></span>
+<span class="h-full w-1 rounded bg-[#c9781e]"></span>
+<span class="h-2/3 w-1 rounded bg-[#c9781e]/40"></span>
+<span class="h-1/3 w-1 rounded bg-[#c9781e]/40"></span>
+<span class="h-3/4 w-1 rounded bg-[#c9781e]/40"></span>
+<span class="h-1/2 w-1 rounded bg-[#c9781e]/40"></span>
+<span class="h-2/3 w-1 rounded bg-[#c9781e]/40"></span>
+</div>
+</div>
+<button class="text-caption text-xs text-primary font-body-md-medium px-2 py-1 rounded hover:bg-surface transition-colors">
+              展开原文
+            </button>
+</div>
+<!-- Bottom Action Buttons inside Focus Card -->
+<div class="mt-3.5 flex items-center justify-between gap-2 pt-2 border-t border-outline-variant/20">
+<button class="flex-1 py-1.5 px-3 rounded-full bg-[#c9781e] hover:bg-[#8d4f00] text-on-primary text-[12px] font-body-md-medium flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[15px]">draw</span>
+<span class="">交给小谛办 (起草二次确认规范)</span>
+</button>
+<button class="py-1.5 px-3 rounded-full bg-surface border border-outline-variant/40 text-on-surface text-[12px] font-body-md hover:bg-surface-container transition-colors active:scale-95 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span class="">复制节点</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 7. EDITORIAL ASSISTANT PROMPT BAR (Mindmap expansion actions) -->
+<section class="mt-4 mb-2">
+<div class="bg-surface rounded-2xl p-3 border border-outline-variant/30 flex items-center justify-between gap-2 shadow-sm">
+<!-- AI Orb Indicator -->
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary via-primary-fixed to-secondary-container flex items-center justify-center p-0.5 animate-orb shadow-inner">
+<div class="w-full h-full bg-surface rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings: 'FILL' 1;">neurology</span>
+</div>
+</div>
+<div>
+<p class="text-[12px] font-body-md-medium font-medium text-on-surface leading-tight">觉得节点归纳不够详尽？</p>
+<p class="font-caption text-[11px] text-on-surface-variant">让小谛按「按参会部门」或「按执行时序」重构导图</p>
+</div>
+</div>
+<button class="py-1.5 px-3 rounded-full bg-primary-container text-on-primary text-[11.5px] font-body-md-medium flex items-center gap-1 hover:opacity-95 active:scale-95 transition-all flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span class="">重新归纳</span>
+</button>
+</div>
+</section>
+<!-- Fast Export / Panorama Row -->
+<div class="grid grid-cols-2 gap-2 my-3">
+<button class="py-2 px-3 rounded-xl bg-surface border border-outline-variant/30 text-on-surface-variant hover:text-primary flex items-center justify-center gap-1.5 text-[12px] font-body-md active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px] text-primary">picture_as_pdf</span>
+<span class="">导出为思维导图 (Markmap)</span>
+</button>
+<button class="py-2 px-3 rounded-xl bg-surface border border-outline-variant/30 text-on-surface-variant hover:text-secondary flex items-center justify-center gap-1.5 text-[12px] font-body-md active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px] text-[#c9781e]">description</span>
+<span class="">生成全景会议纪要</span>
+</button>
+</div>
+</main>
+<!-- 8. MANDATORY BOTTOM NAVIGATION BAR (Exact execution from Shared Component JSON) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-xs pb-safe h-16 max-w-lg mx-auto bg-surface border-t border-outline-variant/30 shadow-sm"><!-- Item 1: 今日谛听 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-body-md py-1 hover:text-primary transition-colors duration-150 active:scale-95 flex-1" href="javascript:void(0)">
+<span class="material-symbols-outlined text-[22px]">auto_stories</span>
+<span class="text-caption font-caption mt-0.5">今日谛听</span>
+</a>
+<!-- Item 2: 记录 (Active) -->
+<a class="flex flex-col items-center justify-center text-primary font-body-md-medium py-1 hover:text-primary transition-colors duration-150 active:scale-95 flex-1" href="javascript:void(0)">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">graphic_eq</span>
+<span class="text-caption font-caption mt-0.5 font-medium">记录</span>
+</a>
+<!-- Item 3: Center Raised Action (即刻聆听) -->
+<div class="flex flex-col items-center justify-center relative -top-3 flex-1">
+<button aria-label="即刻聆听" class="w-14 h-14 rounded-full bg-primary-container text-on-primary shadow-lg flex items-center justify-center hover:opacity-95 active:scale-95 transition-all duration-150 border-4 border-surface relative">
+<span class="material-symbols-outlined text-[28px]">mic</span>
+<span class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-error border-2 border-surface animate-pulse"></span>
+</button>
+<span class="text-caption font-caption text-primary font-body-md-medium mt-0.5 font-medium whitespace-nowrap">即刻聆听</span>
+</div>
+<!-- Item 4: 任务 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-body-md py-1 hover:text-primary transition-colors duration-150 active:scale-95 flex-1" href="javascript:void(0)">
+<span class="material-symbols-outlined text-[22px]">check_circle</span>
+<span class="text-caption font-caption mt-0.5">任务</span>
+</a>
+<!-- Item 5: 我的 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-body-md py-1 hover:text-primary transition-colors duration-150 active:scale-95 flex-1" href="javascript:void(0)">
+<span class="material-symbols-outlined text-[22px]">person</span>
+<span class="text-caption font-caption mt-0.5">我的</span>
+</a></nav>
+</div>
+
+
+</body></html>

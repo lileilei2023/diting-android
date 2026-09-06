@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>小谛晨读 · 深度梳理 - 谛听 DiTing</title>
+<!-- Google Fonts: Noto Serif SC, Plus Jakarta Sans, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Serif+SC:wght@500;600;700;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with configuration -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed": "#0e1d25",
+            "secondary-fixed-dim": "#ffb876",
+            "on-tertiary-container": "#1f2e35",
+            "surface-variant": "#e3e3de",
+            "surface-bright": "#faf9f4",
+            "on-secondary": "#ffffff",
+            "outline": "#6d7a76",
+            "secondary-container": "#ffa449",
+            "primary-fixed": "#7ef7e3",
+            "surface-dim": "#dbdad5",
+            "inverse-on-surface": "#f2f1ec",
+            "primary": "#006b5f",
+            "on-surface-variant": "#3d4946",
+            "tertiary-fixed": "#d5e5ef",
+            "surface": "#faf9f4",
+            "tertiary": "#516169",
+            "primary-container": "#12a594",
+            "secondary-fixed": "#ffdcc0",
+            "on-primary-container": "#00322c",
+            "primary-fixed-dim": "#5fdac7",
+            "on-secondary-container": "#6f3d00",
+            "outline-variant": "#bcc9c5",
+            "tertiary-container": "#85959f",
+            "error-container": "#ffdad6",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed": "#2d1600",
+            "secondary": "#8d4f00",
+            "on-tertiary": "#ffffff",
+            "inverse-primary": "#5fdac7",
+            "on-tertiary-fixed-variant": "#3a4951",
+            "surface-container-high": "#e9e8e3",
+            "background": "#faf9f4",
+            "tertiary-fixed-dim": "#b9c9d3",
+            "on-surface": "#1b1c19",
+            "surface-container-highest": "#e3e3de",
+            "surface-container": "#efeee9",
+            "inverse-surface": "#30312e",
+            "error": "#ba1a1a",
+            "on-background": "#1b1c19",
+            "on-primary-fixed-variant": "#005047",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed-variant": "#6b3b00",
+            "surface-tint": "#006b5f",
+            "on-error": "#ffffff",
+            "surface-container-low": "#f5f4ef",
+            "on-primary-fixed": "#00201c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "card-pad-desktop": "1.5rem",
+            "space-xs": "0.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-xl": "1.5rem",
+            "card-pad-mobile": "1rem",
+            "space-3xl": "3rem",
+            "space-xxs": "0.25rem",
+            "space-md": "1rem",
+            "space-sm": "0.75rem",
+            "space-2xl": "2rem",
+            "space-lg": "1.25rem",
+            "gutter-mobile": "1rem"
+          },
+          "fontFamily": {
+            "body-md-medium": ["Plus Jakarta Sans", "PingFang SC", "sans-serif"],
+            "display-lg": ["Noto Serif SC", "Noto Serif", "serif"],
+            "code-stat": ["JetBrains Mono", "monospace"],
+            "body-lg": ["Plus Jakarta Sans", "PingFang SC", "sans-serif"],
+            "code-timestamp": ["JetBrains Mono", "monospace"],
+            "caption": ["Plus Jakarta Sans", "PingFang SC", "sans-serif"],
+            "display-lg-mobile": ["Noto Serif SC", "Noto Serif", "serif"],
+            "headline-sm": ["Noto Serif SC", "Noto Serif", "serif"],
+            "headline-md": ["Noto Serif SC", "Noto Serif", "serif"],
+            "body-md": ["Plus Jakarta Sans", "PingFang SC", "sans-serif"]
+          },
+          "fontSize": {
+            "body-md-medium": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "500" }],
+            "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "code-stat": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "code-timestamp": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "display-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "0", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Subtle paper texture overlay */
+    .paper-texture {
+      background-image: radial-gradient(#1b1c19 0.45px, transparent 0.45px);
+      background-size: 16px 16px;
+      opacity: 0.025;
+    }
+    /* AI Breathing Orb effect */
+    @keyframes breathing {
+      0%, 100% {
+        transform: scale(0.96);
+        filter: blur(12px);
+        opacity: 0.28;
+      }
+      50% {
+        transform: scale(1.05);
+        filter: blur(16px);
+        opacity: 0.38;
+      }
+    }
+    .ai-orb-pulse {
+      animation: breathing 3.6s ease-in-out infinite;
+    }
+    /* Soft elevation shadow */
+    .shadow-paper-card {
+      box-shadow: 0 2px 8px -2px rgba(27, 28, 25, 0.04), 0 1px 2px rgba(27, 28, 25, 0.02);
+    }
+    .shadow-floating {
+      box-shadow: 0 12px 28px -6px rgba(27, 28, 25, 0.08), 0 4px 12px -2px rgba(27, 28, 25, 0.03);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen relative flex justify-center selection:bg-primary-container/20 selection:text-primary">
+<!-- Tactile paper grain wrapper -->
+<div class="fixed inset-0 paper-texture pointer-events-none z-0"></div>
+<!-- Mobile Container Shell (max-w-md viewport anchor) -->
+<main class="w-full max-w-md bg-background relative z-10 flex flex-col pb-28">
+<!-- TOP APP BAR (Sub-page linear reading state with Back action) -->
+<header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md px-gutter-mobile h-14 flex items-center justify-between border-b border-outline-variant/30">
+<!-- Back button -->
+<button aria-label="返回上一级" class="flex items-center gap-1 -ml-1.5 py-1.5 px-2 rounded-full text-on-surface-variant hover:text-primary active:scale-95 transition-all" onclick="window.history.back()">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+<span class="font-body-md-medium text-body-md-medium">今日谛听</span>
+</button>
+<!-- Center Title -->
+<div class="flex flex-col items-center">
+<span class="font-headline-sm text-[15px] font-semibold tracking-tight text-on-surface">小谛晨读 · 深度梳理</span>
+<span class="font-code-timestamp text-[10px] text-tertiary">04月18日 · 晨间第03号卷宗</span>
+</div>
+<!-- Action Cluster -->
+<div class="flex items-center gap-1.5 -mr-1.5">
+<button aria-label="朗读音频" class="h-8 px-2.5 rounded-full bg-primary-container/10 text-primary hover:bg-primary-container/20 flex items-center gap-1 text-caption font-body-md-medium active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="graphic_eq">graphic_eq</span>
+<span class="font-code-timestamp text-[11px]">02:45</span>
+</button>
+<button aria-label="生成长图分享" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[19px]" data-icon="share">share</span>
+</button>
+</div>
+</header>
+<!-- META BADGE STRIP -->
+<div class="px-gutter-mobile pt-3 pb-2 flex items-center justify-between">
+<div class="inline-flex items-center gap-2 bg-surface-container-low px-2.5 py-1 rounded-full border border-outline-variant/40">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span class="font-caption text-caption text-on-surface-variant">基于昨日与今晨 3 段录音</span>
+<span class="text-outline-variant">·</span>
+<span class="font-code-timestamp text-[11px] text-primary font-semibold">认知对齐 96%</span>
+</div>
+<div class="flex items-center gap-1 text-tertiary font-caption text-[11px]">
+<span class="material-symbols-outlined text-[13px]" data-icon="verified_user">verified_user</span>
+<span>端侧离线析构</span>
+</div>
+</div>
+<!-- HERO EDITORIAL TITLE & CORE SYNTHESIS -->
+<section class="px-gutter-mobile pt-2 pb-5">
+<!-- Editorial Headline -->
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-on-surface font-bold tracking-tight mb-3">
+        梳理：Q2 预算分歧、交付节点与核心博弈
+      </h1>
+<p class="font-body-md text-on-surface-variant leading-relaxed text-[13.5px]">
+        小谛已剔除 42 分钟发散讨论与情绪冗余，提炼出技术架构与商务交付间的根本诉求鸿沟，并生成针对性缓释策略。
+      </p>
+<!-- AI Atmosphere / Mood Radar Pill -->
+<div class="mt-4 p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-start gap-3 relative overflow-hidden">
+<!-- Floating breathing orb in background corner -->
+<div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-gradient-to-tr from-primary-container via-secondary-container to-amber-200 ai-orb-pulse pointer-events-none"></div>
+<div class="w-7 h-7 rounded-lg bg-surface-container-lowest flex-shrink-0 flex items-center justify-center text-primary shadow-sm border border-outline-variant/20 mt-0.5">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="psychology">psychology</span>
+</div>
+<div class="flex-1 pr-4">
+<div class="flex items-center justify-between">
+<span class="font-caption text-[11px] font-semibold tracking-wider text-tertiary uppercase">小谛洞察 · 语调与博弈热度</span>
+<span class="font-code-timestamp text-[10px] text-secondary font-medium bg-secondary-fixed/50 px-1.5 py-0.5 rounded">中度张力 (Moderate)</span>
+</div>
+<p class="font-body-md text-[12.5px] text-on-surface mt-1 leading-snug">
+            张工语速较常态提升 18%，伴随高频术语防御；李总在强调“回款周期”时声调加重，核心分歧非技术可行性，而是财务季度窗口。
+          </p>
+</div>
+</div>
+<!-- Quick Audio Synthesis Player Bar -->
+<div class="mt-4 p-3 rounded-2xl bg-surface-container border border-outline-variant/30 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<!-- Play/Pause Toggle -->
+<button class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center active:scale-90 transition-transform shadow-sm" id="audio-play-btn">
+<span class="material-symbols-outlined text-[18px] material-symbols-fill" data-icon="play_arrow">play_arrow</span>
+</button>
+<div>
+<div class="font-body-md-medium text-[12px] text-on-surface flex items-center gap-1.5">
+<span>小谛口播 · 90秒早读浓缩</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+</div>
+<span class="font-code-timestamp text-[10px] text-tertiary">已提炼 3 处核心分歧 · AI 拟真语调</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-code-timestamp text-[11px] text-tertiary">00:24 / 01:30</span>
+<button class="px-1.5 py-0.5 text-[10px] font-code-timestamp font-semibold text-tertiary hover:text-primary rounded bg-surface-container-high ml-1">1.2x</button>
+</div>
+</div>
+<!-- Waveform scrubber bar -->
+<div class="w-full bg-surface-container-highest h-6 rounded-lg px-2 flex items-center gap-0.5 overflow-hidden relative cursor-pointer">
+<!-- Amber Action Marker Pip -->
+<div class="absolute left-[42%] -top-0.5 w-1.5 h-1.5 rounded-full bg-secondary-container ring-2 ring-background z-20" title="妥协建议点"></div>
+<div class="absolute left-[70%] -top-0.5 w-1.5 h-1.5 rounded-full bg-secondary-container ring-2 ring-background z-20" title="行动发起点"></div>
+<!-- Waveform simulated bars -->
+<div class="w-0.5 h-2 bg-primary-container rounded-full"></div>
+<div class="w-0.5 h-3 bg-primary-container rounded-full"></div>
+<div class="w-0.5 h-4 bg-primary-container rounded-full"></div>
+<div class="w-0.5 h-2.5 bg-primary-container rounded-full"></div>
+<div class="w-0.5 h-5 bg-primary-container rounded-full"></div>
+<div class="w-0.5 h-3.5 bg-primary-container rounded-full"></div>
+<div class="w-0.5 h-4 bg-primary-container rounded-full"></div>
+<div class="w-0.5 h-2 bg-primary-container rounded-full"></div>
+<div class="w-0.5 h-4.5 bg-primary-container rounded-full"></div>
+<div class="w-0.5 h-3 bg-primary-container rounded-full"></div>
+<!-- Current Scrubber Needle -->
+<div class="w-1 h-5 bg-primary rounded-full z-10"></div>
+<!-- Remaining Bars -->
+<div class="w-0.5 h-2 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-3.5 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-4 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-2 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-4.5 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-5 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-3 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-2 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-3.5 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-4 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-2.5 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-3 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-4.5 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-2 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-3.5 bg-outline-variant/60 rounded-full"></div>
+<div class="w-0.5 h-1.5 bg-outline-variant/60 rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- SECTION 1: THE CORE CONTRADICTION -->
+<section class="px-gutter-mobile py-4 border-t border-outline-variant/20">
+<!-- Section Header -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">一、关键交割分歧脉络</h2>
+</div>
+<span class="font-caption text-[11px] text-tertiary">对话脉络比对</span>
+</div>
+<!-- Threaded Comparison Cards -->
+<div class="space-y-3">
+<!-- Card A: Architecture (张工) - 3px mint rail -->
+<div class="bg-surface-container-lowest rounded-2xl p-card-pad-mobile shadow-paper-card border border-outline-variant/30 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-primary-container"></div>
+<div class="pl-1">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="font-body-md-medium text-[13px] text-on-surface font-semibold">立场 A · 架构研发 (张工)</span>
+<span class="font-code-stat text-[10px] bg-primary-container/15 text-primary px-1.5 py-0.5 rounded">技术自洽性</span>
+</div>
+<button class="flex items-center gap-0.5 font-code-timestamp text-[11px] text-primary hover:underline">
+<span class="material-symbols-outlined text-[13px]" data-icon="play_circle">play_circle</span>
+<span>原声 14:32</span>
+</button>
+</div>
+<p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed">
+              “端侧降噪与双向流协议必须在本地完成全量验证，否则弱网断点重连会导致音字同步丢包。我们需要保留 3 周的 Alpha-2 封闭测试窗口，绝不能仓促上线。”
+            </p>
+<div class="mt-2.5 pt-2 border-t border-outline-variant/15 flex items-center gap-2 text-caption text-[11px] text-tertiary">
+<span class="material-symbols-outlined text-[14px]" data-icon="warning">warning</span>
+<span>核心诉求：阻断未经充分回归测试的协议强行交付</span>
+</div>
+</div>
+</div>
+<!-- Card B: Business (李总) - 3px amber rail -->
+<div class="bg-surface-container-lowest rounded-2xl p-card-pad-mobile shadow-paper-card border border-outline-variant/30 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-secondary"></div>
+<div class="pl-1">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="font-body-md-medium text-[13px] text-on-surface font-semibold">立场 B · 商务与交付 (李总)</span>
+<span class="font-code-stat text-[10px] bg-secondary-fixed text-on-secondary-fixed px-1.5 py-0.5 rounded">回款红线</span>
+</div>
+<button class="flex items-center gap-0.5 font-code-timestamp text-[11px] text-secondary hover:underline">
+<span class="material-symbols-outlined text-[13px]" data-icon="play_circle">play_circle</span>
+<span>原声 21:05</span>
+</button>
+</div>
+<p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed">
+              “Q2 集团给华东的现金流指标收紧了 30%。4月30日如果不能向客户输出 SDK 验收包，首期 180 万的回款就会顺延至 Q3。这个风险必须规避，哪怕先给白盒版本。”
+            </p>
+<div class="mt-2.5 pt-2 border-t border-outline-variant/15 flex items-center gap-2 text-caption text-[11px] text-tertiary">
+<span class="material-symbols-outlined text-[14px]" data-icon="monetization_on">monetization_on</span>
+<span>核心诉求：锁定合同验收节点，确保四月底现金回流</span>
+</div>
+</div>
+</div>
+<!-- Xiao Di Synthesis / Reconciliation Card -->
+<div class="bg-surface-container-low rounded-2xl p-card-pad-mobile border border-primary/20 shadow-sm relative overflow-hidden">
+<div class="absolute right-2 top-2 opacity-5">
+<span class="material-symbols-outlined text-[72px]" data-icon="balance">balance</span>
+</div>
+<div class="flex items-center gap-1.5 text-primary mb-2">
+<span class="material-symbols-outlined text-[16px] material-symbols-fill" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-headline-sm text-[13px] font-semibold tracking-wide">小谛拆解与折中平衡解</span>
+</div>
+<p class="font-body-md text-[13px] text-on-surface leading-relaxed">
+            双方冲突表面上是“时间与质量”的矛盾，实质是<strong>“合同条款验收定义”</strong>与<strong>“架构工程抗压界限”</strong>的定义错位：
+          </p>
+<div class="mt-2 space-y-1.5 bg-surface-container-lowest p-2.5 rounded-xl border border-outline-variant/25 text-[12.5px] text-on-surface-variant">
+<div class="flex items-start gap-1.5">
+<span class="font-code-stat text-primary font-bold">01.</span>
+<span>李总关心的不是底层协议重构细节，而是客户签字确认的<span class="text-on-surface font-medium underline decoration-primary-container decoration-2 underline-offset-2">验收 Checklist 第 4 条</span>；</span>
+</div>
+<div class="flex items-start gap-1.5">
+<span class="font-code-stat text-primary font-bold">02.</span>
+<span>张工担忧的是全量开放后不可逆的数据丢失信誉损失；</span>
+</div>
+<div class="flex items-start gap-1.5 text-secondary">
+<span class="font-code-stat font-bold">建议:</span>
+<span class="font-body-md-medium">将 4月30日交付定义为“定向灰度 SDK 预发布”，仅开放双向流基础功能，将极端断网测试保留在次月补丁包，双方均获缓冲。</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: MEMORY GRAPH PENETRATION -->
+<section class="px-gutter-mobile py-4 border-t border-outline-variant/20">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">二、认知图谱穿透关联</h2>
+</div>
+<span class="font-caption text-[11px] text-tertiary">历史记忆溯源</span>
+</div>
+<!-- Memory Graph Mini Bento Grid -->
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Node 1: Person Persona -->
+<div class="col-span-1 bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/25 shadow-paper-card flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-1 text-tertiary text-caption text-[11px] mb-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="account_circle">account_circle</span>
+<span>人物决策画像</span>
+</div>
+<div class="font-body-md-medium text-[13px] text-on-surface font-semibold">李总 (商务决策)</div>
+<p class="font-caption text-[11px] text-on-surface-variant mt-1 leading-snug">
+              重视可控现金流；对“协议自研”持防御态度，厌恶无边界延期。
+            </p>
+</div>
+<div class="mt-2 pt-1.5 border-t border-outline-variant/15 flex items-center justify-between text-[10px] font-code-timestamp text-tertiary">
+<span>置信度 94%</span>
+<span class="text-primary">历史 12 次交互</span>
+</div>
+</div>
+<!-- Node 2: Historical Risk -->
+<div class="col-span-1 bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/25 shadow-paper-card flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-1 text-secondary text-caption text-[11px] mb-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="crisis_alert">crisis_alert</span>
+<span>历史风险震荡</span>
+</div>
+<div class="font-body-md-medium text-[13px] text-on-surface font-semibold">5月交付冲突</div>
+<p class="font-caption text-[11px] text-on-surface-variant mt-1 leading-snug">
+              已连续在 3 次跨组周会中提及；曾于去年 Q4 出现类似回款滞后。
+            </p>
+</div>
+<div class="mt-2 pt-1.5 border-t border-outline-variant/15 flex items-center justify-between text-[10px] font-code-timestamp text-tertiary">
+<span>关联事件 #09</span>
+<span class="text-secondary font-medium">高优先级</span>
+</div>
+</div>
+<!-- Node 3: Rule Guardrail (Full width inside bento) -->
+<div class="col-span-2 bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/25 shadow-paper-card flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-error-container/30 text-error flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[16px]" data-icon="shield_with_heart">shield_with_heart</span>
+</div>
+<div>
+<div class="font-body-md-medium text-[12.5px] text-on-surface font-semibold">
+                谛听安全红线机制 · #04 人工二次确认
+              </div>
+<div class="font-caption text-[11px] text-on-surface-variant">
+                合同节点修改与回款承诺不得由 AI 直接代发，必须由你手动核验盖章版本。
+              </div>
+</div>
+</div>
+<span class="font-code-stat text-[10px] text-tertiary bg-surface-container px-2 py-1 rounded">不可跨越</span>
+</div>
+</div>
+</section>
+<!-- SECTION 3: RECOMMENDED ACTION ITEMS & AGENT DISPATCH -->
+<section class="px-gutter-mobile py-4 border-t border-outline-variant/20">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">三、今日破局建议与建议动作</h2>
+</div>
+<span class="font-code-timestamp text-[11px] text-secondary font-medium">3 项待裁决</span>
+</div>
+<div class="space-y-3">
+<!-- Action 1: Draft memo via Xiao Di -->
+<div class="bg-surface-container-lowest rounded-2xl p-card-pad-mobile shadow-paper-card border border-outline-variant/30 relative overflow-hidden transition-all hover:border-secondary-container">
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-secondary"></div>
+<div class="pl-1">
+<div class="flex items-start gap-3">
+<!-- Amber Checkbox -->
+<input class="mt-1 w-4 h-4 rounded border-secondary text-secondary focus:ring-secondary/20 cursor-pointer" id="action-1" type="checkbox"/>
+<div class="flex-1">
+<label class="font-body-md-medium text-[13.5px] text-on-surface font-semibold block cursor-pointer" for="action-1">
+                  起草《分阶段交付与验收妥协备忘录》草案
+                </label>
+<p class="font-caption text-[12px] text-on-surface-variant mt-0.5">
+                  将 Alpha-2 定义为封闭灰度，锁定 4月30日 首期款回款条款，避免口头承诺变形。
+                </p>
+<div class="mt-3 flex items-center justify-between">
+<span class="font-code-timestamp text-[10px] text-tertiary">建议耗时 · 15 分钟</span>
+<!-- Agent Dispatch Amber Button -->
+<button class="h-7 px-3 rounded-full bg-secondary-fixed text-on-secondary-fixed text-caption font-body-md-medium hover:bg-secondary-container transition-colors flex items-center gap-1 active:scale-95">
+<span class="material-symbols-outlined text-[13px]" data-icon="smart_toy">smart_toy</span>
+<span>交由小谛起草邮件</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action 2: Calendar 30 min sync -->
+<div class="bg-surface-container-lowest rounded-2xl p-card-pad-mobile shadow-paper-card border border-outline-variant/30 relative overflow-hidden transition-all hover:border-secondary-container">
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-secondary"></div>
+<div class="pl-1">
+<div class="flex items-start gap-3">
+<input class="mt-1 w-4 h-4 rounded border-secondary text-secondary focus:ring-secondary/20 cursor-pointer" id="action-2" type="checkbox"/>
+<div class="flex-1">
+<label class="font-body-md-medium text-[13.5px] text-on-surface font-semibold block cursor-pointer" for="action-2">
+                  向架构组发起 30 分钟专项卡点对齐
+                </label>
+<p class="font-caption text-[12px] text-on-surface-variant mt-0.5">
+                  与张工敲定降噪断点测试的底线白名单，明确灰度名单仅限 5 家友好内测客户。
+                </p>
+<div class="mt-3 flex items-center justify-between">
+<span class="font-code-timestamp text-[10px] text-tertiary">对齐人：张工、李总</span>
+<button class="h-7 px-3 rounded-full bg-surface-container-high text-on-surface text-caption font-body-md-medium hover:bg-surface-variant transition-colors flex items-center gap-1 active:scale-95">
+<span class="material-symbols-outlined text-[13px]" data-icon="event">event</span>
+<span>预占周五 15:00 日历</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action 3: Business Whitepaper stamping -->
+<div class="bg-surface-container-lowest rounded-2xl p-card-pad-mobile shadow-paper-card border border-outline-variant/30 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-tertiary"></div>
+<div class="pl-1">
+<div class="flex items-start gap-3">
+<input class="mt-1 w-4 h-4 rounded border-secondary text-secondary focus:ring-secondary/20 cursor-pointer" id="action-3" type="checkbox"/>
+<div class="flex-1">
+<label class="font-body-md-medium text-[13.5px] text-on-surface font-semibold block cursor-pointer" for="action-3">
+                  跟进华东区商务白皮书盖章版本
+                </label>
+<p class="font-caption text-[12px] text-on-surface-variant mt-0.5">
+                  确认公章流转状态，并在下午法务归档前取得扫描件备案。
+                </p>
+<div class="mt-2 text-right">
+<span class="font-code-timestamp text-[10px] text-tertiary">由你亲自确认 · 红线机制</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FOOTER CITATION NOTE -->
+<div class="px-gutter-mobile py-6 text-center">
+<p class="font-caption text-[11px] text-tertiary">
+        谛听 DiTing 硬件陪伴内核 · 音频切片均经端侧 AES-256 加密保护
+      </p>
+<div class="mt-1 flex items-center justify-center gap-2 text-outline-variant text-[11px]">
+<span>录音源指纹: #REC-240418-01~03</span>
+<span>·</span>
+<span>提炼耗时 4.2s</span>
+</div>
+</div>
+<!-- BOTTOM FLOATING ACTION DOCK (Task Workbench Forwarding) -->
+<aside class="fixed bottom-0 left-0 w-full z-50 pointer-events-none flex justify-center">
+<div class="w-full max-w-md bg-surface/95 backdrop-blur-lg border-t border-outline-variant/30 px-gutter-mobile py-2.5 pb-safe flex items-center justify-between gap-3 pointer-events-auto shadow-floating">
+<!-- Secondary: Re-listen / Re-summarize -->
+<button class="h-10 px-3.5 rounded-full border border-outline-variant/60 text-on-surface font-body-md-medium text-[13px] hover:bg-surface-container-high transition-all flex items-center gap-1.5 active:scale-95 flex-shrink-0">
+<span class="material-symbols-outlined text-[16px] text-tertiary" data-icon="refresh">refresh</span>
+<span>重新提炼</span>
+</button>
+<!-- Primary Mint Action: Flow to Tasks Workbench -->
+<button class="flex-1 h-10 px-4 rounded-full bg-primary hover:bg-primary/90 text-on-primary font-body-md-medium text-[13.5px] shadow-sm flex items-center justify-center gap-1.5 active:scale-98 transition-all">
+<span>一键流转至任务工作台</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</aside>
+</main>
+<script>
+    // Audio Player Toggle Interaction
+    const playBtn = document.getElementById('audio-play-btn');
+    let isPlaying = false;
+    if (playBtn) {
+      playBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        const iconSpan = playBtn.querySelector('.material-symbols-outlined');
+        if (iconSpan) {
+          iconSpan.textContent = isPlaying ? 'pause' : 'play_arrow';
+        }
+      });
+    }
+
+    // Checkbox strikethrough micro-interaction
+    document.querySelectorAll('input[type="checkbox"]').forEach(box => {
+      box.addEventListener('change', (e) => {
+        const label = document.querySelector(`label[for="${e.target.id}"]`);
+        if (label) {
+          if (e.target.checked) {
+            label.classList.add('line-through', 'text-tertiary');
+          } else {
+            label.classList.remove('line-through', 'text-tertiary');
+          }
+        }
+      });
+    });
+  </script>
+</body></html>

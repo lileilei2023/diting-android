@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EAE8E0;font-family:'Noto Sans SC',PingFang SC,system-ui,sans-serif;color:#1B2420}
+a{color:#12A594}a:hover{color:#0E8578}
+*{box-sizing:border-box}
+@keyframes dtPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.08);opacity:1}}
+@keyframes dtBlink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes dtWave{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+@keyframes dtSpin{to{transform:rotate(360deg)}}
+@keyframes dtRing{0%{transform:scale(.6);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;gap:36px;padding:36px;align-items:flex-start;justify-content:center;min-height:100vh">
+
+<div style="flex:none">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="position:relative;height:100%;display:flex;flex-direction:column;background:#F4F3EE;font-family:'Noto Sans SC',PingFang SC,system-ui,sans-serif;color:#1B2420;line-height:1.6">
+
+<!-- ═══ 设备配对 ═══ -->
+<sc-if value="{{ isPair }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="设备配对" style="flex:1;overflow:auto;padding:70px 20px 40px;display:flex;flex-direction:column">
+  <div style="font-family:'Noto Serif SC',serif;font-size:26px;font-weight:600;line-height:1.3;text-wrap:balance">把录音卡靠近手机</div>
+  <div style="color:#636B63;font-size:14px;margin-top:6px">谛听会通过蓝牙识别 MR20 / Farosh，并写入一把只属于这台手机的密钥。</div>
+  <div style="position:relative;height:190px;margin:22px 0 10px;display:flex;align-items:center;justify-content:center">
+    <div style="position:absolute;width:110px;height:110px;border-radius:50%;border:1.5px solid #12A594;animation:dtRing 2.2s ease-out infinite"></div>
+    <div style="position:absolute;width:110px;height:110px;border-radius:50%;border:1.5px solid #12A594;animation:dtRing 2.2s ease-out .8s infinite"></div>
+    <div style="width:64px;height:100px;border-radius:14px;background:#1B2420;box-shadow:0 12px 30px rgba(20,30,25,.25);display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px"><div style="width:8px;height:8px;border-radius:50%;background:{{ pairDotColor }};animation:dtBlink 1.4s infinite"></div></div>
+  </div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;text-transform:uppercase;font-weight:600;margin:6px 0 8px">扫描结果 · {{ pairStateLabel }}</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;box-shadow:0 8px 24px rgba(20,30,25,.06);overflow:hidden">
+    <sc-for list="{{ scanList }}" as="d" hint-placeholder-count="3">
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #E3E4DC;background:{{ d.bg }}">
+      <div style="width:10px;height:10px;border-radius:50%;background:{{ d.dot }}"></div>
+      <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:15px">{{ d.name }}</div><div style="font-size:12px;color:#636B63;font-family:'IBM Plex Mono',monospace">{{ d.meta }}</div></div>
+      <div style="display:flex;gap:2px;align-items:flex-end;height:14px"><div style="width:3px;height:5px;background:{{ d.b1 }};border-radius:1px"></div><div style="width:3px;height:8px;background:{{ d.b2 }};border-radius:1px"></div><div style="width:3px;height:11px;background:{{ d.b3 }};border-radius:1px"></div><div style="width:3px;height:14px;background:{{ d.b4 }};border-radius:1px"></div></div>
+    </div>
+    </sc-for>
+  </div>
+  <sc-if value="{{ pairErr }}" hint-placeholder-val="{{ false }}">
+  <div style="margin-top:14px;background:rgba(201,120,30,.08);border-left:3px solid #C9781E;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.6">
+    <div style="font-weight:600;color:#C9781E">这张卡已绑定另一台手机</div>
+    <div style="color:#636B63;margin-top:2px">录音卡只认一把密钥（SK&amp;ERR）。请在原手机解绑，或长按卡片 6 秒重置（会清除设备端绑定，不影响云端记录）。</div>
+    <div style="display:flex;gap:10px;margin-top:10px"><div onClick="{{ pairReset }}" style="flex:1;text-align:center;padding:9px;border-radius:10px;background:#C9781E;color:#fff;font-weight:600;font-size:13px;cursor:pointer">我已重置，重试</div><div onClick="{{ pairHelp }}" style="flex:1;text-align:center;padding:9px;border-radius:10px;border:1px solid #E3E4DC;background:#fff;font-size:13px;cursor:pointer">原机解绑教程</div></div>
+  </div>
+  </sc-if>
+  <div style="flex:1"></div>
+  <div onClick="{{ pairStart }}" style="margin-top:18px;text-align:center;padding:15px;border-radius:14px;background:{{ pairBtnBg }};color:#fff;font-weight:600;font-size:16px;cursor:pointer;box-shadow:0 8px 24px rgba(18,165,148,.25)">{{ pairBtnLabel }}</div>
+  <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:13px;color:#636B63"><span onClick="{{ pairSimErr }}" style="cursor:pointer;text-decoration:underline dotted">模拟：已被其他手机绑定</span><span onClick="{{ pairHelp }}" style="cursor:pointer">找不到设备？</span></div>
+</div>
+</sc-if>
+
+<!-- ═══ 首页 · 今日谛听 ═══ -->
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="今日谛听" style="flex:1;overflow:auto;padding:62px 18px 110px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between">
+    <div><div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600">今日谛听</div><div style="font-family:'Noto Serif SC',serif;font-size:28px;font-weight:600;line-height:1.2">9月6日 · 周日</div></div>
+    <div onClick="{{ goDevice }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E3E4DC;border-radius:999px;padding:5px 10px 5px 8px;font-size:12px;color:#636B63;cursor:pointer;white-space:nowrap;flex:none"><span style="width:8px;height:8px;border-radius:50%;background:{{ devDot }}"></span>{{ devLabel }}</div>
+  </div>
+
+  <sc-if value="{{ emptyToday }}" hint-placeholder-val="{{ false }}">
+  <div style="margin-top:60px;text-align:center;color:#636B63;font-size:14px;line-height:1.8"><div style="font-family:'Noto Serif SC',serif;font-size:20px;color:#1B2420">今天还没有录音</div>长按下方录音键开始，<br>短按则是 30 秒快速捕捉。</div>
+  </sc-if>
+
+  <sc-if value="{{ hasToday }}" hint-placeholder-val="{{ true }}">
+  <div onClick="{{ openS1 }}" style="margin-top:18px;background:rgba(18,165,148,.09);border:1px solid rgba(18,165,148,.25);border-radius:20px;padding:18px 18px 16px;cursor:pointer">
+    <div style="font-size:11px;letter-spacing:.14em;color:#12A594;font-weight:600">今天最乱的事</div>
+    <div style="font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600;line-height:1.4;margin-top:6px;text-wrap:balance">Q4 定价要不要改成按席位——周会上没吵完，客户下午又提了一次。</div>
+    <div style="font-size:13px;color:#636B63;margin-top:8px">小谛把 2 场对话里 6 处相关发言捞了出来，还有一个你没接住的承诺。</div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center"><span onClick="{{ heroS1 }}" style="font-size:12px;background:#fff;border-radius:999px;padding:3px 10px;color:#12A594;font-weight:600;white-space:nowrap;cursor:pointer">↩ 周会 09:41</span><span onClick="{{ heroS2 }}" style="font-size:12px;background:#fff;border-radius:999px;padding:3px 10px;color:#12A594;font-weight:600;white-space:nowrap;cursor:pointer">↩ 通话 14:23</span><span style="flex:1"></span><span onClick="{{ heroInsight }}" style="font-size:12px;background:#12A594;color:#fff;border-radius:999px;padding:4px 12px;font-weight:600;white-space:nowrap;cursor:pointer">看三种声音 ›</span></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px">
+    <div onClick="{{ tabSessions }}" style="background:#fff;border:1px solid #E3E4DC;border-radius:14px;padding:12px 12px 10px;cursor:pointer"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600">1h13</div><div style="font-size:11px;color:#636B63">记录时长 ›</div></div>
+    <div onClick="{{ tabSessions }}" style="background:#fff;border:1px solid #E3E4DC;border-radius:14px;padding:12px 12px 10px;cursor:pointer"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600">3</div><div style="font-size:11px;color:#636B63">会话场次 ›</div></div>
+    <div onClick="{{ heroInsight }}" style="background:#fff;border:1px solid #E3E4DC;border-radius:14px;padding:12px 12px 10px;cursor:pointer"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600">2</div><div style="font-size:11px;color:#636B63">关键决策 ›</div></div>
+  </div>
+
+  <div style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-left:3px solid #12A594;border-radius:16px;padding:14px 16px;box-shadow:0 8px 24px rgba(20,30,25,.06)">
+    <div style="font-weight:600;font-size:14px;margin-bottom:8px">今日捕捉</div>
+    <sc-for list="{{ captures }}" as="c" hint-placeholder-count="4">
+    <div onClick="{{ c.open }}" style="display:flex;gap:10px;padding:8px 0;border-top:1px solid #E3E4DC;cursor:pointer;align-items:flex-start">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#12A594;font-weight:600;padding-top:3px;flex:none">{{ c.t }}</span>
+      <div style="flex:1;font-size:14px;line-height:1.55">{{ c.text }}<span style="font-size:11px;color:#636B63;margin-left:6px">{{ c.src }}</span></div>
+    </div>
+    </sc-for>
+  </div>
+
+  <div style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;box-shadow:0 8px 24px rgba(20,30,25,.06)">
+    <div style="font-weight:600;font-size:14px;margin-bottom:10px">小谛自动整理</div>
+    <div style="display:flex;gap:8px">
+      <div onClick="{{ goTasksFollow }}" style="flex:1;background:#F4F3EE;border-radius:12px;padding:10px;cursor:pointer"><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:#C9781E">3</div><div style="font-size:12px;color:#636B63">件要继续跟进</div></div>
+      <div onClick="{{ goTasksObserve }}" style="flex:1;background:#F4F3EE;border-radius:12px;padding:10px;cursor:pointer"><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600">2</div><div style="font-size:12px;color:#636B63">个反复被提</div></div>
+      <div onClick="{{ openReport }}" style="flex:1;background:#F4F3EE;border-radius:12px;padding:10px;cursor:pointer"><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600">1</div><div style="font-size:12px;color:#636B63">个可沉淀成内容</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;background:rgba(201,120,30,.08);border:1px solid rgba(201,120,30,.2);border-left:3px solid #C9781E;border-radius:16px;padding:14px 16px">
+    <div style="font-weight:600;font-size:14px;color:#C9781E;margin-bottom:6px">被你忽略的提醒</div>
+    <div style="font-family:'Noto Serif SC',serif;font-size:15px;line-height:1.6;border-left:2px solid rgba(201,120,30,.35);padding-left:10px">"9 月初把数据导出方案发给李总。" <span style="color:#636B63;font-size:12px;font-family:'Noto Sans SC',sans-serif">—— 你，8月20日</span></div>
+    <div style="font-size:13px;color:#636B63;margin-top:8px">今天是 9 月 6 日。这个词今天又被李总提了 3 次，记忆里还没有任何动作。</div>
+    <div style="display:flex;gap:8px;margin-top:10px"><div onClick="{{ openT1 }}" style="padding:8px 14px;border-radius:10px;background:#C9781E;color:#fff;font-size:13px;font-weight:600;cursor:pointer">看小谛拟的草稿</div><div onClick="{{ openS2 }}" style="padding:8px 14px;border-radius:10px;background:#fff;border:1px solid #E3E4DC;font-size:13px;cursor:pointer">回到原声</div></div>
+  </div>
+
+  <div onClick="{{ goWeek }}" style="margin-top:14px;background:#1B2420;color:#E8ECE5;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;gap:12px;align-items:center">
+    <div style="flex:1"><div style="font-size:11px;letter-spacing:.14em;opacity:.7;font-weight:600">周日 · 本周复盘已就绪</div><div style="font-family:'Noto Serif SC',serif;font-size:16px;font-weight:600;margin-top:3px;line-height:1.4">答应了 5 件事，兑现了 3 件。</div></div><span style="font-size:12px;color:#37C9B6;font-weight:600;white-space:nowrap">对表 ›</span>
+  </div>
+  <div style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;box-shadow:0 8px 24px rgba(20,30,25,.06)">
+    <div style="font-weight:600;font-size:14px;margin-bottom:4px">明日待办</div>
+    <sc-for list="{{ todos }}" as="t" hint-placeholder-count="3">
+    <div onClick="{{ t.toggle }}" style="display:flex;gap:12px;align-items:center;padding:9px 0;border-top:1px solid #E3E4DC;cursor:pointer">
+      <div style="width:20px;height:20px;border-radius:5px;border:1.5px solid {{ t.border }};background:{{ t.bg }};display:flex;align-items:center;justify-content:center;flex:none"><svg width="12" height="10" viewBox="0 0 12 10"><path d="M1 5l3.5 3.5L11 1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+      <div style="flex:1;font-size:14px;color:{{ t.color }};text-decoration:{{ t.deco }}">{{ t.text }}</div>
+      <span style="font-size:11px;color:#636B63">{{ t.due }}</span>
+    </div>
+    </sc-for>
+  </div>
+  </sc-if>
+</div>
+<div onClick="{{ openChatGlobal }}" title="和小谛聊聊" style="position:absolute;right:18px;bottom:104px;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#12A594);box-shadow:0 10px 24px rgba(18,165,148,.35);cursor:pointer;z-index:60;animation:dtPulse 3.2s ease-in-out infinite"></div>
+</sc-if>
+
+<!-- ═══ 记录 ═══ -->
+<sc-if value="{{ isSessions }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="记录" style="flex:1;overflow:auto;padding:62px 18px 110px">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end"><div style="font-family:'Noto Serif SC',serif;font-size:28px;font-weight:600">记录</div><div style="display:flex;background:#EBE9E1;border-radius:999px;padding:3px"><span style="font-size:12px;padding:5px 12px;border-radius:999px;background:#fff;font-weight:600;white-space:nowrap">会话</span><span onClick="{{ goWeek }}" style="font-size:12px;padding:5px 12px;border-radius:999px;color:#636B63;font-weight:600;cursor:pointer;white-space:nowrap">周</span><span onClick="{{ goMonth }}" style="font-size:12px;padding:5px 12px;border-radius:999px;color:#636B63;font-weight:600;cursor:pointer;white-space:nowrap">月</span></div></div>
+  <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><sc-for list="{{ sessFilters }}" as="f" hint-placeholder-count="4"><span onClick="{{ f.pick }}" style="padding:5px 12px;border-radius:999px;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.bd }};font-size:12px;cursor:pointer;white-space:nowrap">{{ f.label }}</span></sc-for></div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:20px 0 8px">今天</div>
+  <sc-for list="{{ sessionsToday }}" as="s" hint-placeholder-count="3">
+  <div onClick="{{ s.open }}" style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;box-shadow:0 8px 24px rgba(20,30,25,.06)">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-weight:600;font-size:15px">{{ s.title }}</div><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#636B63">{{ s.time }}</span></div>
+    <div style="font-size:13px;color:#636B63;margin-top:4px;line-height:1.55">{{ s.brief }}</div>
+    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#F4F3EE;white-space:nowrap">{{ s.kind }} · {{ s.dur }}</span><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#F4F3EE;white-space:nowrap">{{ s.speakers }}</span><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(201,120,30,.1);color:#C9781E;font-weight:600;white-space:nowrap">{{ s.todoCount }} 个待办</span></div>
+  </div>
+  </sc-for>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:20px 0 8px">昨天</div>
+  <sc-for list="{{ sessionsPast }}" as="s" hint-placeholder-count="2">
+  <div onClick="{{ s.open }}" style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-weight:600;font-size:15px">{{ s.title }}</div><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#636B63">{{ s.time }}</span></div>
+    <div style="font-size:13px;color:#636B63;margin-top:4px;line-height:1.55">{{ s.brief }}</div>
+  </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<!-- ═══ 会话详情 ═══ -->
+<sc-if value="{{ isSession }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="会话详情" style="flex:1;display:flex;flex-direction:column;min-height:0">
+  <div style="padding:58px 14px 0;background:#F4F3EE">
+    <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sess.title }}</div><div style="font-size:12px;color:#636B63;font-family:'IBM Plex Mono',monospace">{{ sess.time }} · {{ sess.dur }} · {{ sess.speakers }}</div></div><div onClick="{{ openReport }}" style="font-size:12px;color:#12A594;font-weight:600;cursor:pointer">生成报告</div></div>
+    <div style="margin-top:12px;background:#EBE9E1;box-shadow:inset 0 1px 2px rgba(29,36,35,.06);border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:10px">
+      <div onClick="{{ togglePlay }}" style="width:34px;height:34px;border-radius:50%;background:#12A594;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none">{{ playIcon }}</div>
+      <div style="flex:1;position:relative;height:34px;display:flex;align-items:center">{{ waveStatic }}<div style="position:absolute;left:{{ playPct }}%;top:4px;bottom:4px;width:2px;background:#C0492B"></div></div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#636B63;flex:none">{{ playTime }}</span>
+    </div>
+    <div style="display:flex;gap:22px;margin-top:10px;padding:0 4px;border-bottom:1px solid #E3E4DC;align-items:center">
+      <sc-for list="{{ sessTabs }}" as="tb" hint-placeholder-count="3">
+      <div onClick="{{ tb.pick }}" style="padding:8px 2px 9px;font-size:14px;font-weight:600;color:{{ tb.color }};border-bottom:2px solid {{ tb.line }};cursor:pointer;margin-bottom:-1px;white-space:nowrap">{{ tb.label }}</div>
+      </sc-for>
+      <span style="flex:1"></span>
+      <sc-if value="{{ sessTranscript }}" hint-placeholder-val="{{ true }}"><span onClick="{{ toggleBilingual }}" style="font-size:11px;padding:3px 9px;border-radius:999px;background:{{ biBg }};color:{{ biFg }};border:1px solid {{ biBd }};cursor:pointer;white-space:nowrap;margin-bottom:4px">中英对照</span></sc-if>
+    </div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:12px 14px 100px">
+    <sc-if value="{{ sessTranscript }}" hint-placeholder-val="{{ true }}">
+    <sc-for list="{{ segments }}" as="g" hint-placeholder-count="6">
+    <div onClick="{{ g.seek }}" style="display:flex;gap:10px;padding:8px 10px;border-radius:12px;background:{{ g.bg }};cursor:pointer;margin-bottom:2px">
+      <div style="flex:none;width:40px"><div style="font-size:11px;font-weight:600;color:{{ g.spColor }}">{{ g.speaker }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#636B63">{{ g.t }}</div></div>
+      <div style="flex:1;font-size:14px;line-height:1.65">{{ g.text }}<sc-if value="{{ g.hasFix }}" hint-placeholder-val="{{ false }}"><span onClick="{{ g.fix }}" style="display:inline-block;margin-left:6px;font-size:11px;padding:1px 8px;border-radius:999px;background:{{ g.fixBg }};color:{{ g.fixFg }};border:1px dashed {{ g.fixBd }};cursor:pointer;font-weight:600;vertical-align:1px">{{ g.fixLabel }}</span></sc-if><sc-if value="{{ g.showEn }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#636B63;font-style:italic;line-height:1.55;margin-top:4px">{{ g.en }}</div></sc-if></div>
+    </div>
+    </sc-for>
+    <div style="font-size:12px;color:#636B63;text-align:center;margin-top:10px;line-height:1.6">长按任意词可纠正；纠正会自动加入热词，并回训口音模型。</div>
+    </sc-if>
+    <sc-if value="{{ sessSummary }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid #5B7380;border-radius:16px;padding:14px 16px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-weight:600;font-size:14px">会议信息</div><span style="font-size:11px;color:#5B7380;white-space:nowrap">小谛整理</span></div>
+      <div style="font-size:13px;color:#636B63;margin-top:4px;line-height:1.7">{{ sess.time }} · {{ sess.dur }} · 场景：{{ sess.kind }}</div>
+      <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;margin-top:10px;gap:2px"><sc-for list="{{ shares }}" as="sh" hint-placeholder-count="2"><div style="width:{{ sh.pct }}%;background:{{ sh.color }}"></div></sc-for></div>
+      <div style="display:flex;gap:14px;margin-top:6px;flex-wrap:wrap"><sc-for list="{{ shares }}" as="sh" hint-placeholder-count="2"><span onClick="{{ sh.open }}" style="font-size:12px;color:#636B63;display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:{{ sh.color }}"></span>{{ sh.name }} {{ sh.pct }}%</span></sc-for></div>
+    </div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid #5B7380;border-radius:16px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-weight:600;font-size:14px;margin-bottom:6px">会议内容</div>
+      <sc-for list="{{ sess.points }}" as="p" hint-placeholder-count="3">
+      <div onClick="{{ p.seek }}" style="display:flex;gap:10px;padding:7px 0;border-top:1px solid #E3E4DC;font-size:14px;line-height:1.55;cursor:pointer"><span style="font-family:'IBM Plex Mono',monospace;color:#12A594;font-weight:600;font-size:12px;flex:none;padding-top:2px">{{ p.n }}</span><div style="flex:1">{{ p.text }} <span style="font-size:11px;color:#12A594;white-space:nowrap">↩ {{ p.t }}</span></div></div>
+      </sc-for>
+    </div>
+    <div style="background:rgba(201,120,30,.06);border:1px solid rgba(201,120,30,.2);border-left:3px solid #C9781E;border-radius:16px;padding:14px 16px">
+      <div style="font-weight:600;font-size:14px;color:#C9781E;margin-bottom:6px">待办事项</div>
+      <sc-for list="{{ sess.todos }}" as="td" hint-placeholder-count="2">
+      <div style="padding:8px 0;border-top:1px solid rgba(201,120,30,.15)"><div style="font-size:14px">{{ td.text }}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px"><span style="font-size:12px;color:#636B63">{{ td.owner }} · {{ td.due }}</span><span onClick="{{ td.delegate }}" style="font-size:12px;color:#C9781E;font-weight:600;cursor:pointer">交给小谛办 ›</span></div></div>
+      </sc-for>
+    </div>
+    </sc-if>
+    <sc-if value="{{ sessMindmap }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#0E7D70;color:#fff;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px"><div><div style="font-family:'Noto Serif SC',serif;font-weight:600;font-size:16px;line-height:1.3">{{ sess.title }}</div><div style="font-size:12px;opacity:.8;margin-top:2px">{{ sess.brief }}</div></div><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.18);white-space:nowrap;flex:none">主旨</span></div>
+    <sc-for list="{{ tree }}" as="br" hint-placeholder-count="3">
+    <div style="margin:12px 0 0 8px;border-left:2px solid {{ br.color }};padding-left:12px">
+      <div style="background:#fff;border:1px solid #E3E4DC;border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600;font-size:14px">{{ br.title }}</span><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#F4F3EE;color:#636B63;white-space:nowrap">{{ br.n }} 点</span></div>
+      <sc-for list="{{ br.kids }}" as="k" hint-placeholder-count="2">
+      <div onClick="{{ k.seek }}" style="margin:6px 0 0 14px;background:{{ k.bg }};border:1px solid #E3E4DC;border-radius:10px;padding:8px 12px;font-size:13px;line-height:1.5;display:flex;gap:8px;align-items:center;cursor:pointer"><span style="width:6px;height:6px;border-radius:50%;background:{{ br.color }};flex:none"></span><span style="flex:1">{{ k.text }}</span><sc-if value="{{ k.hasT }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ br.color }};background:#fff;border:1px solid #E3E4DC;border-radius:6px;padding:1px 6px;white-space:nowrap">▶ {{ k.t }}</span></sc-if></div>
+      </sc-for>
+    </div>
+    </sc-for>
+    <div style="font-size:12px;color:#636B63;margin-top:12px;text-align:center">点叶子回到原声 · 薄荷=原声要点 · 石板青=小谛归纳 · 琥珀=行动</div>
+    </sc-if>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:10px 14px 30px;background:linear-gradient(180deg,rgba(244,243,238,0),#F4F3EE 40%);display:flex;gap:10px;align-items:center">
+    <div onClick="{{ openInsight }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#fff;border:1px solid #E3E4DC;font-weight:600;font-size:14px;cursor:pointer">升维成洞察</div>
+    <div onClick="{{ regen }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#12A594;color:#fff;font-weight:600;font-size:14px;cursor:pointer">{{ regenLabel }}</div>
+    <div onClick="{{ openChatScoped }}" style="width:48px;height:48px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#12A594);box-shadow:0 8px 20px rgba(18,165,148,.35);cursor:pointer;flex:none"></div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 实时录音 ═══ -->
+<sc-if value="{{ isLive }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="实时录音" style="flex:1;display:flex;flex-direction:column;background:#1B2420;color:#E8ECE5;padding:62px 20px 40px">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div onClick="{{ liveToggleMode }}" style="font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.2);cursor:pointer">{{ liveModeLabel }}</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:{{ liveRtColor }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ liveRtColor }}"></span>{{ liveRtLabel }}</div>
+  </div>
+  <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:rgba(232,236,229,.6)">9月6日 19:02 · 点此改名</span><span onClick="{{ liveCycleScene }}" style="font-size:12px;padding:4px 10px;border-radius:999px;background:rgba(55,201,182,.15);color:#37C9B6;cursor:pointer;font-weight:600">场景：{{ liveSceneName }} ▾</span></div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:52px;font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:12px"><span style="width:12px;height:12px;border-radius:50%;background:#E0533A;animation:dtBlink 1.2s infinite"></span>{{ liveClock }}</div>
+  <div style="height:70px;display:flex;align-items:center;justify-content:center;gap:3px;margin-top:6px">{{ liveWave }}</div>
+  <sc-if value="{{ liveMeeting }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;overflow:hidden;margin-top:14px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;min-height:0">
+    <sc-for list="{{ liveCaps }}" as="lc" hint-placeholder-count="3">
+    <div style="opacity:{{ lc.op }}">
+      <div style="display:flex;gap:8px;align-items:baseline"><span style="font-size:11px;font-weight:600;color:{{ lc.color }};border:1px solid {{ lc.color }};border-radius:4px;padding:0 5px">{{ lc.sp }}</span><span style="font-size:16px;line-height:1.5">{{ lc.zh }}</span></div>
+      <div style="font-size:13px;color:rgba(232,236,229,.55);margin-left:30px;margin-top:2px;line-height:1.5">{{ lc.en }}</div>
+    </div>
+    </sc-for>
+    <sc-if value="{{ liveAiShow }}" hint-placeholder-val="{{ false }}">
+    <div style="background:rgba(224,162,74,.1);border:1px solid rgba(224,162,74,.35);border-left:3px solid #E0A24A;border-radius:12px;padding:10px 12px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;font-weight:600;color:#E0A24A;letter-spacing:.08em">小谛 · 听到一句承诺</span><span style="font-size:11px;color:rgba(232,236,229,.5);font-family:'IBM Plex Mono',monospace">{{ liveClock }}</span></div>
+      <div style="font-size:14px;line-height:1.5;margin-top:4px">"这两天把方案发你" —— 这是你对李总的第 2 次承诺。会后会进「待确认」，现在不打断。</div>
+    </div>
+    </sc-if>
+    <div style="display:flex;gap:8px;align-items:baseline"><span style="font-size:11px;font-weight:600;color:#37C9B6;border:1px solid #37C9B6;border-radius:4px;padding:0 5px">A</span><span style="font-size:16px;color:rgba(232,236,229,.8)">{{ livePartial }}<span style="display:inline-block;width:2px;height:16px;background:#37C9B6;margin-left:2px;vertical-align:-3px;animation:dtBlink 1s infinite"></span></span></div>
+  </div>
+  </sc-if>
+  <sc-if value="{{ liveQuick }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;color:rgba(232,236,229,.6);font-size:14px;line-height:1.8">快速捕捉不联网、不开字幕。<br>松手即存，小谛稍后离线转写。</div>
+  </sc-if>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:12px;color:rgba(232,236,229,.6)"><span>中文 → English</span><div onClick="{{ liveToggleRt }}" style="display:flex;align-items:center;gap:6px;cursor:pointer">实时翻译<div style="width:34px;height:20px;border-radius:999px;background:{{ liveRtToggleBg }};position:relative"><div style="position:absolute;top:2px;left:{{ liveRtKnob }}px;width:16px;height:16px;border-radius:50%;background:#fff"></div></div></div></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:18px">
+    <div onClick="{{ back }}" style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px">取消</div>
+    <div onClick="{{ livePause }}" style="width:64px;height:64px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#1B2420;font-weight:600;font-size:13px">{{ livePauseLabel }}</div>
+    <div onClick="{{ liveFinish }}" style="width:52px;height:52px;border-radius:50%;background:#12A594;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="20" height="16" viewBox="0 0 20 16"><path d="M2 8l6 6L18 2" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 洞察 ═══ -->
+<sc-if value="{{ isInsight }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="洞察" style="flex:1;display:flex;flex-direction:column;min-height:0">
+  <div style="padding:58px 14px 0">
+    <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="flex:1;min-width:0"><div style="font-family:'Noto Serif SC',serif;font-weight:600;font-size:18px">Q4 定价的三种声音</div><div style="font-size:12px;color:#636B63">来自 2 场会话 · 9月6日</div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex:none"><div onClick="{{ openS1 }}" style="font-size:12px;color:#12A594;font-weight:600;cursor:pointer;white-space:nowrap">事件详情 ›</div><div onClick="{{ openReport }}" style="font-size:12px;color:#12A594;font-weight:600;cursor:pointer;white-space:nowrap">生成报告 ›</div></div></div>
+    <div style="display:flex;gap:22px;margin-top:12px;padding:0 4px;border-bottom:1px solid #E3E4DC">
+      <sc-for list="{{ insTabs }}" as="tb" hint-placeholder-count="3">
+      <div onClick="{{ tb.pick }}" style="padding:8px 2px 9px;font-size:14px;font-weight:600;color:{{ tb.color }};border-bottom:2px solid {{ tb.line }};cursor:pointer;margin-bottom:-1px">{{ tb.label }}</div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:12px 14px 100px">
+    <sc-if value="{{ insMinutes }}" hint-placeholder-val="{{ true }}">
+    <sc-for list="{{ insItems }}" as="it" hint-placeholder-count="4">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;margin-bottom:10px;display:flex;gap:12px">
+      <div style="font-family:'Noto Serif SC',serif;font-size:22px;font-weight:600;color:#12A594;line-height:1;flex:none">{{ it.n }}</div>
+      <div style="flex:1"><div style="font-weight:600;font-size:14px">{{ it.title }}</div><div style="font-size:13px;color:#636B63;line-height:1.6;margin-top:3px">{{ it.body }}</div><span onClick="{{ it.seek }}" style="display:inline-block;margin-top:8px;font-size:11px;color:#12A594;font-weight:600;background:rgba(18,165,148,.09);border-radius:999px;padding:2px 9px;cursor:pointer;white-space:nowrap">回到原声 {{ it.t }}</span></div>
+    </div>
+    </sc-for>
+    </sc-if>
+    <sc-if value="{{ insConfirm }}" hint-placeholder-val="{{ false }}">
+    <div style="font-size:12px;color:#636B63;margin:2px 4px 10px;line-height:1.6">小谛不确定的事不会写进记忆。你点「确认」它才成为事实；点「存疑」则标注为可证伪。</div>
+    <sc-for list="{{ confirmItems }}" as="ci" hint-placeholder-count="3">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid {{ ci.bar }};border-radius:16px;padding:14px 16px;margin-bottom:10px">
+      <div style="font-size:14px;line-height:1.6">{{ ci.text }}</div>
+      <div style="font-size:12px;color:#636B63;margin-top:4px">{{ ci.why }}</div>
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center"><div onClick="{{ ci.confirm }}" style="padding:7px 14px;border-radius:10px;background:{{ ci.cBg }};color:{{ ci.cFg }};border:1px solid {{ ci.cBd }};font-size:13px;font-weight:600;cursor:pointer">{{ ci.cLabel }}</div><div onClick="{{ ci.doubt }}" style="padding:7px 14px;border-radius:10px;background:{{ ci.dBg }};color:{{ ci.dFg }};border:1px solid #E3E4DC;font-size:13px;cursor:pointer">{{ ci.dLabel }}</div><span style="flex:1"></span><span style="font-size:11px;color:#12A594;font-weight:600">↩ {{ ci.t }}</span></div>
+    </div>
+    </sc-for>
+    </sc-if>
+    <sc-if value="{{ insTension }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:16px">
+      <div style="font-weight:600;font-size:14px;margin-bottom:12px">定位张力 · 谁站在哪</div>
+      <sc-for list="{{ tensions }}" as="tn" hint-placeholder-count="3">
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#636B63"><span>{{ tn.left }}</span><span>{{ tn.right }}</span></div>
+        <div style="position:relative;height:6px;background:#F4F3EE;border-radius:3px;margin-top:6px"><div style="position:absolute;left:{{ tn.a }}%;top:-5px;width:16px;height:16px;border-radius:50%;background:#12A594;border:2px solid #fff;transform:translateX(-50%)"></div><div style="position:absolute;left:{{ tn.b }}%;top:-5px;width:16px;height:16px;border-radius:50%;background:#C9781E;border:2px solid #fff;transform:translateX(-50%)"></div><div style="position:absolute;left:{{ tn.c }}%;top:-5px;width:16px;height:16px;border-radius:50%;background:#636B63;border:2px solid #fff;transform:translateX(-50%)"></div></div>
+        <div style="font-size:13px;margin-top:10px;line-height:1.6">{{ tn.note }}</div>
+      </div>
+      </sc-for>
+      <div style="display:flex;gap:12px;font-size:11px;color:#636B63;margin-top:4px"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#12A594;margin-right:4px"></span>你</span><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#C9781E;margin-right:4px"></span>李总（客户）</span><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#636B63;margin-right:4px"></span>小张</span></div>
+    </div>
+    </sc-if>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:10px 14px 30px;background:linear-gradient(180deg,rgba(244,243,238,0),#F4F3EE 40%);display:flex;gap:10px">
+    <div onClick="{{ regen }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#fff;border:1px solid #E3E4DC;font-weight:600;font-size:14px;cursor:pointer">{{ regenLabel2 }}</div>
+    <div onClick="{{ askPublish }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#12A594;color:#fff;font-weight:600;font-size:14px;cursor:pointer">发布到团队</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 任务工作台 ═══ -->
+<sc-if value="{{ isTasks }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="任务工作台" style="flex:1;overflow:auto;padding:62px 18px 110px">
+  <div onClick="{{ openChatGlobal }}" style="background:#fff;border:1px solid #E3E4DC;border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 8px 24px rgba(20,30,25,.06)">
+    <div style="width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#12A594);flex:none;animation:dtPulse 3s ease-in-out infinite"></div>
+    <div style="flex:1"><div style="font-weight:600;font-size:15px">和小谛聊聊</div><div onClick="{{ goGrowthStop }}" style="font-size:12px;color:#636B63;cursor:pointer">Lv.4 整理者 · 陪伴 37 天 · BP 1,280 ›</div></div>
+    <div style="font-size:12px;color:#12A594;font-weight:600">›</div>
+  </div>
+  <div style="display:flex;gap:22px;margin-top:16px;padding:0 4px;border-bottom:1px solid #E3E4DC">
+    <sc-for list="{{ taskTabs }}" as="tb" hint-placeholder-count="3">
+    <div onClick="{{ tb.pick }}" style="padding:8px 2px 9px;font-size:14px;font-weight:600;color:{{ tb.color }};border-bottom:2px solid {{ tb.line }};cursor:pointer;margin-bottom:-1px">{{ tb.label }}</div>
+    </sc-for>
+  </div>
+  <sc-if value="{{ taskTabTasks }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+    <sc-for list="{{ taskFilters }}" as="f" hint-placeholder-count="5">
+    <span onClick="{{ f.pick }}" style="padding:5px 12px;border-radius:999px;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.bd }};font-size:12px;cursor:pointer;white-space:nowrap">{{ f.label }}</span>
+    </sc-for>
+  </div>
+  <sc-for list="{{ taskList }}" as="tk" hint-placeholder-count="4">
+  <div onClick="{{ tk.open }}" style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;margin-top:10px;cursor:pointer;box-shadow:0 8px 24px rgba(20,30,25,.06)">
+    <div style="display:flex;align-items:flex-start;gap:10px"><div style="width:9px;height:9px;border-radius:50%;background:{{ tk.dot }};margin-top:7px;flex:none"></div><div style="flex:1"><div style="font-weight:600;font-size:15px;line-height:1.4">{{ tk.title }}</div><div style="font-size:13px;color:#636B63;margin-top:3px;line-height:1.55">{{ tk.note }}</div></div></div>
+    <div style="display:flex;gap:6px;margin-top:10px;margin-left:19px;flex-wrap:wrap"><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#F4F3EE;white-space:nowrap">{{ tk.source }}</span><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:{{ tk.stBg }};color:{{ tk.stFg }};font-weight:600;white-space:nowrap">{{ tk.status }}</span></div>
+  </div>
+  </sc-for>
+  </sc-if>
+  <sc-if value="{{ taskTabNotes }}" hint-placeholder-val="{{ false }}">
+  <div style="font-size:12px;color:#636B63;margin:14px 4px 8px;line-height:1.6">碎念是你随口说、还没成型的想法。小谛只收着，不催你。</div>
+  <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3">
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;margin-bottom:10px"><div style="font-family:'Noto Serif SC',serif;font-size:15px;line-height:1.6">{{ n.text }}</div><div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:#636B63"><span>{{ n.when }}</span><span onClick="{{ n.toTask }}" style="color:#C9781E;font-weight:600;cursor:pointer">变成任务 ›</span></div></div>
+  </sc-for>
+  </sc-if>
+  <sc-if value="{{ taskTabObserve }}" hint-placeholder-val="{{ false }}">
+  <div style="font-size:12px;color:#636B63;margin:14px 4px 8px;line-height:1.6">观察来自记忆图谱：同一个词在多场会话里反复出现，或两次承诺互相冲突。</div>
+  <sc-for list="{{ observes }}" as="o" hint-placeholder-count="2">
+  <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid {{ o.bar }};border-radius:16px;padding:14px 16px;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-weight:600;font-size:14px">{{ o.title }}</div><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:{{ o.bar }};font-weight:600">{{ o.stat }}</span></div>
+    <div style="font-size:13px;color:#636B63;margin-top:4px;line-height:1.6">{{ o.body }}</div>
+    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+      <sc-for list="{{ o.refs }}" as="r" hint-placeholder-count="2"><span onClick="{{ r.open }}" style="font-size:11px;color:#12A594;font-weight:600;background:rgba(18,165,148,.09);border-radius:999px;padding:2px 9px;cursor:pointer;white-space:nowrap">{{ r.label }}</span></sc-for>
+    </div>
+  </div>
+  </sc-for>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ═══ 任务详情 ═══ -->
+<sc-if value="{{ isTask }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="任务详情" style="flex:1;display:flex;flex-direction:column;min-height:0">
+  <div style="flex:1;overflow:auto;padding:58px 14px 130px">
+    <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="flex:1;font-size:12px;color:#636B63">任务 · {{ task.source }}</div><span style="font-size:11px;padding:3px 10px;border-radius:999px;background:{{ task.stBg }};color:{{ task.stFg }};font-weight:600;white-space:nowrap;flex:none">{{ task.status }}</span></div>
+    <div style="font-family:'Noto Serif SC',serif;font-size:22px;font-weight:600;line-height:1.35;margin-top:14px;text-wrap:balance">{{ task.title }}</div>
+    <div style="margin-top:10px;background:#fff;border:1px solid #E3E4DC;border-left:3px solid #5B7380;border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.6"><span style="font-weight:600;color:#5B7380">小谛：</span>{{ task.note }}</div>
+    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+      <sc-for list="{{ task.refs }}" as="r" hint-placeholder-count="2"><span onClick="{{ r.open }}" style="font-size:11px;color:#12A594;font-weight:600;background:rgba(18,165,148,.09);border-radius:999px;padding:3px 10px;cursor:pointer;white-space:nowrap">↩ {{ r.label }}</span></sc-for>
+      <span onClick="{{ goAgents }}" style="font-size:11px;color:#5B7380;font-weight:600;background:#F4F3EE;border-radius:999px;padding:3px 10px;cursor:pointer;white-space:nowrap">Skill：{{ task.skills }} ›</span>
+    </div>
+
+    <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:22px 0 10px">执行链路 · 每一步外部副作用都要你点头</div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:6px 16px">
+      <sc-for list="{{ taskSteps }}" as="st" hint-placeholder-count="5">
+      <div style="display:flex;gap:12px;padding:10px 0;position:relative">
+        <div style="display:flex;flex-direction:column;align-items:center;flex:none;width:16px"><div style="width:12px;height:12px;border-radius:50%;background:{{ st.dot }};border:2px solid {{ st.ring }};box-sizing:border-box;margin-top:4px"></div><div style="flex:1;width:2px;background:{{ st.lineBg }};margin-top:4px"></div></div>
+        <div style="flex:1;padding-bottom:4px"><div style="font-size:14px;font-weight:{{ st.fw }};color:{{ st.fg }}">{{ st.label }}</div><div style="font-size:12px;color:#636B63;line-height:1.55">{{ st.desc }}</div></div>
+      </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ taskRunning }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px"><div style="width:22px;height:22px;border-radius:50%;border:2.5px solid rgba(18,165,148,.2);border-top-color:#12A594;animation:dtSpin .9s linear infinite;flex:none"></div><div style="font-size:13px;line-height:1.5"><b>{{ runStep }}</b><br><span style="color:#636B63">正在读取 2 场会话原文与记忆图谱中「李总」「数据导出」节点…</span></div></div>
+    </sc-if>
+
+    <sc-if value="{{ taskHasArtifact }}" hint-placeholder-val="{{ false }}">
+    <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:22px 0 10px">采用后发布到 <span onClick="{{ goDest }}" style="color:#12A594;cursor:pointer;letter-spacing:0;font-weight:600;margin-left:6px">管理目的地 ›</span></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ taskDests }}" as="td" hint-placeholder-count="4"><span onClick="{{ td.pick }}" style="font-size:12px;padding:5px 11px;border-radius:999px;background:{{ td.bg }};color:{{ td.fg }};border:1px solid {{ td.bd }};cursor:pointer;white-space:nowrap">{{ td.label }}</span></sc-for></div>
+    <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:22px 0 10px">产出工件 · {{ task.artType }}</div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+      <div style="padding:10px 14px;background:#F4F3EE;font-size:12px;color:#636B63;display:flex;justify-content:space-between"><span>{{ task.artName }}</span><span style="font-family:'IBM Plex Mono',monospace">v{{ task.artVer }}</span></div>
+      <div style="padding:14px 16px;font-size:13px;line-height:1.75;white-space:pre-line">{{ task.artBody }}</div>
+    </div>
+    </sc-if>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:10px 14px 30px;background:linear-gradient(180deg,rgba(244,243,238,0),#F4F3EE 40%);display:flex;gap:10px">
+    <sc-for list="{{ taskActions }}" as="a" hint-placeholder-count="2">
+    <div onClick="{{ a.run }}" style="flex:{{ a.flex }};text-align:center;padding:13px;border-radius:14px;background:{{ a.bg }};color:{{ a.fg }};border:1px solid {{ a.bd }};font-weight:600;font-size:14px;cursor:pointer">{{ a.label }}</div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ AI 对话 ═══ -->
+<sc-if value="{{ isChat }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="AI 对话" style="flex:1;display:flex;flex-direction:column;min-height:0">
+  <div style="padding:58px 14px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #E3E4DC;background:#F4F3EE">
+    <div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div>
+    <div style="width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#12A594);animation:{{ ballAnim }}"></div>
+    <div style="flex:1"><div style="font-weight:600;font-size:15px">小谛</div><div style="font-size:12px;color:#636B63">{{ chatScopeLabel }}</div></div>
+    <div onClick="{{ goPlan }}" style="font-size:11px;padding:3px 8px;border-radius:6px;background:#1B2420;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap">{{ planLabel }} ›</div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:14px 14px 10px;display:flex;flex-direction:column;gap:12px">
+    <sc-for list="{{ chatMsgs }}" as="m" hint-placeholder-count="4">
+    <div style="display:flex;justify-content:{{ m.justify }}">
+      <div style="max-width:82%;padding:10px 14px;border-radius:16px;background:{{ m.bg }};color:{{ m.fg }};font-size:14px;line-height:1.6;border:1px solid {{ m.bd }}">{{ m.text }}
+        <sc-if value="{{ m.hasLink }}" hint-placeholder-val="{{ false }}"><div onClick="{{ m.link }}" style="margin-top:8px;padding:8px 10px;border-radius:10px;background:rgba(201,120,30,.1);color:#C9781E;font-weight:600;font-size:13px;cursor:pointer">{{ m.linkLabel }}</div></sc-if>
+        <sc-if value="{{ m.hasRef }}" hint-placeholder-val="{{ false }}"><div onClick="{{ m.ref }}" style="margin-top:6px;font-size:11px;color:#12A594;font-weight:600;cursor:pointer">↩ {{ m.refLabel }}</div></sc-if>
+      </div>
+    </div>
+    </sc-for>
+    <sc-if value="{{ chatTyping }}" hint-placeholder-val="{{ false }}"><div style="display:flex"><div style="padding:12px 16px;border-radius:16px;background:#fff;border:1px solid #E3E4DC;display:flex;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:#12A594;animation:dtBlink 1s infinite"></span><span style="width:6px;height:6px;border-radius:50%;background:#12A594;animation:dtBlink 1s .2s infinite"></span><span style="width:6px;height:6px;border-radius:50%;background:#12A594;animation:dtBlink 1s .4s infinite"></span></div></div></sc-if>
+  </div>
+  <div style="padding:8px 14px 0;display:flex;gap:6px;flex-wrap:wrap">
+    <sc-for list="{{ chatChips }}" as="ch" hint-placeholder-count="3"><span onClick="{{ ch.send }}" style="font-size:12px;padding:5px 11px;border-radius:999px;background:#fff;border:1px solid #E3E4DC;cursor:pointer;color:#12A594;white-space:nowrap">{{ ch.label }}</span></sc-for>
+  </div>
+  <div style="padding:10px 14px 34px;display:flex;align-items:center;gap:10px">
+    <div onClick="{{ chatMic }}" style="width:44px;height:44px;border-radius:50%;background:{{ micBg }};display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg width="14" height="20" viewBox="0 0 14 20"><rect x="4" y="1" width="6" height="11" rx="3" fill="{{ micFg }}"></rect><path d="M1 9a6 6 0 0012 0M7 15v4" stroke="{{ micFg }}" stroke-width="1.8" fill="none" stroke-linecap="round"></path></svg></div>
+    <input value="{{ chatInput }}" onChange="{{ chatType }}" onKeyDown="{{ chatKey }}" placeholder="问小谛，或说「帮我…」直接派活" style="flex:1;height:44px;border-radius:999px;border:1px solid #E3E4DC;background:#fff;padding:0 16px;font-size:14px;font-family:inherit;outline:none;color:#1B2420">
+    <div onClick="{{ chatSend }}" style="width:44px;height:44px;border-radius:50%;background:#12A594;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 13V3M3 8l5-5 5 5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 可视化报告 ═══ -->
+<sc-if value="{{ isReport }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="可视化报告" style="flex:1;display:flex;flex-direction:column;min-height:0">
+  <div style="padding:58px 14px 10px;display:flex;align-items:center;gap:8px">
+    <div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div>
+    <div style="flex:1;display:flex;gap:6px;overflow:auto">
+      <sc-for list="{{ reportTpls }}" as="rt" hint-placeholder-count="3"><span onClick="{{ rt.pick }}" style="font-size:12px;padding:5px 11px;border-radius:999px;background:{{ rt.bg }};color:{{ rt.fg }};border:1px solid {{ rt.bd }};cursor:pointer;white-space:nowrap">{{ rt.label }}</span></sc-for>
+    </div>
+    <div onClick="{{ shareReport }}" style="font-size:12px;color:#12A594;font-weight:600;cursor:pointer;white-space:nowrap">分享</div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:4px 14px 100px">
+    <div style="background:{{ rpBg }};color:{{ rpFg }};border-radius:20px;padding:22px 20px;border:1px solid #E3E4DC">
+      <div style="font-size:11px;letter-spacing:.16em;opacity:.7;font-weight:600">{{ rpKicker }}</div>
+      <div style="font-family:'Noto Serif SC',serif;font-size:26px;font-weight:600;line-height:1.3;margin-top:6px;text-wrap:balance">{{ rpTitle }}</div>
+      <div style="font-size:13px;opacity:.75;margin-top:6px;line-height:1.6">{{ rpSub }}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px">
+        <sc-for list="{{ rpStats }}" as="rs" hint-placeholder-count="3"><div style="background:{{ rpTileBg }};border-radius:12px;padding:10px"><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600">{{ rs.v }}</div><div style="font-size:11px;opacity:.75">{{ rs.k }}</div></div></sc-for>
+      </div>
+    </div>
+    <div style="margin-top:12px;background:rgba(18,165,148,.09);border:1px solid rgba(18,165,148,.25);border-radius:16px;padding:14px 16px"><div style="font-size:11px;letter-spacing:.14em;color:#12A594;font-weight:600">核心结论</div><div style="font-family:'Noto Serif SC',serif;font-size:16px;line-height:1.55;margin-top:6px">{{ rpConclusion }}</div></div>
+    <sc-for list="{{ rpSections }}" as="sec" hint-placeholder-count="3">
+    <div style="margin-top:12px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;display:flex;gap:12px"><div style="font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;color:#12A594;line-height:1.1">{{ sec.n }}</div><div><div style="font-weight:600;font-size:14px">{{ sec.title }}</div><div style="font-size:13px;color:#636B63;line-height:1.65;margin-top:3px">{{ sec.body }}</div></div></div>
+    </sc-for>
+    <div style="font-size:11px;color:#636B63;text-align:center;margin-top:14px;line-height:1.7">由谛听基于 2 场会话原声与记忆图谱生成<br>只读链接 7 天后过期</div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:10px 14px 30px;background:linear-gradient(180deg,rgba(244,243,238,0),#F4F3EE 40%);display:flex;gap:10px">
+    <div onClick="{{ regen }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#fff;border:1px solid #E3E4DC;font-weight:600;font-size:14px;cursor:pointer">{{ regenLabel3 }}</div>
+    <div onClick="{{ exportReport }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#12A594;color:#fff;font-weight:600;font-size:14px;cursor:pointer">导出长图</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 我的 ═══ -->
+<sc-if value="{{ isMe }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="我的" style="flex:1;overflow:auto;padding:62px 18px 110px">
+  <div style="font-family:'Noto Serif SC',serif;font-size:28px;font-weight:600">我的</div>
+  <div onClick="{{ goGrowth }}" style="margin-top:14px;background:linear-gradient(135deg,#12A594,#0E8578);color:#fff;border-radius:20px;padding:18px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 12px 30px rgba(18,165,148,.3)">
+    <div style="width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,rgba(255,255,255,.3));flex:none"></div>
+    <div style="flex:1"><div style="font-weight:600;font-size:16px">阿澈 · 与小谛相伴 37 天</div><div style="font-size:12px;opacity:.85;margin-top:2px">Lv.4 整理者 · BP 1,280 · 距 Lv.5 还差 220</div><div style="height:4px;background:rgba(255,255,255,.3);border-radius:2px;margin-top:8px"><div style="width:72%;height:100%;background:#fff;border-radius:2px"></div></div></div>
+  </div>
+  <div style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+    <div onClick="{{ goDevice }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #E3E4DC;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:#1B2420;flex:none"></div><div style="flex:1"><div style="font-size:15px;font-weight:600">录音卡</div><div style="font-size:12px;color:#636B63">MR20 · {{ devLabel }} · 电量 82%</div></div><span style="color:#636B63">›</span></div>
+    <div onClick="{{ goPlan }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #E3E4DC;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:#C9781E;flex:none"></div><div style="flex:1"><div style="font-size:15px;font-weight:600">能力与订阅</div><div style="font-size:12px;color:#636B63">{{ planLabel }} · 实时字幕 / Agent 执行 / 团队发布</div></div><span style="color:#636B63">›</span></div>
+    <div onClick="{{ goTeach }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #E3E4DC;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:radial-gradient(circle at 30% 30%,#fff,#12A594);flex:none"></div><div style="flex:1"><div style="font-size:15px;font-weight:600">教小谛</div><div style="font-size:12px;color:#636B63">声纹 · 热词 {{ hotCount }} · 场景 {{ sceneCount }} · Skill {{ skillCount }}</div></div><span style="color:#636B63">›</span></div>
+    <div onClick="{{ goPair }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:#12A594;flex:none"></div><div style="flex:1"><div style="font-size:15px;font-weight:600">重新配对 / 添加设备</div><div style="font-size:12px;color:#636B63">MR20、Farosh 均可作为音频入口</div></div><span style="color:#636B63">›</span></div>
+  </div>
+  <div style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+    <sc-for list="{{ meToggles }}" as="tg" hint-placeholder-count="3">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #E3E4DC"><div style="flex:1;min-width:0"><div style="font-size:15px">{{ tg.name }}</div><div style="font-size:12px;color:#636B63">{{ tg.desc }}</div></div><div onClick="{{ tg.toggle }}" style="width:44px;height:26px;border-radius:999px;background:{{ tg.bg }};position:relative;cursor:pointer;flex:none"><div style="position:absolute;top:3px;left:{{ tg.knob }}px;width:20px;height:20px;border-radius:50%;background:#fff"></div></div></div>
+    </sc-for>
+  </div>
+  <div style="font-size:12px;color:#636B63;text-align:center;margin-top:20px">谛听 v1.0 预研 · 听得见，更听得懂</div>
+</div>
+</sc-if>
+
+<!-- ═══ 成长卡 ═══ -->
+<sc-if value="{{ isGrowth }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="成长卡" style="flex:1;overflow:auto;padding:58px 18px 60px">
+  <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="font-weight:600;font-size:16px">成长卡</div></div>
+  <div style="margin-top:22px;text-align:center"><div style="width:96px;height:96px;border-radius:50%;margin:0 auto;background:radial-gradient(circle at 30% 30%,#fff,#12A594);box-shadow:0 16px 40px rgba(18,165,148,.35);animation:dtPulse 3s ease-in-out infinite"></div><div style="font-family:'Noto Serif SC',serif;font-size:22px;font-weight:600;margin-top:14px">Lv.4 整理者</div><div style="font-size:13px;color:#636B63">下一阶：Lv.5 参谋 —— 小谛开始替你预判风险</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:14px;padding:12px;text-align:center"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600">37</div><div style="font-size:11px;color:#636B63">陪伴天数</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:14px;padding:12px;text-align:center"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600">1,280</div><div style="font-size:11px;color:#636B63">BP</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:14px;padding:12px;text-align:center"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600">214</div><div style="font-size:11px;color:#636B63">记忆节点</div></div>
+  </div>
+  <div style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px">
+    <div style="font-weight:600;font-size:14px;margin-bottom:6px">BP 怎么来</div>
+    <div style="font-size:13px;color:#636B63;line-height:1.8">BP 不奖励"录得多"，只奖励"闭环"：<br>· 确认一条待确认事实 +5<br>· 采用一个 Agent 产出 +20<br>· 回到原声纠正一次转写 +3<br>· 连续 7 天看完今日谛听 +30</div>
+  </div>
+  <div style="margin-top:14px;background:rgba(18,165,148,.09);border:1px solid rgba(18,165,148,.25);border-radius:16px;padding:14px 16px;font-size:13px;line-height:1.7">小谛现在知道你世界里的 <b>18 个人</b>、<b>9 个承诺</b>、<b>4 项进行中的决策</b>。它们都能回溯到原声，随时可删。</div>
+</div>
+</sc-if>
+
+<!-- ═══ 设备管理 ═══ -->
+<sc-if value="{{ isDevice }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="设备管理" style="flex:1;overflow:auto;padding:58px 18px 60px">
+  <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="font-weight:600;font-size:16px">录音卡</div></div>
+  <div style="margin-top:18px;background:#1B2420;color:#E8ECE5;border-radius:20px;padding:20px;display:flex;gap:16px;align-items:center">
+    <div style="width:44px;height:70px;border-radius:10px;background:#2A332E;flex:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px"><div style="width:6px;height:6px;border-radius:50%;background:{{ devDot }}"></div></div>
+    <div style="flex:1"><div style="font-weight:600;font-size:16px">MR20 · 阿澈的卡</div><div style="font-size:12px;opacity:.7;font-family:'IBM Plex Mono',monospace;margin-top:2px">SN MR20-7F3A2C · FW 1.4.2</div><div style="display:flex;gap:6px;margin-top:10px"><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.12);white-space:nowrap">{{ devLabel }}</span><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.12);white-space:nowrap">电量 82%</span><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.12);white-space:nowrap">剩余 6.2h</span></div></div>
+  </div>
+  <sc-if value="{{ devBackfill }}" hint-placeholder-val="{{ false }}">
+  <div style="margin-top:12px;background:rgba(201,120,30,.08);border-left:3px solid #C9781E;border-radius:12px;padding:12px 14px;font-size:13px"><div style="font-weight:600;color:#C9781E">回填中 64%</div><div style="color:#636B63;margin-top:2px">蓝牙曾断开 4 分钟，卡上缓存的 2 段音频正在补传。补齐后小谛会重新对齐转写。</div><div style="height:4px;background:#fff;border-radius:2px;margin-top:8px"><div style="width:64%;height:100%;background:#C9781E;border-radius:2px"></div></div></div>
+  </sc-if>
+  <div style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #E3E4DC;font-size:14px"><span>录音码率</span><span style="color:#636B63;font-family:'IBM Plex Mono',monospace">32 kbps</span></div>
+    <div style="display:flex;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #E3E4DC;font-size:14px"><span>设备端 VAD（Conversation）</span><span style="color:#12A594;font-weight:600">开</span></div>
+    <div style="display:flex;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #E3E4DC;font-size:14px"><span>卡上未同步文件</span><span style="color:#636B63">2 个 · 18 MB</span></div>
+    <div style="display:flex;justify-content:space-between;padding:13px 16px;font-size:14px"><span>配对于</span><span style="color:#636B63">7月31日（更早的录音不自动上传）</span></div>
+  </div>
+  <div onClick="{{ addFarosh }}" style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;opacity:.85;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;border:1.5px dashed #636B63;flex:none"></div><div style="flex:1"><div style="font-size:14px;font-weight:600">添加 Farosh</div><div style="font-size:12px;color:#636B63">第二张卡；理解与行动层不感知硬件差异</div></div></div>
+  <div onClick="{{ goPair }}" style="margin-top:22px;text-align:center;padding:13px;border-radius:14px;border:1px solid #C0492B;color:#C0492B;font-weight:600;font-size:14px;cursor:pointer">解绑并重置密钥</div>
+</div>
+</sc-if>
+
+<!-- ═══ 能力与订阅 ═══ -->
+<sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="能力与订阅" style="flex:1;overflow:auto;padding:58px 18px 60px">
+  <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="font-weight:600;font-size:16px">能力与订阅</div></div>
+  <div style="font-size:13px;color:#636B63;margin:16px 4px 10px;line-height:1.6">按"能力"而不是"分钟数"分层：贵的是实时通道与 Agent 执行，转写与摘要走批处理，不限量。</div>
+  <sc-for list="{{ plans }}" as="p" hint-placeholder-count="3">
+  <div onClick="{{ p.pick }}" style="background:#fff;border:1.5px solid {{ p.bd }};border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-weight:600;font-size:16px">{{ p.name }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#636B63">{{ p.price }}</div></div>
+    <div style="font-size:13px;color:#636B63;line-height:1.7;margin-top:4px;white-space:pre-line">{{ p.feats }}</div>
+  </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<!-- ═══ 首次引导 · 教小谛 ═══ -->
+<sc-if value="{{ isOnboard }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="首次引导" style="flex:1;display:flex;flex-direction:column;min-height:0;padding:62px 20px 36px">
+  <div style="display:flex;gap:6px;align-items:center"><sc-for list="{{ obDots }}" as="d" hint-placeholder-count="3"><div style="height:4px;flex:1;border-radius:2px;background:{{ d.bg }}"></div></sc-for><span style="font-size:11px;color:#636B63;margin-left:6px;font-family:'IBM Plex Mono',monospace">{{ obStepLabel }}</span></div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#12A594;font-weight:600;margin-top:22px">{{ obKicker }}</div>
+  <div style="font-family:'Noto Serif SC',serif;font-size:24px;font-weight:600;line-height:1.3;margin-top:4px;text-wrap:balance">{{ obTitle }}</div>
+  <div style="font-size:13px;color:#636B63;margin-top:6px;line-height:1.6">{{ obSub }}</div>
+
+  <sc-if value="{{ obStep1 }}" hint-placeholder-val="{{ true }}">
+  <div style="margin-top:18px;background:#fff;border:1px solid #E3E4DC;border-radius:20px;padding:18px;box-shadow:0 8px 24px rgba(20,30,25,.06)">
+    <div style="font-size:11px;color:#636B63;letter-spacing:.14em;font-weight:600">请朗读 · {{ readIdxLabel }}</div>
+    <div style="font-family:'Noto Serif SC',serif;font-size:19px;line-height:1.6;margin-top:8px">{{ readSentence }}</div>
+    <div style="height:44px;display:flex;align-items:center;justify-content:center;gap:3px;margin-top:12px">{{ obWave }}</div>
+    <sc-if value="{{ readDone }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:8px;background:#F4F3EE;border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.7"><span style="color:#636B63">识别：</span>{{ readHeard }}<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"><sc-for list="{{ readFixes }}" as="f" hint-placeholder-count="1"><span onClick="{{ f.fix }}" style="font-size:12px;padding:3px 10px;border-radius:999px;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.bd }};cursor:pointer">{{ f.label }}</span></sc-for></div></div>
+    </sc-if>
+    <div onClick="{{ readAction }}" style="margin-top:12px;text-align:center;padding:12px;border-radius:12px;background:{{ readBtnBg }};color:#fff;font-weight:600;font-size:14px;cursor:pointer">{{ readBtnLabel }}</div>
+  </div>
+  <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+    <div style="background:rgba(18,165,148,.09);border-radius:12px;padding:10px;font-size:12px;line-height:1.5"><b style="color:#12A594">声纹</b><br>之后"说话人 A"永远是你</div>
+    <div style="background:rgba(18,165,148,.09);border-radius:12px;padding:10px;font-size:12px;line-height:1.5"><b style="color:#12A594">口音</b><br>3 句足够校准常见混淆音</div>
+    <div style="background:rgba(18,165,148,.09);border-radius:12px;padding:10px;font-size:12px;line-height:1.5"><b style="color:#12A594">热词</b><br>句中已埋入你的产品名</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ obStep2 }}" hint-placeholder-val="{{ false }}">
+  <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <sc-for list="{{ sceneCards }}" as="sc" hint-placeholder-count="6">
+    <div onClick="{{ sc.toggle }}" style="background:{{ sc.bg }};border:1.5px solid {{ sc.bd }};border-radius:16px;padding:14px;cursor:pointer;position:relative">
+      <div style="width:20px;height:20px;border-radius:50%;position:absolute;top:12px;right:12px;background:{{ sc.checkBg }};border:1.5px solid {{ sc.bd }};display:flex;align-items:center;justify-content:center"><svg width="11" height="9" viewBox="0 0 12 10"><path d="M1 5l3.5 3.5L11 1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+      <div style="font-weight:600;font-size:15px">{{ sc.name }}</div>
+      <div style="font-size:12px;color:#636B63;line-height:1.55;margin-top:4px">{{ sc.brief }}</div>
+    </div>
+    </sc-for>
+  </div>
+  <div style="font-size:12px;color:#636B63;margin-top:12px;line-height:1.6">每个场景自带一套"响应规则"和提示词，之后可在 我的 › 教小谛 里细调。录音时也能临时指定"这场按 X 处理"。</div>
+  </sc-if>
+
+  <sc-if value="{{ obStep3 }}" hint-placeholder-val="{{ false }}">
+  <div style="margin-top:16px;display:flex;gap:8px">
+    <div onClick="{{ importContacts }}" style="flex:1;background:#fff;border:1px solid #E3E4DC;border-radius:14px;padding:12px;cursor:pointer;text-align:center"><div style="font-weight:600;font-size:14px">通讯录</div><div style="font-size:11px;color:#636B63">{{ contactsLabel }}</div></div>
+    <div onClick="{{ importCalendar }}" style="flex:1;background:#fff;border:1px solid #E3E4DC;border-radius:14px;padding:12px;cursor:pointer;text-align:center"><div style="font-weight:600;font-size:14px">日历</div><div style="font-size:11px;color:#636B63">{{ calendarLabel }}</div></div>
+    <div style="flex:1;background:#fff;border:1px solid #E3E4DC;border-radius:14px;padding:12px;text-align:center;opacity:.6"><div style="font-weight:600;font-size:14px">飞书 / 企微</div><div style="font-size:11px;color:#636B63">稍后连接</div></div>
+  </div>
+  <div style="margin-top:14px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px">
+    <div style="font-weight:600;font-size:14px">首批热词 <span style="font-family:'IBM Plex Mono',monospace;color:#636B63;font-size:12px;font-weight:400">{{ hotCount }}</span></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+      <sc-for list="{{ hotwordsPreview }}" as="h" hint-placeholder-count="8"><span style="font-size:12px;padding:4px 10px;border-radius:999px;background:{{ h.bg }};color:{{ h.fg }};border:1px solid #E3E4DC;white-space:nowrap">{{ h.word }}<span style="opacity:.6;margin-left:4px;font-size:10px">{{ h.src }}</span></span></sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:10px;margin-top:16px">
+    <div onClick="{{ obSkip }}" style="padding:14px 18px;border-radius:14px;background:#fff;border:1px solid #E3E4DC;font-weight:600;font-size:14px;cursor:pointer;color:#636B63">{{ obSkipLabel }}</div>
+    <div onClick="{{ obNext }}" style="flex:1;text-align:center;padding:14px;border-radius:14px;background:#12A594;color:#fff;font-weight:600;font-size:15px;cursor:pointer;box-shadow:0 8px 24px rgba(18,165,148,.25)">{{ obNextLabel }}</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 教小谛 Hub ═══ -->
+<sc-if value="{{ isTeach }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="教小谛" style="flex:1;overflow:auto;padding:58px 18px 60px">
+  <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="font-weight:600;font-size:16px">教小谛</div></div>
+  <div style="font-size:13px;color:#636B63;margin:14px 4px 0;line-height:1.6">你在任何页面里的纠正，都会自动落到这里。这一页只是让你看得见、改得了。</div>
+  <div style="margin-top:14px;background:rgba(18,165,148,.09);border:1px solid rgba(18,165,148,.25);border-radius:16px;padding:12px 16px;display:flex;gap:14px">
+    <div style="flex:1"><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600">{{ hotCount }}</div><div style="font-size:11px;color:#636B63">热词</div></div>
+    <div style="flex:1"><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600">{{ sceneCount }}</div><div style="font-size:11px;color:#636B63">启用场景</div></div>
+    <div style="flex:1"><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600">{{ skillCount }}</div><div style="font-size:11px;color:#636B63">已连接 Skill</div></div>
+    <div style="flex:1"><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600">12</div><div style="font-size:11px;color:#636B63">本周纠正</div></div>
+  </div>
+  <sc-for list="{{ teachGroups }}" as="g" hint-placeholder-count="4">
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:18px 0 8px">{{ g.title }}</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid {{ g.bar }};border-radius:16px;overflow:hidden">
+    <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+    <div onClick="{{ r.go }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid #E3E4DC;cursor:pointer"><div style="flex:1"><div style="font-size:14px;font-weight:600">{{ r.name }}</div><div style="font-size:12px;color:#636B63;line-height:1.5">{{ r.desc }}</div></div><span style="font-size:12px;color:{{ r.vc }};font-family:'IBM Plex Mono',monospace;white-space:nowrap">{{ r.value }}</span><span style="color:#636B63">›</span></div>
+    </sc-for>
+  </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<!-- ═══ 热词 ═══ -->
+<sc-if value="{{ isHotwords }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="热词" style="flex:1;display:flex;flex-direction:column;min-height:0">
+  <div style="flex:1;overflow:auto;padding:58px 18px 100px">
+    <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="flex:1;font-weight:600;font-size:16px">热词与专名</div><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#636B63">{{ hotCount }}</span></div>
+    <div style="margin-top:14px;background:rgba(201,120,30,.08);border:1px solid rgba(201,120,30,.2);border-left:3px solid #C9781E;border-radius:16px;padding:12px 16px">
+      <div style="font-weight:600;font-size:13px;color:#C9781E">小谛从今天的会话里发现了新词</div>
+      <div style="font-size:12px;color:#636B63;margin-top:2px">反复出现、但词表里没有，转写可能不稳。</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+        <sc-for list="{{ hotCandidates }}" as="c" hint-placeholder-count="3"><span onClick="{{ c.add }}" style="font-size:12px;padding:5px 11px;border-radius:999px;background:#fff;border:1px dashed #C9781E;color:#C9781E;cursor:pointer;font-weight:600;white-space:nowrap">+ {{ c.word }} <span style="font-weight:400;opacity:.7">{{ c.n }}次</span></span></sc-for>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap">
+      <sc-for list="{{ hotSrcFilters }}" as="f" hint-placeholder-count="5"><span onClick="{{ f.pick }}" style="font-size:12px;padding:5px 11px;border-radius:999px;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.bd }};cursor:pointer;white-space:nowrap">{{ f.label }}</span></sc-for>
+    </div>
+    <div style="margin-top:10px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+      <sc-for list="{{ hotList }}" as="h" hint-placeholder-count="8">
+      <div style="display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #E3E4DC"><div style="flex:1"><span style="font-size:14px;font-weight:600">{{ h.word }}</span><span style="font-size:12px;color:#636B63;margin-left:8px">{{ h.read }}</span></div><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:{{ h.bg }};color:{{ h.fg }};white-space:nowrap;flex:none">{{ h.src }}</span><span onClick="{{ h.remove }}" style="color:#9AA39C;cursor:pointer;font-size:16px;line-height:1">×</span></div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:10px 14px 30px;background:linear-gradient(180deg,rgba(244,243,238,0),#F4F3EE 40%);display:flex;gap:8px">
+    <input value="{{ hotInput }}" onChange="{{ hotType }}" onKeyDown="{{ hotKey }}" placeholder="输入词，可用「词 / 读音」" style="flex:1;height:46px;border-radius:14px;border:1px solid #E3E4DC;background:#fff;padding:0 16px;font-size:14px;font-family:inherit;outline:none;color:#1B2420">
+    <div onClick="{{ hotAdd }}" style="padding:0 18px;height:46px;display:flex;align-items:center;border-radius:14px;background:#12A594;color:#fff;font-weight:600;font-size:14px;cursor:pointer">加入</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 场景与响应规则 ═══ -->
+<sc-if value="{{ isScenes }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="场景与响应规则" style="flex:1;overflow:auto;padding:58px 18px 60px">
+  <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="flex:1;font-weight:600;font-size:16px">场景与响应规则</div></div>
+  <div style="font-size:12px;color:#636B63;margin:12px 4px 0;line-height:1.6">响应规则 = "听到什么句子 → 做什么"。它们挂在场景下，而不是全局开关；录音时小谛自动识别场景，也可手动指定。</div>
+  <div style="display:flex;gap:6px;margin-top:12px;overflow:auto;padding-bottom:2px">
+    <sc-for list="{{ sceneTabs }}" as="t" hint-placeholder-count="4"><span onClick="{{ t.pick }}" style="font-size:12px;padding:6px 12px;border-radius:999px;background:{{ t.bg }};color:{{ t.fg }};border:1px solid {{ t.bd }};cursor:pointer;white-space:nowrap;opacity:{{ t.op }}">{{ t.label }}</span></sc-for>
+  </div>
+  <div style="margin-top:12px;background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:15px">{{ curScene.name }}</div><div style="font-size:12px;color:#636B63">{{ curScene.brief }}</div></div><div onClick="{{ curScene.toggleOn }}" style="width:44px;height:26px;border-radius:999px;background:{{ curScene.onBg }};position:relative;cursor:pointer;flex:none"><div style="position:absolute;top:3px;left:{{ curScene.knob }}px;width:20px;height:20px;border-radius:50%;background:#fff"></div></div></div>
+    <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:14px 0 6px">识别线索</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ curScene.cues }}" as="c" hint-placeholder-count="3"><span style="font-size:12px;padding:3px 9px;border-radius:999px;background:#F4F3EE;white-space:nowrap">{{ c }}</span></sc-for></div>
+  </div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:16px 0 8px">响应规则 · 听到 → 做</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid #C9781E;border-radius:16px;overflow:hidden">
+    <sc-for list="{{ sceneRules }}" as="r" hint-placeholder-count="5">
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #E3E4DC">
+      <div style="flex:1"><div style="font-size:14px"><span style="font-weight:600">{{ r.hear }}</span> <span style="color:#636B63">→</span> <span style="color:{{ r.doColor }};font-weight:600">{{ r.do }}</span></div><div style="font-size:12px;color:#636B63;line-height:1.5">{{ r.eg }}</div></div>
+      <div onClick="{{ r.toggle }}" style="width:44px;height:26px;border-radius:999px;background:{{ r.bg }};position:relative;cursor:pointer;flex:none"><div style="position:absolute;top:3px;left:{{ r.knob }}px;width:20px;height:20px;border-radius:50%;background:#fff"></div></div>
+    </div>
+    </sc-for>
+  </div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:16px 0 8px">忽略规则 · 全局生效</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #E3E4DC"><div><div style="font-size:14px">口令「小谛别记」</div><div style="font-size:12px;color:#636B63">说出后到下一句"好了"之间不落库、不转写</div></div><div style="width:44px;height:26px;border-radius:999px;background:#12A594;position:relative"><div style="position:absolute;top:3px;left:21px;width:20px;height:20px;border-radius:50%;background:#fff"></div></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #E3E4DC"><div><div style="font-size:14px">私人时段</div><div style="font-size:12px;color:#636B63">21:00–08:00 只本地缓存，不上云不理解</div></div><span onClick="{{ editQuiet }}" style="font-size:12px;color:#12A594;font-weight:600;cursor:pointer;white-space:nowrap">编辑</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px"><div><div style="font-size:14px">敏感信息打码</div><div style="font-size:12px;color:#636B63">手机号 / 身份证 / 银行卡在转写与工件中脱敏</div></div><div style="width:44px;height:26px;border-radius:999px;background:#12A594;position:relative"><div style="position:absolute;top:3px;left:21px;width:20px;height:20px;border-radius:50%;background:#fff"></div></div></div>
+  </div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:16px 0 8px">提示词 · {{ curScene.name }}</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+    <div style="display:flex;gap:16px;padding:0 16px;border-bottom:1px solid #E3E4DC"><sc-for list="{{ promptTabs }}" as="pt" hint-placeholder-count="3"><span onClick="{{ pt.pick }}" style="padding:10px 0;font-size:13px;font-weight:600;color:{{ pt.color }};border-bottom:2px solid {{ pt.line }};margin-bottom:-1px;cursor:pointer">{{ pt.label }}</span></sc-for></div>
+    <textarea value="{{ promptText }}" onChange="{{ promptType }}" style="width:100%;min-height:110px;border:none;padding:12px 16px;font-size:13px;line-height:1.7;font-family:inherit;color:#1B2420;resize:vertical;outline:none;background:#fff;display:block"></textarea>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 12px;font-size:12px;color:#636B63"><span>可用变量 <span style="font-family:'IBM Plex Mono',monospace">{参与人} {热词} {上次纪要}</span></span><span onClick="{{ promptReset }}" style="color:#12A594;font-weight:600;cursor:pointer">恢复默认</span></div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 模型与 Agent/Skill ═══ -->
+<sc-if value="{{ isAgents }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="模型与 Skill" style="flex:1;overflow:auto;padding:58px 18px 60px">
+  <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="flex:1;font-weight:600;font-size:16px">模型与 Skill</div></div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:16px 0 8px">模型 · 三层各选其一</div>
+  <sc-for list="{{ modelLayers }}" as="ml" hint-placeholder-count="3">
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:12px 16px;margin-bottom:8px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-weight:600;font-size:14px">{{ ml.layer }}</div><span style="font-size:11px;color:#636B63;white-space:nowrap;flex:none;margin-left:8px">{{ ml.hint }}</span></div>
+    <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+      <sc-for list="{{ ml.opts }}" as="o" hint-placeholder-count="3"><div onClick="{{ o.pick }}" style="flex:1;min-width:90px;padding:8px 10px;border-radius:10px;border:1.5px solid {{ o.bd }};background:{{ o.bg }};cursor:pointer"><div style="font-size:13px;font-weight:600">{{ o.name }}</div><div style="font-size:11px;color:#636B63">{{ o.tag }}</div></div></sc-for>
+    </div>
+  </div>
+  </sc-for>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:16px 0 8px">Skill 注册 · 小谛能动手做的事</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid #C9781E;border-radius:16px;overflow:hidden">
+    <sc-for list="{{ skills }}" as="sk" hint-placeholder-count="6">
+    <div style="padding:12px 16px;border-bottom:1px solid #E3E4DC">
+      <div style="display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:8px;background:{{ sk.icon }};flex:none"></div><div style="flex:1"><div style="font-size:14px;font-weight:600">{{ sk.name }}</div><div style="font-size:12px;color:#636B63">{{ sk.desc }}</div></div><div onClick="{{ sk.toggle }}" style="font-size:12px;padding:5px 11px;border-radius:999px;background:{{ sk.bg }};color:{{ sk.fg }};border:1px solid {{ sk.bd }};cursor:pointer;font-weight:600;white-space:nowrap;flex:none">{{ sk.stateLabel }}</div></div>
+      <sc-if value="{{ sk.on }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:6px;margin:8px 0 0 40px;flex-wrap:wrap;align-items:center"><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#F4F3EE;white-space:nowrap">权限：{{ sk.perm }}</span><span onClick="{{ sk.toggleGate }}" style="font-size:11px;padding:2px 8px;border-radius:999px;background:{{ sk.gateBg }};color:{{ sk.gateFg }};cursor:pointer;font-weight:600">{{ sk.gateLabel }}</span></div>
+      </sc-if>
+    </div>
+    </sc-for>
+    <div onClick="{{ addMcp }}" style="display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer"><div style="width:30px;height:30px;border-radius:8px;border:1.5px dashed #636B63;flex:none"></div><div style="flex:1"><div style="font-size:14px;font-weight:600">添加 MCP 服务器</div><div style="font-size:12px;color:#636B63">粘贴地址即可，新 Skill 默认「执行前需确认」</div></div></div>
+  </div>
+  <div style="margin-top:14px;background:rgba(201,120,30,.08);border-left:3px solid #C9781E;border-radius:12px;padding:12px 14px;font-size:12px;color:#636B63;line-height:1.6"><b style="color:#1B2420">底线不可关：</b>发送 / 写入 / 下单类 Skill 永远走"待确认结果"闸门，即使这里关掉"执行前需确认"，也只是跳过目标确认那一步。</div>
+</div>
+</sc-if>
+
+<!-- ═══ 复盘 · 周 / 月 ═══ -->
+<sc-if value="{{ isReviews }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="复盘" style="flex:1;display:flex;flex-direction:column;min-height:0">
+  <div style="flex:1;overflow:auto;padding:58px 18px 100px">
+    <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="flex:1;font-weight:600;font-size:16px">复盘</div><div style="display:flex;background:#EBE9E1;border-radius:999px;padding:3px"><sc-for list="{{ rvTabs }}" as="t" hint-placeholder-count="2"><span onClick="{{ t.pick }}" style="font-size:12px;padding:5px 14px;border-radius:999px;background:{{ t.bg }};color:{{ t.fg }};font-weight:600;cursor:pointer;white-space:nowrap">{{ t.label }}</span></sc-for></div></div>
+
+    <sc-if value="{{ rvWeek }}" hint-placeholder-val="{{ true }}">
+    <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin-top:18px">第 36 周 · 9月1日 – 9月7日 · 对表</div>
+    <div style="font-family:'Noto Serif SC',serif;font-size:24px;font-weight:600;line-height:1.35;margin-top:4px;text-wrap:balance">这周你答应了 5 件事，兑现了 3 件。</div>
+    <div style="font-size:13px;color:#636B63;margin-top:6px;line-height:1.6">周复盘不重述内容，只对表：说过的 vs 做了的。</div>
+    <div style="margin-top:16px;background:#fff;border:1px solid #E3E4DC;border-left:3px solid #C9781E;border-radius:16px;padding:14px 16px">
+      <div style="font-weight:600;font-size:14px;margin-bottom:4px">承诺兑现表</div>
+      <sc-for list="{{ promises }}" as="p" hint-placeholder-count="5">
+      <div onClick="{{ p.open }}" style="display:flex;gap:10px;padding:9px 0;border-top:1px solid #E3E4DC;cursor:pointer;align-items:flex-start"><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:{{ p.bg }};color:{{ p.fg }};font-weight:600;white-space:nowrap;flex:none;margin-top:2px">{{ p.st }}</span><div style="flex:1;font-size:14px;line-height:1.5">{{ p.text }}<div style="font-size:12px;color:#636B63">对 {{ p.who }} · {{ p.when }}</div></div></div>
+      </sc-for>
+    </div>
+    <div style="margin-top:12px;background:#fff;border:1px solid #E3E4DC;border-left:3px solid #5B7380;border-radius:16px;padding:14px 16px">
+      <div style="font-weight:600;font-size:14px;margin-bottom:8px">反复被提 · 本周 vs 上周</div>
+      <sc-for list="{{ trends }}" as="tr" hint-placeholder-count="3">
+      <div style="display:flex;align-items:center;gap:10px;padding:6px 0"><span style="font-size:14px;width:84px;flex:none">{{ tr.word }}</span><div style="flex:1;height:8px;background:#F4F3EE;border-radius:4px;overflow:hidden"><div style="width:{{ tr.pct }}%;height:100%;background:{{ tr.color }}"></div></div><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:{{ tr.color }};font-weight:600;white-space:nowrap;width:52px;text-align:right">{{ tr.delta }}</span></div>
+      </sc-for>
+    </div>
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">谁出现得最多</div><div style="font-size:13px;line-height:1.9;color:#636B63">李总 · 3 场<br>小张 · 2 场<br>设计师 · 1 场</div></div>
+      <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">决策落地</div><div style="font-size:13px;line-height:1.9;color:#636B63"><span style="color:#12A594;font-weight:600">1</span> 已执行<br><span style="color:#C9781E;font-weight:600">1</span> 待验证<br>0 被推翻</div></div>
+    </div>
+    <div style="margin-top:12px;background:rgba(201,120,30,.08);border:1px solid rgba(201,120,30,.2);border-left:3px solid #C9781E;border-radius:16px;padding:14px 16px">
+      <div style="font-weight:600;font-size:14px;color:#C9781E;margin-bottom:6px">下周建议 · 点即建任务</div>
+      <sc-for list="{{ nextWeek }}" as="n" hint-placeholder-count="3"><div onClick="{{ n.toTask }}" style="display:flex;gap:10px;padding:8px 0;border-top:1px solid rgba(201,120,30,.15);font-size:14px;cursor:pointer;align-items:center"><div style="width:18px;height:18px;border-radius:5px;border:1.5px solid #C9781E;flex:none"></div><span style="flex:1">{{ n.text }}</span><span style="color:#C9781E;font-size:12px;white-space:nowrap">建任务 ›</span></div></sc-for>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ rvMonth }}" hint-placeholder-val="{{ false }}">
+    <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin-top:18px">2026 年 8 月 · 沉淀</div>
+    <div style="font-family:'Noto Serif SC',serif;font-size:24px;font-weight:600;line-height:1.35;margin-top:4px;text-wrap:balance">8 月只有三件事真正重要。</div>
+    <div style="font-size:13px;color:#636B63;margin-top:6px;line-height:1.6">月复盘做三件事：把主题聚成文档、回看当时的决策、决定遗忘什么。</div>
+    <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:18px 0 8px">主题 · 图谱自动聚类</div>
+    <sc-for list="{{ themes }}" as="th" hint-placeholder-count="3">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid #5B7380;border-radius:16px;padding:14px 16px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><div style="font-weight:600;font-size:15px">{{ th.title }}</div><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#636B63;white-space:nowrap">{{ th.n }} 场</span></div>
+      <div style="font-size:13px;color:#636B63;line-height:1.6;margin-top:4px">{{ th.body }}</div>
+      <div style="display:flex;gap:8px;margin-top:10px"><span onClick="{{ th.doc }}" style="font-size:12px;padding:5px 12px;border-radius:999px;background:#12A594;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap">沉淀成文档</span><span onClick="{{ th.open }}" style="font-size:12px;padding:5px 12px;border-radius:999px;background:#fff;border:1px solid #E3E4DC;cursor:pointer;white-space:nowrap">看会话</span></div>
+    </div>
+    </sc-for>
+    <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:18px 0 8px">决策回看 · 当时 vs 现在</div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+      <sc-for list="{{ lookbacks }}" as="lb" hint-placeholder-count="3">
+      <div onClick="{{ lb.open }}" style="padding:12px 16px;border-bottom:1px solid #E3E4DC;cursor:pointer"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:14px;font-weight:600">{{ lb.then }}</span><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:{{ lb.bg }};color:{{ lb.fg }};font-weight:600;white-space:nowrap;flex:none">{{ lb.st }}</span></div><div style="font-size:12px;color:#636B63;margin-top:3px;line-height:1.5">{{ lb.date }} → {{ lb.now }}</div></div>
+      </sc-for>
+    </div>
+    <div onClick="{{ goMemory }}" style="margin-top:12px;background:#F4F3EE;border:1px dashed #9AA39C;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;gap:12px;align-items:center"><div style="flex:1"><div style="font-weight:600;font-size:14px">本月遗忘建议</div><div style="font-size:12px;color:#636B63;line-height:1.5">14 段原声将过期（3 段被引用，保留）· 6 个冷节点将归档</div></div><span style="color:#636B63">›</span></div>
+    </sc-if>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:10px 14px 30px;background:linear-gradient(180deg,rgba(244,243,238,0),#F4F3EE 40%);display:flex;gap:10px">
+    <div onClick="{{ regen }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#fff;border:1px solid #E3E4DC;font-weight:600;font-size:14px;cursor:pointer">{{ regenLabel2 }}</div>
+    <div onClick="{{ openReportRv }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#12A594;color:#fff;font-weight:600;font-size:14px;cursor:pointer">{{ rvCta }}</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 记忆与遗忘 ═══ -->
+<sc-if value="{{ isMemory }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="记忆与遗忘" style="flex:1;overflow:auto;padding:58px 18px 60px">
+  <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="flex:1;font-weight:600;font-size:16px">记忆与遗忘</div></div>
+  <div style="font-size:13px;color:#636B63;margin:14px 4px 0;line-height:1.6">记住得越少，提醒才越准。三层各有寿命；唯一例外：<b style="color:#1B2420">被引用过的，永不过期</b>。</div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:18px 0 8px">三层存储</div>
+  <sc-for list="{{ tiers }}" as="tr" hint-placeholder-count="3">
+  <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid {{ tr.color }};border-radius:16px;padding:12px 16px;margin-bottom:8px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><div style="font-weight:600;font-size:14px">{{ tr.name }}</div><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#636B63;white-space:nowrap">{{ tr.size }}</span></div>
+    <div style="font-size:12px;color:#636B63;line-height:1.5;margin-top:2px">{{ tr.desc }}</div>
+    <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><sc-for list="{{ tr.opts }}" as="o" hint-placeholder-count="4"><span onClick="{{ o.pick }}" style="font-size:12px;padding:4px 10px;border-radius:999px;background:{{ o.bg }};color:{{ o.fg }};border:1px solid {{ o.bd }};cursor:pointer;white-space:nowrap">{{ o.label }}</span></sc-for></div>
+  </div>
+  </sc-for>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">被引用即永久</div><div style="font-size:12px;color:#636B63">任务 / 洞察 / 报告引用过的原声片段不参与过期</div></div><div style="width:44px;height:26px;border-radius:999px;background:#12A594;position:relative;flex:none;opacity:.6"><div style="position:absolute;top:3px;left:21px;width:20px;height:20px;border-radius:50%;background:#fff"></div></div></div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:18px 0 8px">图谱温度 · 214 个节点</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:14px 16px">
+    <div style="display:flex;height:10px;border-radius:5px;overflow:hidden;gap:2px"><div style="width:22%;background:#12A594"></div><div style="width:46%;background:#8FCFC6"></div><div style="width:32%;background:#D9D9D2"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:#636B63"><span><b style="color:#12A594">47</b> 热 · 30 天内</span><span><b style="color:#1B2420">98</b> 温</span><span><b>69</b> 冷 · 180 天未现</span></div>
+    <div style="font-size:12px;color:#636B63;margin-top:8px;line-height:1.6">冷节点不再触发主动提醒，但仍可搜索。本月将归档 6 个：<span style="color:#1B2420">王工 · 旧供应商 A · 一期方案 …</span></div>
+  </div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:18px 0 8px">本月到期</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+    <sc-for list="{{ expiring }}" as="ex" hint-placeholder-count="3">
+    <div style="display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #E3E4DC"><div style="flex:1;min-width:0"><div style="font-size:14px">{{ ex.title }}</div><div style="font-size:12px;color:#636B63">{{ ex.meta }}</div></div><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:{{ ex.bg }};color:{{ ex.fg }};font-weight:600;white-space:nowrap;flex:none">{{ ex.st }}</span><span onClick="{{ ex.keep }}" style="font-size:12px;color:#12A594;font-weight:600;cursor:pointer;white-space:nowrap">{{ ex.act }}</span></div>
+    </sc-for>
+  </div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:18px 0 8px">噪音过滤 · 四道闸 · 本周</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+    <sc-for list="{{ gates }}" as="g" hint-placeholder-count="4">
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #E3E4DC"><span style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:600;color:#5B7380;width:18px;flex:none">{{ g.n }}</span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">{{ g.name }}</div><div style="font-size:12px;color:#636B63;line-height:1.5">{{ g.desc }}</div></div><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#1B2420;white-space:nowrap;flex:none">{{ g.stat }}</span></div>
+    </sc-for>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:18px"><div onClick="{{ exportAll }}" style="flex:1;text-align:center;padding:12px;border-radius:14px;background:#fff;border:1px solid #E3E4DC;font-weight:600;font-size:14px;cursor:pointer">导出全部记忆</div><div onClick="{{ askWipe }}" style="flex:1;text-align:center;padding:12px;border-radius:14px;border:1px solid #C0492B;color:#C0492B;font-weight:600;font-size:14px;cursor:pointer">全部遗忘</div></div>
+</div>
+</sc-if>
+
+<!-- ═══ 目的地与通道 ═══ -->
+<sc-if value="{{ isDest }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="目的地与通道" style="flex:1;overflow:auto;padding:58px 18px 60px">
+  <div style="display:flex;align-items:center;gap:8px"><div onClick="{{ back }}" style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #E3E4DC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="10" height="16" viewBox="0 0 10 16"><path d="M8 2L2 8l6 6" stroke="#1B2420" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></div><div style="flex:1;font-weight:600;font-size:16px">目的地与通道</div></div>
+  <div style="font-size:13px;color:#636B63;margin:14px 4px 0;line-height:1.6">你点「采用」之后，东西去哪。按工件类型走默认目的地，任务详情里可临时改。</div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:18px 0 8px">默认路由</div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;overflow:hidden">
+    <sc-for list="{{ routes }}" as="r" hint-placeholder-count="5">
+    <div style="display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #E3E4DC;font-size:14px"><span style="width:64px;flex:none;color:#636B63">{{ r.kind }}</span><span style="color:#636B63">→</span><span style="flex:1;font-weight:600">{{ r.to }}</span><span onClick="{{ r.change }}" style="font-size:12px;color:#12A594;font-weight:600;cursor:pointer;white-space:nowrap">改</span></div>
+    </sc-for>
+  </div>
+  <div style="font-size:11px;letter-spacing:.14em;color:#636B63;font-weight:600;margin:18px 0 8px">目的地</div>
+  <sc-for list="{{ dests }}" as="d" hint-placeholder-count="5">
+  <div style="background:#fff;border:1px solid #E3E4DC;border-left:3px solid {{ d.bar }};border-radius:16px;margin-bottom:10px;overflow:hidden">
+    <div onClick="{{ d.expand }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:{{ d.icon }};flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px">{{ d.glyph }}</div><div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">{{ d.name }}</div><div style="font-size:12px;color:#636B63;line-height:1.5">{{ d.desc }}</div></div><span onClick="{{ d.toggle }}" style="font-size:12px;padding:5px 11px;border-radius:999px;background:{{ d.bg }};color:{{ d.fg }};border:1px solid {{ d.bd }};cursor:pointer;font-weight:600;white-space:nowrap;flex:none">{{ d.stateLabel }}</span></div>
+    <sc-if value="{{ d.open }}" hint-placeholder-val="{{ false }}">
+    <div style="border-top:1px solid #E3E4DC;background:#FAF9F5;padding:6px 16px 12px">
+      <sc-for list="{{ d.fields }}" as="f" hint-placeholder-count="3">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E3E4DC;font-size:13px"><span style="color:#636B63;white-space:nowrap">{{ f.k }}</span><span style="font-family:{{ f.font }};text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:{{ f.color }}">{{ f.v }}</span></div>
+      </sc-for>
+      <sc-if value="{{ d.hasChips }}" hint-placeholder-val="{{ false }}">
+      <div style="font-size:12px;color:#636B63;margin:10px 0 6px">{{ d.chipsLabel }}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ d.chips }}" as="c" hint-placeholder-count="4"><span onClick="{{ c.pick }}" style="font-size:12px;padding:4px 10px;border-radius:999px;background:{{ c.bg }};color:{{ c.fg }};border:1px solid {{ c.bd }};cursor:pointer;white-space:nowrap">{{ c.label }}</span></sc-for></div>
+      </sc-if>
+      <sc-if value="{{ d.hasBudget }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:10px;font-size:12px;color:#636B63;display:flex;justify-content:space-between"><span>本月实时时长</span><span style="font-family:'IBM Plex Mono',monospace;color:#1B2420">16 h / 200 h</span></div>
+      <div style="height:6px;background:#E3E4DC;border-radius:3px;margin-top:4px"><div style="width:8%;height:100%;background:#12A594;border-radius:3px"></div></div>
+      </sc-if>
+      <div style="font-size:12px;color:{{ d.noteColor }};margin-top:10px;line-height:1.5">{{ d.note }}</div>
+    </div>
+    </sc-if>
+  </div>
+  </sc-for>
+  <div style="margin-top:6px;background:rgba(201,120,30,.08);border-left:3px solid #C9781E;border-radius:12px;padding:12px 14px;font-size:12px;color:#636B63;line-height:1.6"><b style="color:#1B2420">不变的底线：</b>任何目的地的写入都发生在你点「采用」之后；龙虾等外部 Agent 的执行结果必须回到谛听的「待确认结果」，不能直接对外。</div>
+</div>
+</sc-if>
+
+<!-- ═══ 全局：发布二次确认 ═══ -->
+<sc-if value="{{ showConfirm }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(27,36,32,.45);z-index:80;display:flex;align-items:flex-end">
+  <div style="width:100%;background:#F4F3EE;border-radius:24px 24px 0 0;padding:22px 20px 40px">
+    <div style="width:36px;height:4px;border-radius:2px;background:#E3E4DC;margin:0 auto 16px"></div>
+    <div style="font-size:11px;letter-spacing:.14em;color:#C9781E;font-weight:600">这一步会产生真实副作用</div>
+    <div style="font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;margin-top:6px;line-height:1.4">{{ confirmTitle }}</div>
+    <div style="font-size:13px;color:#636B63;margin-top:8px;line-height:1.6">{{ confirmBody }}</div>
+    <div style="display:flex;gap:10px;margin-top:18px"><div onClick="{{ cancelConfirm }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#fff;border:1px solid #E3E4DC;font-weight:600;font-size:14px;cursor:pointer">再想想</div><div onClick="{{ doConfirm }}" style="flex:1;text-align:center;padding:13px;border-radius:14px;background:#C9781E;color:#fff;font-weight:600;font-size:14px;cursor:pointer">{{ confirmCta }}</div></div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═══ 全局 Toast ═══ -->
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:20px;right:20px;top:64px;z-index:90;background:#1B2420;color:#fff;border-radius:14px;padding:12px 16px;font-size:13px;box-shadow:0 12px 30px rgba(0,0,0,.25);line-height:1.5">{{ toast }}</div>
+</sc-if>
+
+<!-- ═══ Tab Bar ═══ -->
+<sc-if value="{{ showTab }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:0;right:0;bottom:0;height:88px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-top:1px solid #E3E4DC;display:flex;align-items:flex-start;padding-top:8px;z-index:70">
+  <div onClick="{{ tabHome }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:{{ cHome }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11l8-7 8 7v9H4z"></path><path d="M9 20v-6h6v6"></path></svg><span style="font-size:11px;font-weight:600">今日谛听</span></div>
+  <div onClick="{{ tabSessions }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:{{ cSess }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"></path></svg><span style="font-size:11px;font-weight:600">记录</span></div>
+  <div style="flex:1;display:flex;justify-content:center"><div onClick="{{ tabRecord }}" title="短按快速捕捉 · 长按会议模式" style="width:60px;height:60px;border-radius:50%;background:#12A594;margin-top:-26px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(18,165,148,.4);cursor:pointer;border:4px solid #F4F3EE"><div style="width:18px;height:18px;border-radius:50%;background:#fff"></div></div></div>
+  <div onClick="{{ tabTasks }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:{{ cTask }};position:relative"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="4"></rect><path d="M8 12l3 3 5-6"></path></svg><span style="font-size:11px;font-weight:600">任务</span><span style="position:absolute;top:-2px;right:calc(50% - 20px);width:8px;height:8px;border-radius:50%;background:#C9781E"></span></div>
+  <div onClick="{{ tabMe }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:{{ cMe }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path></svg><span style="font-size:11px;font-weight:600">我的</span></div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+
+<!-- ═══ 设计说明 ═══ -->
+<aside style="flex:1 1 360px;max-width:520px;min-width:300px;display:flex;flex-direction:column;gap:16px;font-size:13px;line-height:1.7;color:#1B2420">
+  <div>
+    <div style="font-size:11px;letter-spacing:.16em;color:#636B63;font-weight:600">谛听 DITING · 可点击 Demo</div>
+    <h1 style="font-family:'Noto Serif SC',serif;font-size:26px;font-weight:600;margin:4px 0 0;line-height:1.3">听得见，更听得懂；记得住，还替你办。</h1>
+    <p style="margin:8px 0 0;color:#636B63">14 个页面全部可跳转。从「今日谛听」开始点，或用底部录音键走一遍 录音 → 会话 → 洞察 → 任务 → 发布 的闭环。右上 Tweaks 可切换设备状态、空态与订阅层级。</p>
+  </div>
+
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:16px 18px;box-shadow:0 8px 24px rgba(20,30,25,.06)">
+    <div style="font-weight:600;font-size:14px;margin-bottom:8px">底层逻辑：我对原方案做的 6 处调整</div>
+    <ol style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px">
+      <li><b>只有一个真源：记忆图谱。</b>原方案里 Digest、洞察、主动卡、任务是四套并列的产出。Demo 里把它们统一为"图谱上的四个视图"——所有卡都带 <span style="color:#12A594;font-weight:600">↩ 回到原声</span> 引用；「反复被提」「被忽略的提醒」直接由图谱的频次/冲突驱动（见 任务 › 小谛观察）。</li>
+      <li><b>一种闸门，而不是两种"待确认"。</b>原状态机里"待确认（目标）"与"待确认结果"是两个词，用户学两次。Demo 用同一条<span style="color:#C9781E;font-weight:600">琥珀闸门</span>贯穿：确认目标 → 确认产出 → 确认发布；唯一区别是最后一步会弹"真实副作用"二次确认（任务详情 / 洞察 › 发布）。</li>
+      <li><b>「待确认」也是记忆的写入口。</b>洞察页的待确认条不只是给人看：点"确认"才入图谱，点"存疑"标可证伪——AI 的不确定性不会悄悄变成"事实"。</li>
+      <li><b>实时通道的成本让用户看得见。</b>实时录音页顶部常驻「实时中 / 已省电暂停」；短按=快速捕捉（不联网、不字幕），长按=会议模式。触发策略（§8）不再是后台黑盒。</li>
+      <li><b>硬件是入口，不是身份。</b>设备管理里 MR20 与 Farosh 并列，配对页处理 SK&amp;ERR（已被绑定）的重置引导，回填态在首页状态点 + 设备页进度双通道可见。</li>
+      <li><b>配置 = 「教小谛」，纠错即配置。</b>不做设置迷宫：① 首次教（朗读 3 句同时完成声纹+口音+热词，选场景，导入专名）；② 随手教（转写里改一个词 → 自动入热词并回训；把待办划到忽略 → 训练规则）；③ 深度教（我的 › 教小谛，按 听感/理解/行动/记忆 四层）。<b>响应模式挂在场景下</b>而非全局开关——"客户通话" = 说话人分离 + 承诺→待办 + 祈使→建任务 + 闲聊→忽略 + 自己的提示词；录音页可临时覆写"这场按 X 处理"。Skill 注册里，发送/写入类永远走结果闸门，这条底线不可关。</li>
+      <li><b>日 / 周 / 月是三种动作，不是一份报告放大。</b>日=整理（说了什么、漏了什么）；周=<b>对表</b>（承诺兑现表、反复被提的升降）；月=<b>沉淀</b>（主题聚成文档、决策回看、遗忘建议）。粒度越大 AI 越少转述、越多对表。入口：记录 › 周/月，周日首页自动出复盘卡。</li>
+      <li><b>记忆三层 + 引用即永久 + 四道噪音闸。</b>原声 30 天 → 转写 1 年（未引用段落 90 天压缩为摘要）→ 图谱永久但有温度（180 天不出现即归档、不再提醒）。唯一例外规则：<b>被任务/洞察/报告引用过的片段永不过期</b>。噪音：设备 VAD → 场景忽略规则 → "三无句"不入图谱 → 人工"不重要"回训（我的 › 教小谛 › 记忆与遗忘）。</li>
+      <li><b>Todo 发布 = 目的地路由，Hermes 是通道不是目的地。</b>待办→日历+提醒、文档→Notion、邮件→邮箱、消息→飞书、多步执行→龙虾（OpenClaw，跑在你自己机器上的 Agent）。所有写入发生在「采用」之后；外部 Agent 的结果必须回到「待确认结果」。Hermes 只配触发条件、月度预算、电量/弱网降级（教小谛 › 目的地与通道）。</li>
+      <li><b>成长值奖励闭环而非录音量。</b>BP 只在"确认事实 / 采用产出 / 纠正转写"时加分，避免"录得越多越好"的反向激励，与"不常开实时"的成本原则一致。</li>
+    </ol>
+  </div>
+
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:16px 18px">
+    <div style="font-weight:600;font-size:14px;margin-bottom:6px">Demo 覆盖的页面</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <sc-for list="{{ screenChips }}" as="sc" hint-placeholder-count="14"><span onClick="{{ sc.go }}" style="font-size:12px;padding:4px 10px;border-radius:999px;background:{{ sc.bg }};color:{{ sc.fg }};border:1px solid #E3E4DC;cursor:pointer">{{ sc.label }}</span></sc-for>
+    </div>
+  </div>
+
+  <div style="background:#fff;border:1px solid #E3E4DC;border-radius:16px;padding:16px 18px">
+    <div style="font-weight:600;font-size:14px;margin-bottom:8px">对 Stitch 稿的取舍</div>
+    <div style="font-size:12px;color:#636B63;margin-bottom:8px">已并入</div>
+    <ul style="margin:0 0 10px;padding-left:18px;display:flex;flex-direction:column;gap:4px">
+      <li>思维导图改为缩进树，叶子带 ▶ 时间点（会话详情 › 思维导图）</li>
+      <li>波形放入纸槽，琥珀"待办滴"标出提取行动的位置</li>
+      <li>第四种色条 <span style="display:inline-block;width:10px;height:10px;background:#5B7380;border-radius:2px;vertical-align:-1px"></span> 石板青 = 小谛生成，与 薄荷=原声 / 琥珀=行动 分开</li>
+      <li>总结页发言占比条，点名字进人物卡</li>
+      <li>实时录音内嵌"小谛伴写"卡：只标记，不打断</li>
+      <li>中英对照做成转写页的局部开关</li>
+    </ul>
+    <div style="font-size:12px;color:#636B63;margin-bottom:8px">否决</div>
+    <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;color:#636B63">
+      <li>伪精确数据（认知对齐度 96.4%、SHA-256 存证、累计 128 万字）——置信度只在待确认里出现</li>
+      <li>三个录音入口 → 只留 Tab 中心一个</li>
+      <li>「我的」变成设备仪表盘 → 技术参数留在设备管理</li>
+      <li>每卡 3 标签 → 最多 1 个；营销腔命名（战略智囊、共生人格、记忆资产）→ 白话</li>
+      <li>手动主题文件夹与"图谱唯一真源"冲突 → 未来做图谱自动聚类的主题视图</li>
+    </ul>
+  </div>
+
+  <div style="background:rgba(201,120,30,.08);border-left:3px solid #C9781E;border-radius:12px;padding:12px 16px;color:#636B63">
+    <b style="color:#1B2420">待你拍板的问题</b><br>① 洞察是否应并入会话详情第四个 Tab，减少一层导航？② 「碎念」与 Session 中的 3 分钟快速捕捉是否是同一物？③ BP/Lv 成长体系是否保留——它与"克制、不打扰"的品牌气质有一定张力。④ 模型选择是否对普通用户暴露（本 Demo 暴露了三层），还是只在 Unlimited/团队版出现？⑤ 首次引导的朗读是否强制——跳过会让"说话人 A = 你"失效，退化为竞品体验。
+  </div>
+</aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;deviceState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;online&quot;,&quot;offline&quot;,&quot;backfill&quot;],&quot;default&quot;:&quot;online&quot;,&quot;tsType&quot;:&quot;'online'|'offline'|'backfill'&quot;,&quot;section&quot;:&quot;设备&quot;},&quot;emptyToday&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;首页&quot;},&quot;plan&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Free&quot;,&quot;Plus&quot;,&quot;Unlimited&quot;],&quot;default&quot;:&quot;Plus&quot;,&quot;tsType&quot;:&quot;'Free'|'Plus'|'Unlimited'&quot;,&quot;section&quot;:&quot;订阅&quot;}}">
+const C = { mint:'#12A594', amber:'#C9781E', ink:'#1B2420', ink2:'#636B63', hair:'#E3E4DC', paper:'#F4F3EE', mintSoft:'rgba(18,165,148,.09)', amberSoft:'rgba(201,120,30,.1)' };
+const SP = { A:'#12A594', B:'#C9781E', C:'#636B63' };
+const SESSIONS = {
+  s1:{ id:'s1', title:'产品周会 · Q4 定价', time:'09:30', dur:'48 min', speakers:'A B C', kind:'会议', brief:'按席位 vs 按用量吵了 20 分钟；决定周五前出对比表。', todoCount:2,
+    segments:[
+      {t:'00:12',s:12,sp:'A',text:'先过一下 Q4 定价。现在按用量算，客户的账单每月都在跳，续费的时候很难讲清。'},
+      {t:'02:40',s:160,sp:'B',text:'按席位当然好卖，但我们有三家大客户席位只有五个人，用量却是别人十倍，会直接亏。'},
+      {t:'05:03',s:303,sp:'C',text:'能不能混合？基础席位加超额用量。我可以做一版对比表。'},
+      {t:'09:41',s:581,sp:'A',text:'行，那就这么定：小张周五前出三种方案的对比表，下周会上拍板。不要再拖到 10 月。',en:'Alright, decided: Xiao Zhang delivers a comparison of the three options by Friday; we finalize next week. No more slipping into October.'},
+      {t:'14:20',s:860,sp:'B',text:'另外李总那边一直在问数据导出，这个跟定价也有关系，导出算不算增值能力？'},
+      {t:'31:07',s:1867,sp:'A',text:'导出先不放进定价讨论，我下午跟李总通话再确认他到底要什么。'} ],
+    points:[ {n:'01',t:'00:12',s:12,text:'现行按用量计价导致账单波动，续费沟通成本高。'}, {n:'02',t:'02:40',s:160,text:'纯按席位对高用量小团队客户会亏损，需要混合模型。'}, {n:'03',t:'09:41',s:581,text:'决策：周五前产出三方案对比表，下周会拍板，不再延期。'} ],
+    todos:[ {text:'输出三种定价方案的对比表', owner:'小张', due:'周五 9/11'}, {text:'与李总确认"数据导出"的真实需求', owner:'你', due:'今天'} ],
+    nodes:[ {x:18,y:20,text:'账单波动 → 续费难',bg:'#fff'}, {x:82,y:20,text:'纯席位会亏高用量客户',bg:'#fff'}, {x:16,y:60,text:'混合模型：席位+超额',bg:C.mintSoft}, {x:84,y:62,text:'数据导出 = 增值？',bg:'#fff'}, {x:50,y:88,text:'待办：周五对比表',bg:C.amberSoft} ] },
+  s2:{ id:'s2', title:'与李总通话', time:'14:05', dur:'22 min', speakers:'A B', kind:'通话', brief:'"数据导出"被提了 3 次；他要的其实是按月自动归档到他们的 OSS。', todoCount:1,
+    segments:[
+      {t:'01:10',s:70,sp:'B',text:'上次说的数据导出，你们那边有进展吗？我们财务每个月都要手工拉一遍。'},
+      {t:'06:32',s:392,sp:'A',text:'我们在排期。你们理想的形态是什么，CSV 下载到欧艾斯艾斯还是……'},
+      {t:'06:50',s:410,sp:'B',text:'最好是每个月自动推到我们自己的 OSS 桶，不用人点。你们 8 月说 9 月初给方案的。',en:'Ideally it pushes to our own OSS bucket every month, no clicks. Back in August you said early September for the proposal.'},
+      {t:'14:23',s:863,sp:'B',text:'如果定价要改，导出这种基础能力别单独收费，我们内部很难过。',en:'If pricing changes, please don\u2019t charge separately for basics like export — it\u2019s hard to justify internally.'},
+      {t:'20:05',s:1205,sp:'A',text:'明白，我这两天把方案发你。'} ],
+    points:[ {n:'01',t:'06:50',s:410,text:'李总要的不是"导出按钮"，而是按月自动归档到客户 OSS。'}, {n:'02',t:'14:23',s:863,text:'客户明确反对把导出作为付费增值能力。'}, {n:'03',t:'20:05',s:1205,text:'你再次承诺"这两天发方案"，已是第二次承诺。'} ],
+    todos:[ {text:'起草数据导出方案回复', owner:'你', due:'9/8 前'} ],
+    nodes:[ {x:18,y:20,text:'手工拉数据 · 每月',bg:'#fff'}, {x:82,y:20,text:'自动推 OSS',bg:C.mintSoft}, {x:16,y:60,text:'反对单独收费',bg:'#fff'}, {x:84,y:62,text:'8/20 承诺 · 未兑现',bg:C.amberSoft}, {x:50,y:88,text:'待办：发方案',bg:C.amberSoft} ] },
+  s3:{ id:'s3', title:'路上碎念', time:'18:40', dur:'3 min', speakers:'A', kind:'碎念', brief:'"配对必须一次成功，卡没屏幕，所有失败都得在手机上讲清楚。"', todoCount:0,
+    segments:[ {t:'00:05',s:5,sp:'A',text:'想到一个事，配对必须一次成功。卡没有屏幕，任何失败用户都不知道发生了什么，都得靠手机讲清楚。'}, {t:'01:20',s:80,sp:'A',text:'还有，被别的手机绑过的卡，要给一个能自助重置的路径，不然只能退货。'} ],
+    points:[ {n:'01',t:'00:05',s:5,text:'配对流程的所有反馈都必须在手机端完成。'}, {n:'02',t:'01:20',s:80,text:'需要自助重置路径处理已绑定设备。'} ], todos:[],
+    nodes:[ {x:18,y:20,text:'卡无屏',bg:'#fff'}, {x:82,y:20,text:'反馈全在手机',bg:C.mintSoft}, {x:16,y:60,text:'一次成功',bg:'#fff'}, {x:84,y:62,text:'自助重置',bg:C.mintSoft}, {x:50,y:88,text:'可沉淀成文档',bg:C.amberSoft} ] },
+  s4:{ id:'s4', title:'与设计师 1:1', time:'昨天 16:00', dur:'35 min', speakers:'A B', kind:'会议', brief:'确定首页用暖纸底而不是灰底。', todoCount:0, segments:[{t:'00:10',s:10,sp:'A',text:'首页用暖纸底，不要灰。'}], points:[], todos:[], nodes:[] },
+  s5:{ id:'s5', title:'早会', time:'昨天 09:30', dur:'12 min', speakers:'A B C', kind:'会议', brief:'同步本周里程碑。', todoCount:0, segments:[{t:'00:10',s:10,sp:'A',text:'本周里程碑：配对流程走通。'}], points:[], todos:[], nodes:[] },
+};
+const SLATE='#5B7380';
+const TREES = {
+  s1:[ {title:'为什么要改定价', color:C.mint, kids:[{text:'按用量账单波动，续费难讲清',t:'00:12',s:12},{text:'纯席位会亏高用量小团队',t:'02:40',s:160}]},
+       {title:'小谛归纳：分歧本质是客户分层', color:SLATE, kids:[{text:'任何单一维度都伤一边'},{text:'混合模型：席位 + 超额用量',t:'05:03',s:303}]},
+       {title:'行动', color:C.amber, kids:[{text:'小张周五前出三方案对比表',t:'09:41',s:581},{text:'与李总确认"数据导出"真实需求',t:'31:07',s:1867}]} ],
+  s2:[ {title:'李总的诉求', color:C.mint, kids:[{text:'财务每月手工拉数据',t:'01:10',s:70},{text:'要的是自动推到 OSS，不是导出按钮',t:'06:50',s:410},{text:'反对把导出单独收费',t:'14:23',s:863}]},
+       {title:'小谛归纳：伪需求 → 真需求', color:SLATE, kids:[{text:'"导出" = 月度自动归档到客户自有存储'},{text:'客户把它归为基础能力'}]},
+       {title:'行动 · 高风险承诺', color:C.amber, kids:[{text:'第 2 次承诺"这两天发方案"',t:'20:05',s:1205},{text:'9/8 前起草方案回复'}]} ],
+  s3:[ {title:'原声', color:C.mint, kids:[{text:'配对必须一次成功，卡没屏幕',t:'00:05',s:5},{text:'被绑过的卡要能自助重置',t:'01:20',s:80}]},
+       {title:'小谛归纳', color:SLATE, kids:[{text:'可沉淀为产品原则："一次成功"'}]} ],
+};
+const STATUS_STYLE = { '待确认':{dot:C.amber,bg:C.amberSoft,fg:C.amber}, '规划':{dot:C.mint,bg:C.mintSoft,fg:C.mint}, '执行':{dot:C.mint,bg:C.mintSoft,fg:C.mint}, '待确认结果':{dot:C.amber,bg:C.amberSoft,fg:C.amber}, '完成':{dot:'#9AA39C',bg:C.paper,fg:C.ink2}, '终止':{dot:'#C0492B',bg:'rgba(192,73,43,.08)',fg:'#C0492B'} };
+const ARTIFACTS = {
+  t1:{ type:'邮件草稿', name:'致李总：数据导出方案.eml', body:'李总好，\n\n关于数据导出，我们理解您的核心需求是"每月自动归档到贵司 OSS，无需人工介入"。方案如下：\n1. 每月 1 日 02:00 自动导出上月全量数据（CSV + Parquet）\n2. 通过 STS 临时凭证推送到您指定的 OSS 桶\n3. 导出作为基础能力，不单独计费\n\n预计 10 月 15 日前上线。\n—— 阿澈' },
+  t2:{ type:'对比表', name:'Q4 定价三方案对比.xlsx', body:'方案 A · 纯席位  ¥199/席/月  | 3 家大客户预计亏损 -¥42k/月\n方案 B · 纯用量  ¥0.8/千次   | 账单波动 ±35%，续费流失风险\n方案 C · 混合    ¥99/席 + 超额 ¥0.5/千次 | 覆盖 92% 客户，营收 +6%\n\n小谛建议：C，附三家大客户逐家测算。' },
+  t3:{ type:'日历预约', name:'周五 15:00 定价评审 · 会议室 B', body:'与会：你、小张、B\n议程：三方案对比表评审（30 min）\n已检测冲突：无\n\n采用后将写入你的日历并向小张发送邀请。' },
+  t4:{ type:'纪要', name:'8月30日周会纪要', body:'已发布到团队频道 #product。' },
+};
+const INIT_TASKS = [
+  { id:'t1', title:'起草给李总的数据导出方案回复', note:'你 8 月 20 日和今天各承诺了一次，记忆里还没有动作。我按通话原声拟了一版草稿，你点头我再发。', source:'会议 · 与李总通话', status:'待确认', refs:[{label:'与李总通话 06:50',sid:'s2',s:410},{label:'8月20日承诺',sid:'s2',s:70}], artifact:null, ver:0 },
+  { id:'t2', title:'整理 Q4 定价三方案对比表', note:'周会上决定周五前出表。我先按周会讨论搭好三列，小张只需要填大客户测算。', source:'会议 · 产品周会', status:'执行', refs:[{label:'产品周会 09:41',sid:'s1',s:581}], artifact:null, ver:0 },
+  { id:'t3', title:'预约周五 15:00 与小张的定价评审', note:'周五下午你和小张都空着，会议室 B 可用。确认后我才会写进日历、发邀请。', source:'会议 · 产品周会', status:'待确认结果', refs:[{label:'产品周会 09:41',sid:'s1',s:581}], artifact:ARTIFACTS.t3, ver:1 },
+  { id:'t4', title:'发布上周周会纪要到团队', note:'已发布到 #product，3 人已读。', source:'日常', status:'完成', refs:[], artifact:ARTIFACTS.t4, ver:1 },
+  { id:'t5', title:'替你回复招聘渠道的催款', note:'你驳回了：这事你想自己回。', source:'对话', status:'终止', refs:[], artifact:null, ver:0 },
+];
+const INIT_CONFIRM = [
+  { id:'c1', text:'李总反对将数据导出作为付费增值能力。', why:'原声明确，但可能只代表他个人而非采购方。', t:'14:23', sid:'s2', s:863, state:null },
+  { id:'c2', text:'方案 C（混合计价）将使营收提升约 6%。', why:'来自小张口头估算，无数据支撑。', t:'05:03', sid:'s1', s:303, state:null },
+  { id:'c3', text:'三家大客户中，至少一家会因纯席位定价流失。', why:'B 的推断，未被任何人反驳，也未被证实。', t:'02:40', sid:'s1', s:160, state:null },
+];
+const STEP_ORDER = ['待确认','规划','执行','待确认结果','完成'];
+const STEP_DESC = { '待确认':'小谛依会话/记忆生成目标，等你确认', '规划':'目标确认，拆解要读哪些原声、用哪些工具', '执行':'Agent 读原声 + 记忆图谱，调用工具产出工件', '待确认结果':'工件回到你手里，采用前不产生任何外部副作用', '完成':'你点了采用/发布，真实副作用在此刻发生' };
+const LIVE_CAPS = [
+  { sp:'B', color:'#E0A24A', zh:'如果定价要改，导出这种基础能力别单独收费。', en:'If pricing changes, please don\u2019t charge separately for basics like export.' },
+  { sp:'A', color:'#37C9B6', zh:'明白，我这两天把方案发你。', en:'Understood, I\u2019ll send you the proposal in the next couple of days.' },
+  { sp:'B', color:'#E0A24A', zh:'好，那我等你。', en:'Alright, I\u2019ll wait for it.' },
+];
+const PLANS = [
+  { id:'Free', name:'Free', price:'¥0', feats:'离线转写 · 摘要 · 今日谛听\n无实时字幕，无 Agent 执行' },
+  { id:'Plus', name:'Plus', price:'¥39 / 月', feats:'实时字幕 + 翻译（唤醒或手动触发）\nAgent 起草 / 整理，每月 30 次执行' },
+  { id:'Unlimited', name:'Unlimited', price:'¥99 / 月', feats:'Agent 不限次，含预约 / 检索等外部动作\n团队发布与共享记忆' },
+];
+const READ = [
+  { text:'我是阿澈，正在用谛听记录今天的产品周会。', heard:'我是阿澈，正在用第一记录今天的产品周会。', fix:{wrong:'第一',right:'谛听'} },
+  { text:'李总要的是每月自动归档到 OSS，不是导出按钮。', heard:'李总要的是每月自动归档到 OSS，不是导出按钮。', fix:null },
+  { text:'实时字幕走 Hermes 通道，其余时间离线转写。', heard:'实时字幕走河密斯通道，其余时间离线转写。', fix:{wrong:'河密斯',right:'Hermes'} },
+];
+const SCENES = [
+  { id:'meeting', name:'内部会议', brief:'多人 · 决策与待办为主', cues:['≥3 说话人','日历有会议','会议室声学'] },
+  { id:'call', name:'客户通话', brief:'双人 · 承诺与诉求最重要', cues:['2 说话人','通话音质','出现客户人名'] },
+  { id:'one', name:'1:1', brief:'双人 · 反馈与情绪', cues:['2 说话人','固定周期','无议程'] },
+  { id:'mono', name:'独白碎念', brief:'只有你 · 想法而非任务', cues:['1 说话人 = 你','< 5 分钟','移动中'] },
+  { id:'class', name:'课堂 / 讲座', brief:'一人长讲 · 知识点提取', cues:['单说话人 > 20 分钟','非你'] },
+  { id:'interview', name:'采访 / 调研', brief:'问答式 · 原话保真', cues:['问答交替','你为提问方'] },
+];
+const RULES = [
+  { id:'cmd', hear:'祈使句', do:'建待确认任务', eg:'"帮我把方案发给李总" → 任务工作台', color:'#C9781E' },
+  { id:'promise', hear:'承诺句', do:'记为待办 + 记忆节点', eg:'"这两天我发你" → 明日待办，并在图谱里挂上人和日期', color:'#C9781E' },
+  { id:'decision', hear:'决策句', do:'写入纪要', eg:'"那就这么定" → 总结·会议内容', color:'#12A594' },
+  { id:'ask', hear:'反复诉求', do:'小谛观察', eg:'同一词跨会话 ≥3 次 → 观察卡', color:'#12A594' },
+  { id:'chat', hear:'闲聊 / 寒暄', do:'忽略，不入纪要', eg:'天气、午饭、客套 → 只保留原声', color:'#636B63' },
+  { id:'foreign', hear:'外语', do:'开实时翻译', eg:'检测到英语 → Hermes 通道 + 双语字幕', color:'#12A594' },
+];
+const SCENE_RULES_DEFAULT = { meeting:['cmd','decision','ask','chat'], call:['cmd','promise','ask','chat','foreign'], one:['promise','chat'], mono:['cmd'], class:['decision'], interview:[] };
+const PROMPTS_DEFAULT = {
+  meeting:{ '纪要':'按「背景 / 分歧 / 决策 / 待办」四段整理。决策必须带原声时间点；分歧要写清谁持什么立场。语气克制，不加评价。', '待办':'只提取带明确责任人或截止时间的句子。缺一项就放进「待确认」而不是硬猜。', '洞察':'找出会议里没被说出口的张力：谁在回避、哪个词被反复提。给出可证伪的判断。' },
+  call:{ '纪要':'以客户诉求为中心。区分"他说的"与"他要的"。', '待办':'我方承诺一律提取为待办，并标注是第几次承诺。', '洞察':'判断客户立场是否代表采购方；标注可证伪点。' },
+};
+const SKILLS_INIT = [
+  { id:'draft', name:'起草文档 / 邮件', desc:'内置 · 基于原声与记忆写初稿', on:true, perm:'读会话、读记忆', gate:true, icon:'#12A594', builtin:true },
+  { id:'cal', name:'日历', desc:'MCP · 查空闲、创建事件、发邀请', on:true, perm:'读写日历', gate:true, icon:'#C9781E' },
+  { id:'mail', name:'邮箱', desc:'MCP · 以你的名义发送', on:true, perm:'发送邮件', gate:true, icon:'#1B2420' },
+  { id:'search', name:'检索', desc:'内置 · 全网与内部知识库', on:true, perm:'联网', gate:false, icon:'#636B63', builtin:true },
+  { id:'feishu', name:'飞书', desc:'MCP · 群消息、多维表格', on:false, perm:'发送消息、写表', gate:true, icon:'#9AA39C' },
+  { id:'notion', name:'Notion', desc:'MCP · 页面与数据库', on:false, perm:'写页面', gate:true, icon:'#9AA39C' },
+];
+const MODELS = [
+  { layer:'转写 ASR', key:'asr', hint:'影响准确率与延迟', opts:[{id:'local',name:'端侧小模型',tag:'离线 · 免费 · 稍慢'},{id:'cloud',name:'云端 ASR',tag:'高精 · 默认'},{id:'hermes',name:'Hermes 实时',tag:'仅实时段 · 贵'}] },
+  { layer:'理解 / 纪要', key:'llm', hint:'影响总结与洞察质量', opts:[{id:'fast',name:'快速',tag:'秒级 · 省'},{id:'std',name:'标准',tag:'默认'},{id:'deep',name:'深思',tag:'洞察 / 报告用'}] },
+  { layer:'Agent 执行', key:'agent', hint:'影响工件质量与成本', opts:[{id:'std',name:'标准',tag:'默认'},{id:'deep',name:'深思',tag:'长文 / 多步'},{id:'private',name:'私有部署',tag:'团队版'}] },
+];
+const HOT_INIT = [
+  {word:'谛听',read:'dì tīng',src:'产品'},{word:'小谛',read:'',src:'产品'},{word:'Hermes',read:'河密斯',src:'纠错'},{word:'MR20',read:'',src:'产品'},{word:'Farosh',read:'法罗士',src:'产品'},
+  {word:'李总',read:'',src:'通讯录'},{word:'小张',read:'',src:'通讯录'},{word:'OSS',read:'',src:'纠错'},{word:'Q4 定价评审',read:'',src:'日历'},{word:'按席位',read:'',src:'手输'},
+];
+const fmt = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+class Component extends DCLogic {
+  state = { screen:'home', stack:[], sessTab:'转写', sid:'s1', cur:0, playing:false, insTab:'纪要', taskTab:'任务', taskFilter:'全部', tid:'t1', tasks:INIT_TASKS, confirmItems:INIT_CONFIRM, chatScope:'global', chatMsgs:[], chatInput:'', chatTyping:false, micOn:false, reportTpl:'auto', pairState:'Idle', pairErr:false, liveSec:0, liveRt:true, liveMode:'meeting', livePaused:false, todos:[{id:1,text:'把数据导出方案发给李总',due:'9/8',done:false},{id:2,text:'看小张的对比表初稿',due:'9/11',done:false},{id:3,text:'回复设计师暖纸底的样张',due:'明天',done:true}], confirm:null, toast:'', running:false, runStep:'', sessGen:false,
+    obStep:1, readIdx:0, readState:'idle', readFixed:{}, scenesOn:{meeting:true,call:true,mono:true}, contactsDone:false, calendarDone:false,
+    hotwords:HOT_INIT, hotInput:'', hotFilter:'全部', hotCands:[{word:'STS 凭证',n:2},{word:'Parquet',n:2},{word:'混合计价',n:4}],
+    sceneCur:'call', sceneRules:SCENE_RULES_DEFAULT, promptTab:'纪要', prompts:PROMPTS_DEFAULT, skills:SKILLS_INIT, models:{asr:'cloud',llm:'std',agent:'std'}, liveScene:'call', fixedSegs:{}, bilingual:false, sessFilter:'全部', meT:{alert:true,wake:true,cloud:false},
+    rvTab:'周', retention:{audio:'30 天',text:'1 年',graph:'温度归档'}, kept:{}, destOpen:'openclaw', destOn:{cal:true,mail:true,notion:false,feishu:true,openclaw:true,hermes:true}, clawTypes:['检索','整理'], hermesTriggers:['唤醒词','手动','外语','祈使'], taskDest:{} };
+  addTaskFrom(text, source, note){ const nt={id:'t'+Date.now(),title:text,note,source,status:'待确认',refs:[],artifact:null,ver:0}; this.setState(s=>({tasks:[nt,...s.tasks]})); this.go('task',{tid:nt.id}); }
+  addHot(word, src){ const w=word.trim(); if(!w) return; const [ww,read='']=w.split('/').map(x=>x.trim()); this.setState(s=>({ hotwords:[{word:ww,read,src},...s.hotwords.filter(h=>h.word!==ww)], hotInput:'', hotCands:s.hotCands.filter(c=>c.word!==ww) })); this.toastMsg(`「${ww}」已加入热词 · 后续转写自动修正`); }
+  componentDidMount(){ this._tick = setInterval(()=>{ if(this.state.playing){ this.setState(s=>({cur: s.cur+1 >= 2000 ? 0 : s.cur+1})); } if(this.state.screen==='live' && !this.state.livePaused){ this.setState(s=>({liveSec:s.liveSec+1})); } }, 1000); }
+  componentWillUnmount(){ clearInterval(this._tick); clearTimeout(this._toastT); }
+  go(screen, extra={}){ this.setState(s=>({ stack:[...s.stack, s.screen], screen, ...extra })); }
+  back(){ this.setState(s=>{ const st=[...s.stack]; const prev=st.pop() || 'home'; return { stack:st, screen:prev, playing:false }; }); }
+  tab(screen){ this.setState({ screen, stack:[], playing:false }); }
+  toastMsg(t){ clearTimeout(this._toastT); this.setState({toast:t}); this._toastT=setTimeout(()=>this.setState({toast:''}),2400); }
+  openSession(sid, s=0){ this.go('session', { sid, cur:s, sessTab:'转写', playing:false }); }
+  updTask(id, patch){ this.setState(s=>({ tasks: s.tasks.map(t=>t.id===id?{...t,...patch}:t) })); }
+  runAgent(id){ this.setState({running:true, runStep:'读取原声与记忆'}); this.updTask(id,{status:'执行'});
+    setTimeout(()=>this.setState({runStep:'调用 MCP · 起草文档'}),1200);
+    setTimeout(()=>{ this.setState({running:false}); this.updTask(id,{status:'待确认结果', artifact:ARTIFACTS[id]||ARTIFACTS.t1, ver:(this.state.tasks.find(t=>t.id===id).ver||0)+1}); this.toastMsg('小谛完成了产出，等你确认。'); },2600); }
+  sendChat(text){ if(!text.trim()) return; const isCmd=/帮我|预约|整理|起草|发给/.test(text);
+    this.setState(s=>({chatMsgs:[...s.chatMsgs,{role:'u',text}], chatInput:'', chatTyping:true}));
+    setTimeout(()=>{ let reply;
+      if(isCmd){ const nt={ id:'t'+Date.now(), title:text.replace(/^帮我/,'').slice(0,28), note:'来自对话的祈使指令。我先建成待确认任务，你确认目标我再动手。', source:'对话', status:'待确认', refs:[], artifact:null, ver:0 }; this.setState(s=>({tasks:[nt,...s.tasks]})); reply={role:'a',text:'收到。这是一个要动手的活，我已经建成任务，先等你确认目标——不会直接对外发任何东西。', link:()=>this.go('task',{tid:nt.id}), linkLabel:'已为你建任务 · 去确认 ›'}; }
+      else if(/李总|导出/.test(text)) reply={role:'a',text:'李总要的不是"导出按钮"，是每月自动归档到他们的 OSS，且不希望单独收费。你在 8/20 和今天各承诺了一次。', ref:()=>this.openSession('s2',410), refLabel:'与李总通话 06:50'};
+      else if(/定价|席位/.test(text)) reply={role:'a',text:'周会的分歧在"纯席位会亏高用量小团队"。小张提了混合方案，最终决定周五前出对比表。', ref:()=>this.openSession('s1',303), refLabel:'产品周会 05:03'};
+      else reply={role:'a',text:this.state.chatScope==='global'?'我在你所有的记录和记忆里找了一下——没有直接相关的内容。要不要我把它记成一条碎念？':'这段会话里没提到这个。要我扩大到全部记忆去找吗？'};
+      this.setState(s=>({chatMsgs:[...s.chatMsgs,reply], chatTyping:false})); },1100); }
+  startPair(){ if(this.state.pairState!=='Idle') return; const seq=[['Scanning',0],['Connecting',1200],['Authing',2200],['Online',3300]];
+    seq.forEach(([st,d])=>setTimeout(()=>{ if(st==='Authing' && this.state.pairErrSim){ this.setState({pairState:'KeyRejected',pairErr:true}); return; } if(this.state.pairState==='KeyRejected') return; this.setState({pairState:st}); if(st==='Online'){ setTimeout(()=>{ this.setState({pairState:'Idle',stack:[],screen:'onboard',obStep:1,readIdx:0,readState:'idle'}); this.toastMsg('配对成功，deviceKey 已由后台铸发并加密保存。接下来花 1 分钟教教小谛。'); },700); } },d)); }
+  renderVals(){
+    const s=this.state, p=this.props; const dev=p.deviceState ?? 'online'; const plan=p.plan ?? 'Plus'; const emptyToday = !!(p.emptyToday ?? false);
+    const sc = s.screen; const is = k => sc===k;
+    const sess = SESSIONS[s.sid]; const segs = sess.segments; const total = sess.segments.length ? Math.max(...segs.map(g=>g.s))+60 : 100;
+    let activeIdx = -1; segs.forEach((g,i)=>{ if(s.cur>=g.s) activeIdx=i; });
+    const segments = segs.map((g,i)=>{ const key=s.sid+i; const fixed=!!s.fixedSegs[key]; const hasFix = s.sid==='s2' && i===1; return { ...g, text: fixed? g.text.replace('欧艾斯艾斯','OSS') : g.text, speaker: g.sp==='A'?'你':'说话人 '+g.sp, spColor:SP[g.sp], bg: i===activeIdx ? C.mintSoft : 'transparent', seek:()=>this.setState({cur:g.s,playing:true}), hasFix, fixLabel: fixed?'已纠正 · 入热词':'「欧艾斯艾斯」→ OSS？', fixBg: fixed?C.mintSoft:'#fff', fixFg: fixed?C.mint:C.amber, fixBd: fixed?C.mint:C.amber, showEn: s.bilingual && !!g.en, en:g.en||'', fix:(e)=>{ e.stopPropagation(); if(fixed) return; this.setState(st=>({fixedSegs:{...st.fixedSegs,[key]:true}})); this.addHot('OSS / 欧艾斯艾斯','纠错'); this.toastMsg('已纠正并加入热词，口音模型将回训 · BP +3'); } }; });
+    const tabRow = (list, curKey, pick) => list.map(l=>({label:l, pick:()=>pick(l), color:l===curKey?C.ink:C.ink2, line:l===curKey?C.mint:'transparent'}));
+    const task = s.tasks.find(t=>t.id===s.tid) || s.tasks[0]; const ts = STATUS_STYLE[task.status];
+    const stepIdx = STEP_ORDER.indexOf(task.status); const isTerm = task.status==='终止';
+    const taskSteps = STEP_ORDER.map((k,i)=>{ const done=i<stepIdx, now=i===stepIdx; return { label: isTerm && i===0 ? '已终止（用户驳回）' : k, desc: STEP_DESC[k], dot: done?C.mint: now?(k.includes('确认')?C.amber:C.mint):'#fff', ring: done?C.mint: now?(k.includes('确认')?C.amber:C.mint):C.hair, lineBg: i<STEP_ORDER.length-1 ? (done?C.mint:C.hair) : 'transparent', fw: now?600:400, fg: now?C.ink:(done?C.ink2:'#9AA39C') }; });
+    const btn=(label,run,primary,amber)=>({label,run,flex:1,bg:primary?(amber?C.amber:C.mint):'#fff',fg:primary?'#fff':C.ink,bd:primary?'transparent':C.hair});
+    let taskActions=[];
+    if(task.status==='待确认') taskActions=[btn('驳回',()=>{this.updTask(task.id,{status:'终止'});this.toastMsg('已终止。小谛不会再为这条意图起 Agent。');},false), btn('确认目标 → 交给小谛',()=>{this.updTask(task.id,{status:'规划'}); setTimeout(()=>this.runAgent(task.id),600);},true,true)];
+    else if(task.status==='规划') taskActions=[btn('开始执行',()=>this.runAgent(task.id),true)];
+    else if(task.status==='执行') taskActions=[btn('执行中…',()=>{},false)];
+    else if(task.status==='待确认结果') taskActions=[btn('让小谛改改',()=>{this.updTask(task.id,{status:'规划'}); setTimeout(()=>this.runAgent(task.id),500);},false), btn(task.artifact&&task.artifact.type==='日历预约'?'采用并写入日历':'采用并发送',()=>this.setState({confirm:{title:task.artifact?task.artifact.name:task.title, body:`目的地：${curDest.join('、')}。`+(task.artifact&&task.artifact.type==='日历预约'?'将写入你的日历，并向小张发送会议邀请。':'将以你的名义发出。发出后无法撤回。'), cta:'确认，生效', onOk:()=>{this.updTask(task.id,{status:'完成'});this.toastMsg(`已发布到 ${curDest.join(' / ')} · BP +20`);}}}),true,true)];
+    else if(task.status==='完成') taskActions=[btn('回到原声',()=>task.refs[0]?this.openSession(task.refs[0].sid,task.refs[0].s):this.tab('sessions'),false), btn('分享工件',()=>this.toastMsg('已生成只读链接（7 天有效）并复制'),true)];
+    else taskActions=[btn('重新打开为待确认',()=>this.updTask(task.id,{status:'待确认'}),false)];
+    const filters=['全部','待确认','规划','执行','完成','终止'];
+    const taskList = s.tasks.filter(t=> s.taskFilter==='全部' || t.status===s.taskFilter || (s.taskFilter==='待确认'&&t.status==='待确认结果')).map(t=>({ ...t, dot:STATUS_STYLE[t.status].dot, stBg:STATUS_STYLE[t.status].bg, stFg:STATUS_STYLE[t.status].fg, open:()=>this.go('task',{tid:t.id}) }));
+    const confirmItems = s.confirmItems.map(c=>({ ...c, bar: c.state==='ok'?C.mint: c.state==='doubt'?C.amber:C.hair, cLabel:c.state==='ok'?'已入记忆':'确认', cBg:c.state==='ok'?C.mint:'#fff', cFg:c.state==='ok'?'#fff':C.mint, cBd:C.mint, dLabel:c.state==='doubt'?'已标存疑':'存疑', dBg:c.state==='doubt'?C.amberSoft:'#fff', dFg:c.state==='doubt'?C.amber:C.ink2,
+      confirm:()=>{ this.setState(st=>({confirmItems:st.confirmItems.map(x=>x.id===c.id?{...x,state:'ok'}:x)})); this.toastMsg('已写入记忆图谱 · BP +5'); }, doubt:()=>this.setState(st=>({confirmItems:st.confirmItems.map(x=>x.id===c.id?{...x,state:'doubt'}:x)})) }));
+    const rp = { auto:{ kicker:'季度复盘 · 自动识别', title:'Q4 定价：从"按用量"走向混合模型', sub:'基于 9月6日 产品周会与李总通话', stats:[{v:'3',k:'候选方案'},{v:'+6%',k:'方案 C 营收'},{v:'2',k:'未兑现承诺'}], concl:'混合计价能覆盖 92% 客户并避免大客户亏损；但"数据导出"必须作为基础能力，否则最大客户将对定价改革产生抵触。', bg:'#1B2420', fg:'#E8ECE5', tile:'rgba(255,255,255,.1)',
+        sections:[{n:'01',title:'问题',body:'按用量计价造成账单波动，续费沟通成本高。'},{n:'02',title:'分歧',body:'纯席位对高用量小团队客户会亏损，B 提出反对。'},{n:'03',title:'客户信号',body:'李总三次提及导出，明确反对单独收费。'},{n:'04',title:'下一步',body:'周五对比表 → 下周拍板；9/8 前回复李总方案。'}] },
+      diary:{ kicker:'职场日记', title:'打工人的周日：一场没吵完的定价会', sub:'9月6日 · 3 场对话 · 1h13', stats:[{v:'1h13',k:'记录'},{v:'6',k:'被提到的人'},{v:'1',k:'没接住的承诺'}], concl:'今天最值得记住的不是决策，而是李总第三次提"导出"时的语气——他在替财务同事说话。', bg:'#F4F3EE', fg:'#1B2420', tile:'#fff',
+        sections:[{n:'上午',title:'周会',body:'20 分钟的席位 vs 用量之争，小张的混合方案让会议有了出口。'},{n:'下午',title:'李总来电',body:'"你们 8 月说 9 月初给方案的"——这句被小谛标成了被忽略的提醒。'},{n:'傍晚',title:'路上碎念',body:'想到配对必须一次成功。可以沉淀成一篇内部文档。'}] },
+      research:{ kicker:'调研纪要', title:'客户对"数据导出"的真实诉求', sub:'样本：李总 · 1 次通话 · 3 处相关发言', stats:[{v:'3',k:'提及次数'},{v:'OSS',k:'目标形态'},{v:'0',k:'愿付费'}], concl:'"导出"是伪需求，"每月自动归档到客户自有存储、零人工"才是真需求；且客户将其归类为基础能力。', bg:'#12A594', fg:'#fff', tile:'rgba(255,255,255,.16)',
+        sections:[{n:'01',title:'现状痛点',body:'财务每月手工拉数据。'},{n:'02',title:'理想形态',body:'月初自动推送到客户 OSS 桶。'},{n:'03',title:'待确认',body:'是否代表采购方立场？建议下次通话确认。'}] } }[s.reportTpl];
+    const tplLabels={auto:'自动 · 季度复盘',diary:'职场日记',research:'调研纪要'};
+    const chatMsgs = s.chatMsgs.map(m=>({ text:m.text, justify:m.role==='u'?'flex-end':'flex-start', bg:m.role==='u'?C.mint:'#fff', fg:m.role==='u'?'#fff':C.ink, bd:m.role==='u'?'transparent':C.hair, hasLink:!!m.link, link:m.link, linkLabel:m.linkLabel, hasRef:!!m.ref, ref:m.ref, refLabel:m.refLabel }));
+    if(chatMsgs.length===0) chatMsgs.push({ text: s.chatScope==='global' ? '我在。今天有 3 场对话、1 个没接住的承诺。想聊哪个，或者直接派活给我。' : `这段是「${sess.title}」。可以问我里面谁说了什么，或让我基于它动手。`, justify:'flex-start', bg:'#fff', fg:C.ink, bd:C.hair, hasLink:false, hasRef:false });
+    const pairBusy = s.pairState!=='Idle' && s.pairState!=='KeyRejected';
+    const pairLabels={Idle:'未开始',Scanning:'扫描中',Connecting:'连接中',Authing:'写入密钥…',Online:'已上线',KeyRejected:'密钥被拒'};
+    const scanList=[{name:'MR20-7F3A',meta:'svc 001120a0 · RSSI -48',hi:true,rssi:4},{name:'Farosh-02B1',meta:'svc 0000aa19 · RSSI -67',rssi:2},{name:'未知设备',meta:'RSSI -81',rssi:1}].map(d=>({ ...d, bg:d.hi?C.mintSoft:'#fff', dot:d.hi?(s.pairState==='Online'?C.mint:C.amber):C.hair, b1:d.rssi>=1?C.ink:C.hair,b2:d.rssi>=2?C.ink:C.hair,b3:d.rssi>=3?C.ink:C.hair,b4:d.rssi>=4?C.ink:C.hair }));
+    const devMap={online:{dot:C.mint,label:'在线'},offline:{dot:'#9AA39C',label:'离线'},backfill:{dot:C.amber,label:'回填中 64%'}}[dev];
+    const bars = Array.from({length:30},(_,i)=>React.createElement('div',{key:i,style:{width:3,height:44,borderRadius:2,background:'#37C9B6',transformOrigin:'center',animation:`dtWave ${(0.7+((i*37)%50)/100).toFixed(2)}s ease-in-out ${((i*13)%40)/100}s infinite`}}));
+    const liveWave = React.createElement(React.Fragment,null,bars);
+    const pips = sess.todos.length ? sess.points.slice(-2).map(p=>p.s) : [];
+    const waveStatic = React.createElement('div',{style:{position:'relative',width:'100%',height:34,display:'flex',alignItems:'center'}},
+      React.createElement('div',{style:{display:'flex',alignItems:'center',gap:2,width:'100%',height:24}}, Array.from({length:48},(_,i)=>React.createElement('div',{key:i,style:{flex:1,height:4+((i*29)%19),borderRadius:1,background:(i/48*100)<(s.cur/total*100)?C.mint:'#BDC4C1'}}))),
+      ...pips.map((ps,i)=>React.createElement('div',{key:'p'+i,title:'此处提取了待办',style:{position:'absolute',left:`calc(${(ps/total*100).toFixed(1)}% - 4px)`,bottom:-1,width:8,height:8,background:C.amber,borderRadius:'50% 50% 50% 0',transform:'rotate(-45deg)'}})));
+    const spName = { A:'你', B: s.sid==='s2' ? '李总' : '说话人 B', C:'小张' };
+    const shareRaw = {}; segs.forEach(g=>{ shareRaw[g.sp]=(shareRaw[g.sp]||0)+g.text.length; }); const shareTot = Object.values(shareRaw).reduce((a,b)=>a+b,0)||1;
+    const shares = Object.keys(shareRaw).map(k=>({ name:spName[k]||k, pct:Math.round(shareRaw[k]/shareTot*100), color:SP[k], open:()=>this.toastMsg(`${spName[k]||k} · 人物卡（Demo）：出现在 ${k==='A'?'全部':'2'} 场会话`) }));
+    const tree = (TREES[s.sid]||[]).map(br=>({ ...br, n:br.kids.length, kids:br.kids.map(k=>({ ...k, hasT:!!k.t, bg: br.color===C.amber?C.amberSoft:(br.color===SLATE?'#F4F3EE':'#fff'), seek:()=>{ if(k.s!=null) this.setState({sessTab:'转写',cur:k.s,playing:true}); } })) }));
+    const playIcon = React.createElement('svg',{width:14,height:14,viewBox:'0 0 14 14'}, s.playing ? React.createElement('path',{d:'M3 2h3v10H3zM8 2h3v10H8z',fill:'#fff'}) : React.createElement('path',{d:'M3 1.5v11l9-5.5z',fill:'#fff'}));
+    // ── 教小谛 ──
+    const rd = READ[s.readIdx]; const readDone = s.readState==='done'; const readFixedThis = !!s.readFixed[s.readIdx];
+    const obWave = React.createElement(React.Fragment,null, Array.from({length:26},(_,i)=>React.createElement('div',{key:i,style:{width:3,height:30,borderRadius:2,background: s.readState==='rec'?C.mint:C.hair, transformOrigin:'center', animation: s.readState==='rec'?`dtWave ${(0.6+((i*37)%50)/100).toFixed(2)}s ease-in-out ${((i*13)%40)/100}s infinite`:'none', transform: s.readState==='rec'?undefined:'scaleY(.25)'}})));
+    const startRead=()=>{ this.setState({readState:'rec'}); setTimeout(()=>this.setState({readState:'done'}),1800); };
+    const hotCount = s.hotwords.length; const sceneCount = Object.values(s.scenesOn).filter(Boolean).length; const skillCount = s.skills.filter(k=>k.on).length;
+    const srcStyle = { '产品':[C.mintSoft,C.mint], '纠错':[C.amberSoft,C.amber], '通讯录':[C.paper,C.ink2], '日历':[C.paper,C.ink2], '手输':[C.paper,C.ink2] };
+    const curSceneDef = SCENES.find(x=>x.id===s.sceneCur); const curOn = !!s.scenesOn[s.sceneCur];
+    const promptCur = (s.prompts[s.sceneCur]||PROMPTS_DEFAULT.meeting)[s.promptTab] || '';
+    const teachGroups = [
+      { title:'听感 · 小谛怎么听', bar:C.mint, rows:[ {name:'声纹与口音', desc:'"说话人 A" 已绑定为你 · 上次校准 7月31日', value:'已校准', vc:C.mint, go:()=>this.go('onboard',{obStep:1,readIdx:0,readState:'idle'})}, {name:'热词与专名', desc:'人名 / 产品 / 行话，纠错会自动加入', value:String(hotCount), vc:C.ink, go:()=>this.go('hotwords')}, {name:'语言', desc:'中文为主，检测到英语时开翻译', value:'中 · EN', vc:C.ink2, go:()=>this.toastMsg('语言设置（Demo 略）')} ] },
+      { title:'理解 · 听到什么，做什么', bar:C.amber, rows:[ {name:'场景与响应规则', desc:'祈使→任务、承诺→待办、闲聊→忽略…按场景配置', value:sceneCount+' 场景', vc:C.ink, go:()=>this.go('scenes')}, {name:'忽略规则', desc:'口令「小谛别记」、私人时段、敏感信息打码', value:'3 条', vc:C.ink, go:()=>this.go('scenes')}, {name:'提示词', desc:'纪要 / 待办 / 洞察 三种产出的风格', value:'已自定义', vc:C.ink2, go:()=>this.go('scenes')} ] },
+      { title:'行动 · 用什么脑子、能做什么', bar:C.ink, rows:[ {name:'模型', desc:'转写 / 理解 / Agent 三层分别选', value:'云端 · 标准', vc:C.ink2, go:()=>this.go('agents')}, {name:'Agent 与 Skill', desc:'内置能力 + MCP 连接，每个可设"执行前需确认"', value:skillCount+' 已连接', vc:C.ink, go:()=>this.go('agents')}, {name:'目的地与通道', desc:'采用后去哪：日历 / 邮箱 / Notion / 飞书 / 龙虾；Hermes 触发与预算', value:Object.values(s.destOn).filter(Boolean).length+' 已连接', vc:C.ink, go:()=>this.go('dest')} ] },
+      { title:'记忆 · 小谛记住了什么', bar:'#9AA39C', rows:[ {name:'人物卡', desc:'图谱里的 18 个人，可改名、合并', value:'18', vc:C.ink, go:()=>this.go('growth')}, {name:'记忆与遗忘', desc:'三层寿命、引用即永久、四道噪音闸', value:'原声 '+s.retention.audio, vc:C.ink2, go:()=>this.go('memory')}, {name:'周 / 月复盘', desc:'承诺兑现表、决策回看、遗忘建议', value:'周日就绪', vc:C.mint, go:()=>this.go('reviews')} ] },
+    ];
+    // ── 复盘 / 记忆 / 目的地 ──
+    const pill=(on,color)=>({bg:on?color:'#fff', fg:on?'#fff':C.ink, bd:on?color:C.hair});
+    const promises=[{st:'兑现',text:'把配对流程改成一次成功',who:'自己',when:'9/2 碎念 → 9/5 提交',sid:'s3',s:5,ok:1},{st:'兑现',text:'回复设计师暖纸底样张',who:'设计师',when:'9/4 1:1 → 9/5',sid:'s4',s:10,ok:1},{st:'兑现',text:'发布上周周会纪要',who:'团队',when:'9/1 → 9/1',sid:'s5',s:10,ok:1},{st:'逾期',text:'9 月初给李总数据导出方案',who:'李总',when:'8/20 承诺 · 今天第 2 次',sid:'s2',s:410,ok:0},{st:'进行中',text:'周五前出三方案对比表',who:'小张（你拍板）',when:'9/6 周会 → 9/11',sid:'s1',s:581,ok:2}].map(p=>({...p, bg:p.ok===1?C.mintSoft:(p.ok===0?'rgba(192,73,43,.1)':C.amberSoft), fg:p.ok===1?C.mint:(p.ok===0?'#C0492B':C.amber), open:()=>this.openSession(p.sid,p.s)}));
+    const trends=[{word:'定价',pct:90,delta:'8 ↑3',color:C.amber},{word:'数据导出',pct:60,delta:'5 ↑2',color:C.amber},{word:'配对',pct:30,delta:'2 →',color:C.ink2},{word:'Hermes',pct:20,delta:'1 ↓2',color:C.mint}];
+    const nextWeek=[{text:'周一前把导出方案发给李总（已逾期 6 天）'},{text:'周五评审前，向小张要三家大客户的用量数据'},{text:'把"一次成功"写成产品原则文档'}].map(n=>({...n, toTask:()=>this.addTaskFrom(n.text,'复盘 · 第 36 周','来自周复盘的建议。我可以先起草，等你确认目标。')}));
+    const themes=[{title:'Q4 定价',n:12,body:'从"按用量"走向混合模型；分歧本质是客户分层。',sid:'s1'},{title:'客户交付与承诺',n:7,body:'李总的数据导出诉求跨 3 场，两次口头承诺未兑现。',sid:'s2'},{title:'硬件配对体验',n:5,body:'"一次成功"原则；SK 被拒的自助重置路径。',sid:'s3'}].map(t=>({...t, doc:()=>this.addTaskFrom(`把「${t.title}」沉淀成一页文档`,'复盘 · 8 月',`基于 ${t.n} 场会话的图谱聚类。我按"背景 / 结论 / 未决"三段起草，等你确认。`), open:()=>this.openSession(t.sid)}));
+    const lookbacks=[{then:'先做 MR20，Farosh 延后',date:'8/12 决策',now:'配对流程 9/5 走通，判断正确',st:'验证',bg:C.mintSoft,fg:C.mint,sid:'s3',s:5},{then:'9 月初给李总方案',date:'8/20 承诺',now:'未兑现，今天被第 3 次提及',st:'落空',bg:'rgba(192,73,43,.1)',fg:'#C0492B',sid:'s2',s:410},{then:'导出不放进定价讨论',date:'9/6 决策',now:'客户明确反对单独收费，需回看',st:'待验证',bg:C.amberSoft,fg:C.amber,sid:'s1',s:1867}].map(l=>({...l, open:()=>this.openSession(l.sid,l.s)}));
+    const tierDefs=[{k:'audio',name:'原声音频',size:'2.4 GB',desc:'过期后仅删音频，转写与引用保留',color:C.mint,opts:['7 天','30 天','90 天','永久']},{k:'text',name:'转写文本',size:'3.1 万段',desc:'未被引用的段落到期后压缩为摘要',color:SLATE,opts:['90 天','1 年','永久']},{k:'graph',name:'记忆图谱',size:'214 节点',desc:'永久保留，冷节点自动归档、不再提醒',color:C.amber,opts:['温度归档','永不归档']}];
+    const tiers=tierDefs.map(t=>({...t, opts:t.opts.map(o=>({label:o, pick:()=>this.setState(st=>({retention:{...st.retention,[t.k]:o}})), ...pill(s.retention[t.k]===o, t.color)}))}));
+    const expiring=[{id:'e1',title:'8月20日 与李总电话 · 原声',meta:'被任务 t1 引用',ref:true},{id:'e2',title:'8月14日 早会 · 原声 12 min',meta:'无引用 · 9/14 删除',ref:false},{id:'e3',title:'8月9日 路上碎念 · 原声 3 min',meta:'无引用 · 9/9 删除',ref:false}].map(e=>{ const kept=e.ref||!!s.kept[e.id]; return {...e, st:kept?(e.ref?'被引用':'已保留'):'将过期', bg:kept?C.mintSoft:C.amberSoft, fg:kept?C.mint:C.amber, act:e.ref?'':(kept?'取消保留':'保留'), keep:()=>{ if(e.ref) return; this.setState(st=>({kept:{...st.kept,[e.id]:!st.kept[e.id]}})); }}; });
+    const gates=[{n:'一',name:'设备端 VAD',desc:'静音、环境音不进手机',stat:'2h14m 挡下'},{n:'二',name:'场景忽略规则',desc:'闲聊 / 口令「小谛别记」/ 私人时段',stat:'37 句'},{n:'三',name:'"三无句"不入图谱',desc:'无人名、无动词、无时间的单次出现',stat:'112 句'},{n:'四',name:'你的"不重要"',desc:'在观察卡上点忽略，回训阈值',stat:'本周 4 次'}];
+    const routes=[{kind:'待办',to:'系统日历 + 提醒'},{kind:'文档',to:s.destOn.notion?'Notion':'本地 · Notion 未连接'},{kind:'邮件',to:'邮箱（以你的名义）'},{kind:'消息',to:'飞书 #product'},{kind:'多步执行',to:s.destOn.openclaw?'龙虾 OpenClaw':'内置 Agent'}].map(r=>({...r, change:()=>this.toastMsg(`「${r.kind}」的目的地可在下方目的地卡里切换（Demo）`)}));
+    const mono="'IBM Plex Mono',monospace", sans='inherit';
+    const destDefs=[
+      {id:'cal',name:'系统日历',glyph:'日',icon:C.mint,bar:C.mint,desc:'写入事件、发邀请',fields:[{k:'账户',v:'iCloud · 阿澈'},{k:'默认日历',v:'工作'},{k:'冲突检测',v:'开',color:C.mint}],note:'待办类默认目的地。'},
+      {id:'mail',name:'邮箱',glyph:'邮',icon:C.ink,bar:C.mint,desc:'以你的名义发送草稿',fields:[{k:'发件人',v:'ache@company.com',font:mono},{k:'签名',v:'—— 阿澈'},{k:'发送前预览',v:'必须',color:C.amber}],note:'发送不可撤回，永远走结果闸门。'},
+      {id:'notion',name:'Notion',glyph:'N',icon:'#1B2420',bar:SLATE,desc:'文档与任务数据库',fields:[{k:'工作区',v:'阿澈的 Notion'},{k:'数据库',v:'谛听 · 任务'},{k:'字段映射',v:'标题 / 状态 / 截止 / 原声链接'},{k:'同步方向',v:'谛听 → Notion（单向）'}],chipsLabel:'同步方向',chips:['单向推送','双向状态同步'],chipKey:'notionSync',note:'双向同步会让 Notion 里改的状态回写任务；默认单向，避免两边打架。'},
+      {id:'feishu',name:'飞书',glyph:'飞',icon:'#3370FF',bar:C.mint,desc:'群消息、多维表格',fields:[{k:'群',v:'#product'},{k:'@ 规则',v:'只 @ 任务里出现的人'}],note:'消息类默认目的地。'},
+      {id:'openclaw',name:'龙虾 OpenClaw',glyph:'虾',icon:'#C9781E',bar:C.amber,desc:'跑在你自己机器上的 Agent，接多步执行',fields:[{k:'Gateway',v:'ws://home.local:18789',font:mono},{k:'Token',v:'oc_••••••7f2a',font:mono},{k:'结果回传',v:'必须进待确认结果',color:C.amber}],chipsLabel:'转发给龙虾的任务类型',chips:['检索','整理','多步执行','预约'],chipKey:'clawTypes',note:'龙虾拿到的是任务意图 + 引用的原声片段，不是全部记忆。它跑完的结果回到谛听，由你点采用。'},
+      {id:'hermes',name:'Hermes 实时通道',glyph:'H',icon:SLATE,bar:SLATE,desc:'通道，不是目的地：实时字幕 / 翻译 / 语音问答',fields:[{k:'节点',v:'cn-shanghai',font:mono},{k:'电量低于',v:'20% 降级本地转写'},{k:'弱网',v:'RTT > 400ms 降级'}],chipsLabel:'什么时候开',chips:['唤醒词','手动','外语','祈使','高风险'],chipKey:'hermesTriggers',hasBudget:true,note:'不常开。命中触发条件才开，静音超时自动关。预算用完后只走离线转写。'},
+    ];
+    const dests=destDefs.map(d=>{ const on=!!s.destOn[d.id]; const sel = d.chipKey ? (d.chipKey==='notionSync' ? [s.notionSync||'单向推送'] : s[d.chipKey]) : []; return { ...d, open:s.destOpen===d.id, on, expand:()=>this.setState(st=>({destOpen:st.destOpen===d.id?null:d.id})), stateLabel: on?'已连接':'连接', ...pill(on,C.mint), fg:on?'#fff':C.ink, toggle:e=>{ e.stopPropagation(); this.setState(st=>({destOn:{...st.destOn,[d.id]:!on}, destOpen:d.id})); this.toastMsg(on?`已断开 ${d.name}`:`${d.name} 已连接`); },
+      fields:d.fields.map(f=>({...f, font:f.font||sans, color:f.color||C.ink})), hasChips:!!d.chips, chipsLabel:d.chipsLabel||'', hasBudget:!!d.hasBudget, noteColor:d.id==='openclaw'||d.id==='mail'?C.amber:C.ink2,
+      chips:(d.chips||[]).map(c=>({label:c, ...pill(sel.includes(c), d.id==='openclaw'?C.amber:C.mint), pick:()=>{ if(d.chipKey==='notionSync') this.setState({notionSync:c}); else this.setState(st=>{ const cur=st[d.chipKey]; return {[d.chipKey]: cur.includes(c)?cur.filter(x=>x!==c):[...cur,c]}; }); }})) }; });
+    const destOptions = task.artifact ? (task.artifact.type==='日历预约' ? ['系统日历','飞书'] : task.artifact.type==='邮件草稿' ? ['邮箱','Notion 存档'] : task.artifact.type==='对比表' ? ['Notion','飞书','邮箱'] : ['飞书','Notion']) : [];
+    const curDest = s.taskDest[task.id] || destOptions.slice(0,1);
+    const taskDests = destOptions.map(o=>({label:o, ...pill(curDest.includes(o),C.amber), pick:()=>this.setState(st=>{ const cur=st.taskDest[task.id]||destOptions.slice(0,1); return {taskDest:{...st.taskDest,[task.id]: cur.includes(o)?cur.filter(x=>x!==o):[...cur,o]}}; })}));
+    const screens=[['pair','配对'],['onboard','首次引导'],['home','今日谛听'],['reviews','周/月复盘'],['memory','记忆与遗忘'],['dest','目的地与通道'],['live','实时录音'],['sessions','记录'],['session','会话详情'],['insight','洞察'],['tasks','任务工作台'],['task','任务详情'],['chat','AI 对话'],['report','报告'],['me','我的'],['growth','成长卡'],['device','设备管理'],['plan','订阅'],['teach','教小谛'],['hotwords','热词'],['scenes','场景规则'],['agents','模型与 Skill']];
+    const capItems=[{t:'09:41',text:'决定周五前出三种定价方案对比表',src:'产品周会',sid:'s1',s:581},{t:'14:23',text:'李总：导出别单独收费',src:'与李总通话',sid:'s2',s:863},{t:'06:50',text:'李总要的是自动归档到 OSS，不是导出按钮',src:'与李总通话',sid:'s2',s:410},{t:'18:40',text:'配对必须一次成功——卡没屏幕',src:'路上碎念',sid:'s3',s:5}];
+    return {
+      isReviews:is('reviews'), isMemory:is('memory'), isDest:is('dest'), goWeek:()=>this.go('reviews',{rvTab:'周'}), goMonth:()=>this.go('reviews',{rvTab:'月'}), goMemory:()=>this.go('memory'), goDest:()=>this.go('dest'),
+      rvTabs:['周','月'].map(l=>({label:l, pick:()=>this.setState({rvTab:l}), bg:l===s.rvTab?'#fff':'transparent', fg:l===s.rvTab?C.ink:C.ink2})), rvWeek:s.rvTab==='周', rvMonth:s.rvTab==='月', rvCta:s.rvTab==='周'?'生成周报长图':'生成月报长图', openReportRv:()=>this.go('report',{reportTpl:s.rvTab==='周'?'diary':'auto'}),
+      promises, trends, nextWeek, themes, lookbacks, tiers, expiring, gates, routes, dests, taskDests,
+      exportAll:()=>this.toastMsg('已打包：原声 / 转写 / 图谱（JSON + 音频），链接 24 小时有效'), askWipe:()=>this.setState({confirm:{title:'遗忘全部记忆', body:'删除 214 个节点、3.1 万段转写与全部原声。已发布到目的地的工件不受影响。此操作不可恢复。', cta:'全部遗忘', onOk:()=>this.toastMsg('已清空。小谛会像第一天那样重新认识你。')}}),
+      isOnboard:is('onboard'), isTeach:is('teach'), isHotwords:is('hotwords'), isScenes:is('scenes'), isAgents:is('agents'), goTeach:()=>this.go('teach'),
+      obDots:[1,2,3].map(n=>({bg:n<=s.obStep?C.mint:C.hair})), obStepLabel:s.obStep+' / 3', obStep1:s.obStep===1, obStep2:s.obStep===2, obStep3:s.obStep===3,
+      obKicker:['','听感 · 让小谛认识你的声音','理解 · 你常在哪些场景说话','听感 · 你世界里的名字'][s.obStep], obTitle:['','读 3 句话，小谛就知道哪句是你说的','选几个常用场景，规则跟着场景走','把人名和行话先告诉小谛'][s.obStep], obSub:['','同时完成声纹注册、口音校准和第一批热词。以后转写里的"你"不会再被写成"说话人 A"。','每个场景决定：要不要分离说话人、哪些句子变待办、哪些闲聊直接忽略。','从通讯录和日历导入，比手输快十倍。转写里遇到不认识的词，小谛也会自己来问你。'][s.obStep],
+      readIdxLabel:(s.readIdx+1)+' / '+READ.length, readSentence:rd.text, obWave, readDone, readHeard: readFixedThis&&rd.fix ? rd.heard.replace(rd.fix.wrong,rd.fix.right) : rd.heard,
+      readFixes: rd.fix ? [{label: readFixedThis?`已纠正为「${rd.fix.right}」并加入热词`:`「${rd.fix.wrong}」→「${rd.fix.right}」`, bg:readFixedThis?C.mintSoft:'#fff', fg:readFixedThis?C.mint:C.amber, bd:readFixedThis?C.mint:C.amber, fix:()=>{ if(readFixedThis) return; this.setState(st=>({readFixed:{...st.readFixed,[st.readIdx]:true}})); this.toastMsg(`已纠正，「${rd.fix.right}」加入热词`); }}] : [{label:'识别无误 ✓', bg:C.mintSoft, fg:C.mint, bd:C.mint, fix:()=>{}}],
+      readAction:()=>{ if(s.readState==='idle') startRead(); else if(readDone){ if(s.readIdx<READ.length-1) this.setState(st=>({readIdx:st.readIdx+1,readState:'idle'})); else this.setState({obStep:2}); } }, readBtnBg: s.readState==='rec'?'#9AA39C':(readDone?C.mint:'#E0533A'), readBtnLabel: s.readState==='idle'?'● 按住朗读':(s.readState==='rec'?'聆听中…':(s.readIdx<READ.length-1?'下一句':'完成校准')),
+      sceneCards:SCENES.map(x=>({...x, toggle:()=>this.setState(st=>({scenesOn:{...st.scenesOn,[x.id]:!st.scenesOn[x.id]}})), bg:s.scenesOn[x.id]?C.mintSoft:'#fff', bd:s.scenesOn[x.id]?C.mint:C.hair, checkBg:s.scenesOn[x.id]?C.mint:'#fff'})),
+      importContacts:()=>{ if(!s.contactsDone){ this.setState({contactsDone:true}); this.toastMsg('从通讯录导入 6 个人名'); } }, importCalendar:()=>{ if(!s.calendarDone){ this.setState({calendarDone:true}); this.toastMsg('从日历导入 3 个会议名与 2 个项目名'); } }, contactsLabel:s.contactsDone?'已导入 6 个':'导入人名', calendarLabel:s.calendarDone?'已导入 5 个':'导入会议名',
+      hotCount, sceneCount, skillCount, hotwordsPreview:s.hotwords.slice(0,10).map(h=>({...h, bg:srcStyle[h.src][0], fg:srcStyle[h.src][1]})),
+      obSkip:()=>{ if(s.obStep<3) this.setState(st=>({obStep:st.obStep+1})); else this.setState({screen:'home',stack:[]}); }, obSkipLabel:s.obStep<3?'跳过':'稍后', obNext:()=>{ if(s.obStep<3) this.setState(st=>({obStep:st.obStep+1})); else { this.setState({screen:'home',stack:[]}); this.toastMsg('小谛已经认识你了。之后每次纠正，都是在继续教它。'); } }, obNextLabel:s.obStep<3?'下一步':'开始使用谛听',
+      teachGroups,
+      hotCandidates:s.hotCands.map(c=>({...c, add:()=>this.addHot(c.word,'纠错')})), hotSrcFilters:['全部','产品','通讯录','日历','纠错','手输'].map(f=>({label:f, pick:()=>this.setState({hotFilter:f}), bg:f===s.hotFilter?C.ink:'#fff', fg:f===s.hotFilter?'#fff':C.ink, bd:f===s.hotFilter?C.ink:C.hair})),
+      hotList:s.hotwords.filter(h=>s.hotFilter==='全部'||h.src===s.hotFilter).map(h=>({...h, bg:srcStyle[h.src][0], fg:srcStyle[h.src][1], remove:()=>this.setState(st=>({hotwords:st.hotwords.filter(x=>x.word!==h.word)}))})), hotInput:s.hotInput, hotType:e=>this.setState({hotInput:e.target.value}), hotKey:e=>{ if(e.key==='Enter') this.addHot(this.state.hotInput,'手输'); }, hotAdd:()=>this.addHot(s.hotInput,'手输'),
+      sceneTabs:SCENES.map(x=>({label:x.name, pick:()=>this.setState({sceneCur:x.id}), bg:x.id===s.sceneCur?C.ink:'#fff', fg:x.id===s.sceneCur?'#fff':C.ink, bd:x.id===s.sceneCur?C.ink:C.hair, op:s.scenesOn[x.id]?1:.5})),
+      curScene:{ ...curSceneDef, toggleOn:()=>this.setState(st=>({scenesOn:{...st.scenesOn,[s.sceneCur]:!st.scenesOn[s.sceneCur]}})), onBg:curOn?C.mint:C.hair, knob:curOn?21:3 },
+      sceneRules:RULES.map(r=>{ const on=(s.sceneRules[s.sceneCur]||[]).includes(r.id); return {...r, doColor:r.color, bg:on?C.mint:C.hair, knob:on?21:3, toggle:()=>this.setState(st=>{ const cur=st.sceneRules[st.sceneCur]||[]; return {sceneRules:{...st.sceneRules,[st.sceneCur]: on?cur.filter(x=>x!==r.id):[...cur,r.id]}}; })}; }),
+      promptTabs:['纪要','待办','洞察'].map(l=>({label:l, pick:()=>this.setState({promptTab:l}), color:l===s.promptTab?C.ink:C.ink2, line:l===s.promptTab?C.mint:'transparent'})), promptText:promptCur, promptType:e=>{ const v=e.target.value; this.setState(st=>({prompts:{...st.prompts,[st.sceneCur]:{...(st.prompts[st.sceneCur]||PROMPTS_DEFAULT.meeting),[st.promptTab]:v}}})); }, promptReset:()=>{ this.setState(st=>({prompts:{...st.prompts,[st.sceneCur]:PROMPTS_DEFAULT[st.sceneCur]||PROMPTS_DEFAULT.meeting}})); this.toastMsg('已恢复默认提示词'); },
+      modelLayers:MODELS.map(m=>({...m, opts:m.opts.map(o=>({...o, pick:()=>this.setState(st=>({models:{...st.models,[m.key]:o.id}})), bd:s.models[m.key]===o.id?C.mint:C.hair, bg:s.models[m.key]===o.id?C.mintSoft:'#fff'}))})),
+      skills:s.skills.map(k=>({...k, stateLabel:k.on?(k.builtin?'内置 · 开':'已连接'):'连接', bg:k.on?C.mintSoft:'#fff', fg:k.on?C.mint:C.ink, bd:k.on?C.mint:C.hair, toggle:()=>{ if(k.builtin) return; this.setState(st=>({skills:st.skills.map(x=>x.id===k.id?{...x,on:!x.on}:x)})); this.toastMsg(k.on?`已断开 ${k.name}`:`${k.name} 已连接 · 默认执行前需确认`); }, gateLabel:k.gate?'执行前需确认 ✓':'跳过目标确认', gateBg:k.gate?C.amberSoft:C.paper, gateFg:k.gate?C.amber:C.ink2, toggleGate:()=>this.setState(st=>({skills:st.skills.map(x=>x.id===k.id?{...x,gate:!x.gate}:x)})) })), addMcp:()=>this.toastMsg('添加 MCP 服务器（Demo）：粘贴 URL → 读取工具清单 → 逐个授权'),
+      liveSceneName:(SCENES.find(x=>x.id===s.liveScene)||SCENES[0]).name, liveCycleScene:()=>{ const on=SCENES.filter(x=>s.scenesOn[x.id]); const i=on.findIndex(x=>x.id===s.liveScene); const nx=on[(i+1)%on.length]||SCENES[0]; this.setState({liveScene:nx.id}); this.toastMsg(`这场按「${nx.name}」处理：${(SCENE_RULES_DEFAULT[nx.id]||[]).length} 条响应规则生效`); },
+      isPair:is('pair'), isHome:is('home'), isSessions:is('sessions'), isSession:is('session'), isLive:is('live'), isInsight:is('insight'), isTasks:is('tasks'), isTask:is('task'), isChat:is('chat'), isReport:is('report'), isMe:is('me'), isGrowth:is('growth'), isDevice:is('device'), isPlan:is('plan'),
+      showTab:['home','sessions','tasks','me'].includes(sc), cHome:is('home')?C.mint:C.ink2, cSess:is('sessions')?C.mint:C.ink2, cTask:is('tasks')?C.mint:C.ink2, cMe:is('me')?C.mint:C.ink2,
+      tabHome:()=>this.tab('home'), tabSessions:()=>this.tab('sessions'), tabTasks:()=>this.tab('tasks'), tabMe:()=>this.tab('me'), tabRecord:()=>this.go('live',{liveSec:0,livePaused:false,liveMode:'meeting'}),
+      back:()=>this.back(), emptyToday, hasToday:!emptyToday, devDot:devMap.dot, devLabel:devMap.label, devBackfill:dev==='backfill', planLabel:plan,
+      goDevice:()=>this.go('device'), goPair:()=>this.go('pair'), goGrowth:()=>this.go('growth'), goPlan:()=>this.go('plan'),
+      openS1:()=>this.openSession('s1',581), openS2:()=>this.openSession('s2',410), openT1:()=>this.go('task',{tid:'t1'}), openReport:()=>this.go('report'), openInsight:()=>this.go('insight'),
+      goTasksFollow:()=>this.setState({screen:'tasks',stack:[],taskTab:'任务',taskFilter:'待确认'}), goTasksObserve:()=>this.setState({screen:'tasks',stack:[],taskTab:'小谛观察'}),
+      openChatGlobal:()=>this.go('chat',{chatScope:'global',chatMsgs:[]}), openChatScoped:()=>this.go('chat',{chatScope:s.sid,chatMsgs:[]}),
+      captures: capItems.map(c=>({...c, open:()=>this.openSession(c.sid,c.s)})),
+      todos: s.todos.map(t=>({ ...t, toggle:()=>this.setState(st=>({todos:st.todos.map(x=>x.id===t.id?{...x,done:!x.done}:x)})), border:t.done?C.mint:'#B8BDB6', bg:t.done?C.mint:'#fff', color:t.done?C.ink2:C.ink, deco:t.done?'line-through':'none' })),
+      sessFilters:['全部','会议','通话','碎念'].map(f=>({label:f, pick:()=>this.setState({sessFilter:f}), bg:f===s.sessFilter?C.ink:'#fff', fg:f===s.sessFilter?'#fff':C.ink, bd:f===s.sessFilter?C.ink:C.hair})),
+      sessionsToday:['s1','s2','s3'].filter(id=>s.sessFilter==='全部'||SESSIONS[id].kind===s.sessFilter).map(id=>({...SESSIONS[id], open:()=>this.openSession(id)})), sessionsPast:['s4','s5'].filter(id=>s.sessFilter==='全部'||SESSIONS[id].kind===s.sessFilter).map(id=>({...SESSIONS[id], open:()=>this.openSession(id)})),
+      heroS1:e=>{e.stopPropagation(); this.openSession('s1',581);}, heroS2:e=>{e.stopPropagation(); this.openSession('s2',863);}, heroInsight:e=>{e.stopPropagation(); this.go('insight');},
+      goAgents:()=>this.go('agents'), goGrowthStop:e=>{e.stopPropagation(); this.go('growth');}, shareReport:()=>this.toastMsg('已生成只读链接（7 天后过期）并复制'), exportReport:()=>this.toastMsg('长图已保存到相册（1080 × 2680）'), pairHelp:()=>this.toastMsg('帮助：确认卡片指示灯闪烁；已绑定的卡需在原手机「设备管理 › 解绑」或长按 6 秒重置'), addFarosh:()=>{ this.go('pair'); this.toastMsg('Farosh 走同一配对流程；协议差异由 AudioSource 适配器吸收'); }, editQuiet:()=>this.toastMsg('私人时段编辑（Demo）：21:00 – 08:00'),
+      meToggles:[{k:'alert',name:'主动提醒',desc:'被忽略的承诺 / 反复诉求 / 日期冲突'},{k:'wake',name:'唤醒词「小谛」',desc:'命中才开实时通道，其余离线'},{k:'cloud',name:'原始音频上云',desc:'默认只上传转写文本'}].map(t=>({...t, bg:s.meT[t.k]?C.mint:C.hair, knob:s.meT[t.k]?21:3, toggle:()=>this.setState(st=>({meT:{...st.meT,[t.k]:!st.meT[t.k]}}))})),
+      sess:{ ...sess, points:sess.points.map(pt=>({...pt, seek:()=>this.setState({sessTab:'转写',cur:pt.s,playing:true})})), todos:sess.todos.map(td=>({...td, delegate:()=>{ const nt={id:'t'+Date.now(),title:td.text,note:`来自「${sess.title}」的待办。负责人 ${td.owner}，截止 ${td.due}。我可以先起草，等你确认。`,source:'会议 · '+sess.title,status:'待确认',refs:[{label:sess.title,sid:sess.id,s:0}],artifact:null,ver:0}; this.setState(st=>({tasks:[nt,...st.tasks]})); this.go('task',{tid:nt.id}); }})) },
+      segments, sessTabs:tabRow(['转写','总结','导图'], s.sessTab, l=>this.setState({sessTab:l})), sessTranscript:s.sessTab==='转写', sessSummary:s.sessTab==='总结', sessMindmap:s.sessTab==='导图',
+      shares, tree, toggleBilingual:()=>this.setState(st=>({bilingual:!st.bilingual})), biBg:s.bilingual?C.mint:'#fff', biFg:s.bilingual?'#fff':C.ink2, biBd:s.bilingual?C.mint:C.hair, liveAiShow:s.liveSec>=4 && s.liveMode==='meeting',
+      togglePlay:()=>this.setState(st=>({playing:!st.playing})), playIcon, waveStatic, playPct:Math.min(100,s.cur/total*100).toFixed(1), playTime:fmt(s.cur)+' / '+fmt(total),
+      regen:()=>{ this.setState({sessGen:true}); this.toastMsg('再谛听一次：可选风格「更短 / 更正式 / 只留决策」。已保留上一版本，可回退。'); setTimeout(()=>this.setState({sessGen:false}),1800); }, regenLabel:s.sessGen?'生成中…':'再谛听一次', regenLabel2:s.sessGen?'改写中…':'让小谛改改', regenLabel3:s.sessGen?'改写中…':'让小谛改改',
+      liveClock:fmt(s.liveSec), liveWave, liveMeeting:s.liveMode==='meeting', liveQuick:s.liveMode==='quick', liveModeLabel:s.liveMode==='meeting'?'会议模式 · 长按进入':'快速捕捉 · 短按进入', liveToggleMode:()=>this.setState(st=>({liveMode:st.liveMode==='meeting'?'quick':'meeting'})),
+      liveRtColor:(s.liveRt&&s.liveMode==='meeting')?'#37C9B6':'#E0A24A', liveRtLabel:(s.liveRt&&s.liveMode==='meeting')?'实时中 · Hermes 通道已开':'已省电暂停 · 本地转写', liveToggleRt:()=>this.setState(st=>({liveRt:!st.liveRt})), liveRtToggleBg:s.liveRt?'#37C9B6':'rgba(255,255,255,.2)', liveRtKnob:s.liveRt?16:2,
+      liveCaps:LIVE_CAPS.map((c,i)=>({...c, op: i===0?0.45: i===1?0.7:1})), livePartial:'方案里我会把自动归档写成基础能力', livePause:()=>this.setState(st=>({livePaused:!st.livePaused})), livePauseLabel:s.livePaused?'继续':'暂停',
+      liveFinish:()=>{ this.setState({screen:'session',stack:['sessions'],sid:'s2',sessTab:'总结',cur:0,playing:false}); this.toastMsg('已落库。转写就绪，总结正在生成。'); },
+      insTabs:tabRow(['纪要','待确认','定位张力'], s.insTab, l=>this.setState({insTab:l})), insMinutes:s.insTab==='纪要', insConfirm:s.insTab==='待确认', insTension:s.insTab==='定位张力',
+      insItems:[{n:'1',title:'分歧的本质是客户分层，不是计价方式',body:'高用量小团队 vs 低用量大团队，任何单一维度都会伤到一边。',t:'02:40',sid:'s1',s:160},{n:'2',title:'"导出"是伪需求，"自动归档"才是',body:'客户三次提及的都是零人工的月度归档。',t:'06:50',sid:'s2',s:410},{n:'3',title:'两次口头承诺，零动作',body:'8/20 与今天，都由你做出。记忆图谱标为高风险承诺。',t:'20:05',sid:'s2',s:1205},{n:'4',title:'决策有截止，执行无负责人细分',body:'"小张出表"未拆到大客户测算由谁提供数据。',t:'09:41',sid:'s1',s:581}].map(it=>({...it, seek:()=>this.openSession(it.sid,it.s)})),
+      confirmItems, tensions:[{left:'按席位',right:'按用量',a:35,b:15,c:60,note:'你偏向席位（可预测），李总要的是别为基础能力多付钱，小张主张混合。'},{left:'导出是基础能力',right:'导出是增值',a:55,b:5,c:45,note:'你还没有立场——这正是下周会前要决定的。'},{left:'本周拍板',right:'再研究一轮',a:10,b:30,c:25,note:'三方都不想再拖，共识度最高的一项。'}],
+      askPublish:()=>this.setState({confirm:{title:'发布「Q4 定价的三种声音」到团队', body:'团队 12 人可见，含 3 条待确认项的当前状态。已确认的进入团队共享记忆。', cta:'发布', onOk:()=>this.toastMsg('已发布到团队 · BP +20')}}),
+      taskTabs:tabRow(['碎念','小谛观察','任务'], s.taskTab, l=>this.setState({taskTab:l})), taskTabTasks:s.taskTab==='任务', taskTabNotes:s.taskTab==='碎念', taskTabObserve:s.taskTab==='小谛观察',
+      taskFilters:filters.map(f=>({label:f, pick:()=>this.setState({taskFilter:f}), bg:f===s.taskFilter?C.ink:'#fff', fg:f===s.taskFilter?'#fff':C.ink, bd:f===s.taskFilter?C.ink:C.hair})), taskList,
+      notes:[{text:'配对必须一次成功。卡没有屏幕，所有失败都得靠手机讲清楚。',when:'今天 18:40 · 路上',sid:'s3'},{text:'首页用暖纸底，不要灰。像一本会自己整理的笔记。',when:'昨天 16:12 · 1:1',sid:'s4'}].map(n=>({...n, toTask:()=>{ const nt={id:'t'+Date.now(),title:n.text.slice(0,20)+'…',note:'由碎念升级。我可以帮你整理成一页内部文档。',source:'日常',status:'待确认',refs:[{label:'原声',sid:n.sid,s:5}],artifact:null,ver:0}; this.setState(st=>({tasks:[nt,...st.tasks]})); this.go('task',{tid:nt.id}); }})),
+      observes:[{title:'「数据导出」反复被提',stat:'5 次 / 3 场',bar:C.amber,body:'8/20、9/2、今天。提出方始终是李总，你方回应始终是"在排期"。',refs:[{label:'今天 06:50',sid:'s2',s:410},{label:'今天 14:23',sid:'s2',s:863}]},{title:'承诺冲突',stat:'2 条',bar:'#C0492B',body:'你对李总说"这两天发方案"，同时周会决定导出"先不放进定价讨论"。两条承诺指向不同时间表。',refs:[{label:'周会 31:07',sid:'s1',s:1867},{label:'通话 20:05',sid:'s2',s:1205}]},{title:'「一次成功」出现在两类场景',stat:'2 次',bar:C.mint,body:'配对流程与首页体验都提到了。可能是一个值得沉淀的产品原则。',refs:[{label:'碎念 00:05',sid:'s3',s:5}]}].map(o=>({...o, refs:o.refs.map(r=>({...r, open:()=>this.openSession(r.sid,r.s)}))})),
+      task:{ ...task, stBg:ts.bg, stFg:ts.fg, skills: task.artifact&&task.artifact.type==='日历预约' ? '日历' : (task.source.startsWith('对话') ? '起草文档' : '起草文档 · 邮箱'), refs:task.refs.map(r=>({...r, open:()=>this.openSession(r.sid,r.s)})), artType:task.artifact?task.artifact.type:'', artName:task.artifact?task.artifact.name:'', artBody:task.artifact?task.artifact.body:'', artVer:task.ver }, taskSteps, taskActions, taskRunning:s.running, runStep:s.runStep, taskHasArtifact:!!task.artifact && !s.running,
+      chatMsgs, chatTyping:s.chatTyping, chatInput:s.chatInput, chatType:e=>this.setState({chatInput:e.target.value}), chatKey:e=>{ if(e.key==='Enter') this.sendChat(this.state.chatInput); }, chatSend:()=>this.sendChat(s.chatInput), chatScopeLabel:s.chatScope==='global'?'范围：全部记忆 · 214 个节点':'范围：'+sess.title, ballAnim:s.chatTyping?'dtPulse 1.2s ease-in-out infinite':'none',
+      chatChips:[{label:'李总到底要什么？',msg:'李总到底要什么？'},{label:'定价的分歧在哪',msg:'定价会上分歧在哪？'},{label:'帮我起草给李总的回复',msg:'帮我起草给李总的回复'}].map(c=>({...c, send:()=>this.sendChat(c.msg)})),
+      chatMic:()=>{ this.setState(st=>({micOn:!st.micOn})); this.toastMsg(s.micOn?'已省电暂停实时通道':'实时中 · 命中唤醒词后才开 Hermes'); }, micBg:s.micOn?C.amber:'#fff', micFg:s.micOn?'#fff':C.ink,
+      reportTpls:['auto','diary','research'].map(k=>({label:tplLabels[k], pick:()=>this.setState({reportTpl:k}), bg:k===s.reportTpl?C.ink:'#fff', fg:k===s.reportTpl?'#fff':C.ink, bd:k===s.reportTpl?C.ink:C.hair})),
+      rpKicker:rp.kicker, rpTitle:rp.title, rpSub:rp.sub, rpStats:rp.stats, rpConclusion:rp.concl, rpSections:rp.sections, rpBg:rp.bg, rpFg:rp.fg, rpTileBg:rp.tile,
+      plans:PLANS.map(pl=>({...pl, bd:pl.id===plan?C.mint:C.hair, pick:()=>this.toastMsg('订阅层级请在右上 Tweaks 里切换（Demo）')})),
+      pairStateLabel:pairLabels[s.pairState], pairDotColor: s.pairState==='Online'?C.mint: s.pairState==='KeyRejected'?'#C0492B': pairBusy?C.amber:'#9AA39C', pairErr:s.pairErr, pairBtnBg: pairBusy?'#9AA39C':C.mint, pairBtnLabel: s.pairState==='Idle'?'配对': s.pairState==='KeyRejected'?'重试配对': pairLabels[s.pairState], scanList,
+      pairStart:()=>{ if(s.pairState==='KeyRejected'){ this.setState({pairState:'Idle',pairErr:false,pairErrSim:false},()=>this.startPair()); } else this.startPair(); }, pairSimErr:()=>{ this.setState({pairErrSim:true,pairState:'Idle',pairErr:false},()=>this.startPair()); }, pairReset:()=>this.setState({pairErrSim:false,pairErr:false,pairState:'Idle'},()=>this.startPair()),
+      showConfirm:!!s.confirm, confirmTitle:s.confirm?s.confirm.title:'', confirmBody:s.confirm?s.confirm.body:'', confirmCta:s.confirm?s.confirm.cta:'', cancelConfirm:()=>this.setState({confirm:null}), doConfirm:()=>{ const c=s.confirm; this.setState({confirm:null}); c&&c.onOk&&c.onOk(); },
+      hasToast:!!s.toast, toast:s.toast,
+      screenChips:screens.map(([k,label])=>({label, go:()=>this.setState({screen:k,stack:k==='home'?[]:['home']}), bg:sc===k?C.ink:'#fff', fg:sc===k?'#fff':C.ink})),
+    };
+  }
+}
+</script>
+</body>
+</html>

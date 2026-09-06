@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>转写检索 · 原声穿透与决策定位 - 谛听</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Noto Serif SC, Plus Jakarta Sans, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Serif+SC:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with custom configuration -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#85959f",
+            "inverse-primary": "#5fdac7",
+            "on-secondary-fixed-variant": "#6b3b00",
+            "on-primary-fixed-variant": "#005047",
+            "surface-container": "#efeee9",
+            "inverse-surface": "#30312e",
+            "surface-bright": "#faf9f4",
+            "tertiary": "#516169",
+            "outline-variant": "#bcc9c5",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed-variant": "#3a4951",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#3d4946",
+            "surface-container-highest": "#e3e3de",
+            "tertiary-fixed": "#d5e5ef",
+            "outline": "#6d7a76",
+            "on-tertiary": "#ffffff",
+            "on-secondary-container": "#6f3d00",
+            "secondary": "#8d4f00",
+            "surface-container-low": "#f5f4ef",
+            "surface": "#faf9f4",
+            "primary-fixed": "#7ef7e3",
+            "tertiary-fixed-dim": "#b9c9d3",
+            "surface-dim": "#dbdad5",
+            "primary-container": "#12a594",
+            "on-error": "#ffffff",
+            "on-secondary-fixed": "#2d1600",
+            "surface-container-high": "#e9e8e3",
+            "primary-fixed-dim": "#5fdac7",
+            "on-tertiary-container": "#1f2e35",
+            "on-surface": "#1b1c19",
+            "secondary-fixed-dim": "#ffb876",
+            "on-background": "#1b1c19",
+            "background": "#faf9f4",
+            "surface-tint": "#006b5f",
+            "error": "#ba1a1a",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#ffa449",
+            "on-primary-container": "#00322c",
+            "inverse-on-surface": "#f2f1ec",
+            "on-primary-fixed": "#00201c",
+            "primary": "#006b5f",
+            "on-error-container": "#93000a",
+            "secondary-fixed": "#ffdcc0",
+            "surface-variant": "#e3e3de",
+            "on-tertiary-fixed": "#0e1d25",
+            "error-container": "#ffdad6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "1.5rem",
+            "space-2xl": "2rem",
+            "card-pad-mobile": "1rem",
+            "space-xxs": "0.25rem",
+            "gutter-mobile": "1rem",
+            "card-pad-desktop": "1.5rem",
+            "space-lg": "1.25rem",
+            "gutter-desktop": "1.5rem",
+            "space-sm": "0.75rem",
+            "space-xs": "0.5rem",
+            "space-3xl": "3rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "code-timestamp": ["JetBrains Mono", "monospace"],
+            "headline-md": ["Noto Serif SC", "serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "caption": ["Plus Jakarta Sans", "sans-serif"],
+            "display-lg-mobile": ["Noto Serif SC", "serif"],
+            "body-md-medium": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-sm": ["Noto Serif SC", "serif"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "display-lg": ["Noto Serif SC", "serif"],
+            "code-stat": ["JetBrains Mono", "monospace"]
+          },
+          "fontSize": {
+            "code-timestamp": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "400" }],
+            "caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "display-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md-medium": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "500" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "0", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "code-stat": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Paper Texture Substrate */
+    body {
+      background-color: #FAF9F4;
+      color: #1B1C19;
+      -webkit-tap-highlight-color: transparent;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
+    /* Ambient paper stack shadows */
+    .sheet-shadow {
+      box-shadow: 0 2px 8px -2px rgba(29, 36, 35, 0.04), 0 1px 2px rgba(29, 36, 35, 0.02);
+    }
+    .elevated-dock-shadow {
+      box-shadow: 0 -4px 20px -2px rgba(29, 36, 35, 0.08), 0 -1px 4px rgba(29, 36, 35, 0.03);
+    }
+
+    /* Breathing AI dot animation */
+    @keyframes ai-respiration {
+      0%, 100% { opacity: 0.4; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.08); }
+    }
+    .animate-respiration {
+      animation: ai-respiration 2.4s ease-in-out infinite;
+    }
+
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #BCC9C5;
+      border-radius: 9999px;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="h-full font-body-md text-on-surface antialiased flex flex-col items-center">
+<!-- Mobile Container / Desktop Centered Workbench -->
+<div class="w-full max-w-lg min-h-full bg-background flex flex-col relative pb-32">
+<!-- Top Focus Search Header (Task-Focused State: Global Shell suppressed) -->
+<header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-md px-gutter-mobile pt-3 pb-2.5">
+<div class="flex items-center gap-2.5">
+<!-- Back Icon Button -->
+<button aria-label="返回转写全文" class="flex items-center justify-center w-9 h-9 -ml-1 rounded-full text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Active Search Input Box -->
+<div class="flex-1 flex items-center h-10 px-3 bg-surface-container-lowest rounded-full border border-primary/40 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15 shadow-sm transition-all">
+<span class="material-symbols-outlined text-[18px] text-primary mr-2" data-icon="search">search</span>
+<input autofocus="" class="w-full bg-transparent border-none p-0 font-body-md-medium text-on-surface text-body-md focus:ring-0 focus:outline-none placeholder:text-outline" placeholder="搜索对话、MR20协议、时间戳..." type="text" value="MR20 协议"/>
+<!-- Clear Button -->
+<button aria-label="清除检索内容" class="flex items-center justify-center w-5 h-5 ml-1 rounded-full bg-surface-container hover:bg-surface-container-highest text-on-surface-variant transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]" data-icon="close">close</span>
+</button>
+<!-- Voice Input Shortcut -->
+<button aria-label="语音搜索" class="flex items-center justify-center w-6 h-6 ml-1 text-primary hover:text-primary/80 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="mic">mic</span>
+</button>
+</div>
+<!-- Cancel Text Action -->
+<button class="px-1.5 py-1 text-primary font-body-md-medium text-body-md active:scale-95 transition-transform hover:opacity-85" type="button">
+          取消
+        </button>
+</div>
+<!-- Context Source Capsule -->
+<div class="flex items-center justify-between mt-2.5 pt-1 text-caption font-caption text-on-surface-variant">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span class="truncate font-body-md-medium text-on-surface">4月17日 产品技术对齐会</span>
+<span class="text-outline">·</span>
+<span class="font-code-timestamp text-code-timestamp text-tertiary">45:18 / 3,420 字</span>
+</div>
+<span class="flex items-center text-primary text-[11px] font-body-md-medium cursor-pointer hover:underline">
+          全文穿透
+          <span class="material-symbols-outlined text-[14px] ml-0.5" data-icon="open_in_new">open_in_new</span>
+</span>
+</div>
+</header>
+<!-- Filter Pills & Match Counter Section -->
+<section class="px-gutter-mobile py-2 bg-surface">
+<!-- Search Metrics Strip -->
+<div class="flex items-center justify-between py-1 px-2.5 bg-surface-container-low rounded-lg border border-outline-variant/20">
+<div class="flex items-center gap-1.5 text-caption font-caption text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="graphic_eq">graphic_eq</span>
+<span>共找到 <strong class="font-code-stat text-primary text-body-md-medium">5</strong> 处匹配</span>
+<span class="text-outline-variant">|</span>
+<span>2 位发言人</span>
+<span class="text-outline-variant">|</span>
+<span class="text-secondary font-body-md-medium">1 项决策红线</span>
+</div>
+<div class="flex items-center gap-1 font-code-timestamp text-code-timestamp text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-respiration"></span>
+<span>AI 实时检索</span>
+</div>
+</div>
+<!-- Horizontal Filter Pills Scroll -->
+<div class="flex items-center gap-1.5 mt-2.5 overflow-x-auto no-scrollbar py-0.5">
+<!-- Active Pill: 全部结果 (5) -->
+<button class="shrink-0 flex items-center gap-1 px-3 py-1 rounded-full bg-primary text-on-primary font-body-md-medium text-caption shadow-sm transition-all active:scale-95" type="button">
+<span>全部结果</span>
+<span class="bg-primary-fixed/30 text-on-primary px-1.5 py-0.2 rounded-full font-code-stat text-[10px]">5</span>
+</button>
+<!-- Speaker Filter: 张工 -->
+<button class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container font-body-md text-caption transition-all active:scale-95" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>张工</span>
+<span class="text-outline font-code-stat text-[11px]">(3)</span>
+</button>
+<!-- Speaker Filter: 我 -->
+<button class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container font-body-md text-caption transition-all active:scale-95" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span>我</span>
+<span class="text-outline font-code-stat text-[11px]">(2)</span>
+</button>
+<!-- Filter: 仅看 AI 决策标注 -->
+<button class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-outline-variant/30 text-primary hover:bg-surface-container font-body-md text-caption transition-all active:scale-95" type="button">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="auto_awesome">auto_awesome</span>
+<span>AI 决策</span>
+<span class="text-outline font-code-stat text-[11px]">(2)</span>
+</button>
+<!-- Filter: 包含待办事项 -->
+<button class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-outline-variant/30 text-secondary hover:bg-surface-container font-body-md text-caption transition-all active:scale-95" type="button">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="check_circle">check_circle</span>
+<span>待办事项</span>
+<span class="text-outline font-code-stat text-[11px]">(1)</span>
+</button>
+</div>
+</section>
+<!-- Match Results Feed -->
+<main class="flex-1 px-gutter-mobile py-3 space-y-3">
+<!-- MATCH 1: Highlighted Key Decision Anchor -->
+<article class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/30 sheet-shadow overflow-hidden transition-all duration-150 hover:border-primary-container/40">
+<!-- 3px Left Section Rail: Mint Verdant (#12A594) for Decision/Transcript Anchor -->
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-primary-container"></div>
+<div class="p-card-pad-mobile pl-4">
+<!-- Item Header Metadata -->
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-body-md-medium text-[11px]">我</span>
+<div>
+<span class="font-body-md-medium text-body-md text-on-surface">我 · 产品架构</span>
+<span class="ml-1.5 font-code-timestamp text-code-timestamp text-tertiary">14:32</span>
+</div>
+</div>
+<!-- Decision Tag Badge -->
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary-fixed/40 text-on-primary-fixed-variant font-caption text-[11px] font-body-md-medium">
+<span class="material-symbols-outlined text-[12px]" data-icon="bookmark">bookmark</span>
+              核心决议
+            </span>
+</div>
+<!-- Transcript Excerpt with Highlighting -->
+<div class="font-body-md text-body-md text-on-surface leading-relaxed mb-3">
+            “所以本周五前，必须将端侧推流协议正式切换为 <mark class="bg-primary-fixed text-primary font-semibold px-1 py-0.5 rounded shadow-sm">MR20 流式协议</mark>。这不仅能抹平丢包，还能让大模型端到端首字延迟从 850ms 压到 320ms！”
+          </div>
+<!-- Embedded Waveform Audio Slice Well (Stack Level -1) -->
+<div class="p-2.5 rounded-xl bg-surface-container border border-outline-variant/15 flex flex-col gap-2 mb-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<button aria-label="试听当前切片" class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center active:scale-95 shadow-sm transition-transform" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex flex-col">
+<span class="text-caption font-body-md-medium text-on-surface">原声切片 · 12秒</span>
+<span class="font-code-timestamp text-[10px] text-outline">精确锚点 14:32.400</span>
+</div>
+</div>
+<!-- Audio Jump Button -->
+<button class="inline-flex items-center gap-1 text-primary text-caption font-body-md-medium hover:underline" type="button">
+<span>进入全文时空</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="east">east</span>
+</button>
+</div>
+<!-- Micro Waveform Visualizer -->
+<div class="h-6 flex items-center gap-[2px] px-1 bg-surface-container-highest/60 rounded-lg overflow-hidden">
+<span class="w-[2px] h-2 bg-primary-container rounded-full"></span>
+<span class="w-[2px] h-3 bg-primary-container rounded-full"></span>
+<span class="w-[2px] h-4 bg-primary-container rounded-full"></span>
+<span class="w-[2px] h-5 bg-primary-container rounded-full"></span>
+<span class="w-[2px] h-3 bg-primary-container rounded-full"></span>
+<!-- Current Playhead Amber Pip (Action Annotation) -->
+<span class="w-[3px] h-6 bg-secondary rounded-full relative">
+<span class="absolute -top-1 -left-[2px] w-2 h-2 bg-secondary rounded-full ring-2 ring-surface"></span>
+</span>
+<span class="w-[2px] h-4 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-3 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-5 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-2 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-4 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-3 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-2 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-4 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-3 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-1 bg-outline-variant rounded-full"></span>
+</div>
+</div>
+<!-- Associated AI Decision Card (Embedded Stationery Card) -->
+<div class="bg-surface-container-low p-2.5 rounded-xl border-l-2 border-primary flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5" data-icon="insights">insights</span>
+<div class="flex-1 text-caption leading-relaxed">
+<span class="font-body-md-medium text-on-surface">AI 智能提取决策：</span>
+<span class="text-on-surface-variant">全员对齐，本周五前推流协议全面升级至 MR20，责任人指定为 </span>
+<span class="font-body-md-medium text-primary bg-primary-fixed/20 px-1 rounded">@张工</span>
+</div>
+</div>
+</div>
+</article>
+<!-- MATCH 2: Low-Level Technical Details -->
+<article class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/30 sheet-shadow overflow-hidden transition-all duration-150 hover:border-outline">
+<!-- 3px Left Section Rail: Slate Teal (#5B7380 / tertiary) for Architecture Insight -->
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-tertiary"></div>
+<div class="p-card-pad-mobile pl-4">
+<!-- Item Header Metadata -->
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-tertiary-fixed text-on-tertiary-container flex items-center justify-center font-body-md-medium text-[11px]">张</span>
+<div>
+<span class="font-body-md-medium text-body-md text-on-surface">张工 · 底层架构组</span>
+<span class="ml-1.5 font-code-timestamp text-code-timestamp text-tertiary">08:24</span>
+</div>
+</div>
+<!-- Jump Shortcut Pill -->
+<button class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-surface-container hover:bg-surface-container-high text-primary font-code-timestamp text-caption transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]" data-icon="play_circle">play_circle</span>
+<span>原声 08:24</span>
+</button>
+</div>
+<!-- Transcript Excerpt -->
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            “硬件端这次同步的采样率已经固定在 32kHz 16bit，双麦波束成形的延迟压在 12ms 以内。我们现在遇到的核心瓶颈是关于 <mark class="bg-primary-fixed/80 text-on-primary-container font-body-md-medium px-1 py-0.2 rounded">MR20 协议</mark>在录音态下通过 a1 特征通知自动下发 MP3 帧，长文本在缓存阶段容易溢出丢帧...”
+          </p>
+<!-- Audio Wave Snippet & Context Peek -->
+<div class="mt-2.5 pt-2 border-t border-outline-variant/15 flex items-center justify-between text-caption font-caption text-outline">
+<span class="flex items-center gap-1 font-code-stat text-[11px]">
+<span class="material-symbols-outlined text-[13px]" data-icon="mic_external_on">mic_external_on</span>
+              硬件采样率对齐 · 丢包排查
+            </span>
+<span class="text-tertiary hover:text-on-surface cursor-pointer flex items-center">
+              查看上下文 (前后 3 段)
+              <span class="material-symbols-outlined text-[14px]" data-icon="unfold_more">unfold_more</span>
+</span>
+</div>
+</div>
+</article>
+<!-- MATCH 3: Compliance & Security Red Line -->
+<article class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/30 sheet-shadow overflow-hidden transition-all duration-150 hover:border-error/40">
+<!-- 3px Left Section Rail: Red (#D04838 / error) for Blocker & Red Line -->
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-error"></div>
+<div class="p-card-pad-mobile pl-4">
+<!-- Item Header Metadata -->
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-body-md-medium text-[11px]">李</span>
+<div>
+<span class="font-body-md-medium text-body-md text-on-surface">李总 · 业务合规负责人</span>
+<span class="ml-1.5 font-code-timestamp text-code-timestamp text-tertiary">21:15</span>
+</div>
+</div>
+<!-- Red Line Alert Badge -->
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-error-container text-on-error-container font-caption text-[11px] font-body-md-medium">
+<span class="material-symbols-outlined text-[12px]" data-icon="gavel">gavel</span>
+              阻断红线
+            </span>
+</div>
+<!-- Transcript Excerpt -->
+<p class="font-body-md text-body-md text-on-surface leading-relaxed mb-2.5">
+            “在推进 <mark class="bg-primary-fixed/80 text-on-primary-container font-body-md-medium px-1 py-0.2 rounded">MR20 协议</mark>改造的同时，合规红线必须锁定：涉及金融与个人隐私实体必须在端侧芯片完成本地哈希脱敏，严禁明文推至云端...”
+          </p>
+<!-- Warning Strip -->
+<div class="bg-secondary-fixed/30 border border-secondary/20 p-2 rounded-lg flex items-center gap-2 text-caption text-on-secondary-container">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0" data-icon="warning">warning</span>
+<span class="flex-1 font-body-md-medium">合规锁定：推流须附带脱敏哈希签名校验</span>
+<button class="text-secondary hover:underline font-code-timestamp text-[11px]" type="button">查验规范 ›</button>
+</div>
+</div>
+</article>
+<!-- MATCH 4: Action & Next Steps -->
+<article class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/30 sheet-shadow overflow-hidden transition-all duration-150 hover:border-secondary/40">
+<!-- 3px Left Section Rail: Amber Ocher (#C9781E / secondary) for Action / Task -->
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-secondary"></div>
+<div class="p-card-pad-mobile pl-4">
+<!-- Item Header Metadata -->
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-tertiary-fixed text-on-tertiary-container flex items-center justify-center font-body-md-medium text-[11px]">张</span>
+<div>
+<span class="font-body-md-medium text-body-md text-on-surface">张工 · 底层架构组</span>
+<span class="ml-1.5 font-code-timestamp text-code-timestamp text-tertiary">39:04</span>
+</div>
+</div>
+<!-- Action Status -->
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-secondary-fixed/50 text-on-secondary-fixed-variant font-caption text-[11px] font-body-md-medium">
+<span class="material-symbols-outlined text-[12px]" data-icon="task_alt">task_alt</span>
+              已转待办
+            </span>
+</div>
+<!-- Transcript Excerpt -->
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-3">
+            “下周一前启动客户端与硬件团队的联合封闭测试，重点验收 <mark class="bg-primary-fixed/80 text-on-primary-container font-body-md-medium px-1 py-0.2 rounded">MR20 协议</mark>在极端弱网下的断点录音拼接与总结准确率。”
+          </p>
+<!-- Interactive Action Item Box -->
+<div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-2.5 min-w-0">
+<!-- Amber Checkbox -->
+<button aria-label="标记待办完成" class="w-[18px] h-[18px] rounded-[5px] border-[1.5px] border-secondary bg-transparent flex items-center justify-center shrink-0 hover:bg-secondary/10 transition-colors" type="button">
+<!-- empty unchecked state -->
+</button>
+<div class="truncate">
+<p class="font-body-md-medium text-caption text-on-surface truncate">联合封测：MR20 弱网弱信号音频对齐</p>
+<p class="font-caption text-[11px] text-outline">截止: 下周一 18:00 · 待执行</p>
+</div>
+</div>
+<!-- Action Highlight Button -->
+<button class="shrink-0 ml-2 px-2.5 py-1 rounded-full bg-secondary text-on-secondary font-body-md-medium text-caption shadow-sm hover:opacity-90 active:scale-95 transition-all flex items-center gap-0.5" type="button">
+<span>查办</span>
+<span class="material-symbols-outlined text-[13px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</article>
+<!-- MATCH 5: Quick Reference Mention -->
+<article class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/30 sheet-shadow overflow-hidden transition-all duration-150 hover:border-outline">
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-primary-container"></div>
+<div class="p-card-pad-mobile pl-4">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-body-md-medium text-[11px]">我</span>
+<span class="font-body-md-medium text-body-md text-on-surface">我 · 产品架构</span>
+<span class="font-code-timestamp text-code-timestamp text-tertiary">42:10</span>
+</div>
+<button class="text-primary text-caption font-body-md-medium hover:underline flex items-center" type="button">
+<span>08s 切片</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="play_arrow">play_arrow</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            “大家要是没有异议，我们就按这个节奏定死。关于 <mark class="bg-primary-fixed/80 text-on-primary-container font-body-md-medium px-1 py-0.2 rounded">MR20 协议</mark>的技术白皮书今天会前我已经同步在群文档了。”
+          </p>
+</div>
+</article>
+<!-- Bottom Spacer for Floating Audio Dock -->
+<div class="h-6"></div>
+</main>
+<!-- Floating Audio Dock Player Bar (Stack Level 2) -->
+<!-- Task-focused persistent player when playing/sampling hit transcript segments -->
+<aside class="fixed bottom-3 left-0 right-0 max-w-lg mx-auto px-3 z-30 pointer-events-none">
+<div class="pointer-events-auto bg-surface-container-lowest/95 backdrop-blur-md rounded-2xl border border-outline-variant/30 elevated-dock-shadow p-2.5 flex items-center justify-between gap-2.5">
+<!-- Play / Pause Main Disc -->
+<button aria-label="播放或暂停当前切片" class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md active:scale-90 transition-transform shrink-0" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="pause" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<!-- Player Audio Metadata & Progress -->
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-0.5">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-body-md-medium text-caption text-on-surface truncate">命中点 14:32 我 · 产品架构 (12s)</span>
+</div>
+<!-- Human Voice Enhancement Badge -->
+<span class="inline-flex items-center px-1.5 py-0.2 rounded bg-surface-container text-tertiary font-code-stat text-[10px]">
+              人声增强 2.4x
+            </span>
+</div>
+<!-- Micro Playback Slider Track -->
+<div class="w-full flex items-center gap-2">
+<div class="flex-1 h-1.5 bg-surface-container rounded-full overflow-hidden relative">
+<!-- Played Progress -->
+<div class="h-full bg-primary-container rounded-full w-2/5"></div>
+</div>
+<span class="font-code-timestamp text-code-timestamp text-tertiary shrink-0">00:05 / 00:12</span>
+</div>
+</div>
+<!-- Controls Cluster -->
+<div class="flex items-center gap-1 shrink-0 text-on-surface-variant">
+<!-- 10s Rewind -->
+<button aria-label="后退5秒" class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="replay_5">replay_5</span>
+</button>
+<!-- Full Context Jump Button -->
+<button class="w-8 h-8 rounded-full bg-primary-fixed/30 text-on-primary-fixed-variant hover:bg-primary-fixed/50 flex items-center justify-center transition-colors" title="进入全文对齐" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="fullscreen">fullscreen</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+<!-- Micro Inline Interaction Logic -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle Filter Pills Active State
+      const filterPills = document.querySelectorAll('section button');
+      filterPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          filterPills.forEach(p => {
+            p.classList.remove('bg-primary', 'text-on-primary');
+            p.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+          });
+          pill.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+          pill.classList.add('bg-primary', 'text-on-primary');
+        });
+      });
+
+      // Clear search input logic
+      const clearBtn = document.querySelector('input[type="text"] + button');
+      const searchInput = document.querySelector('input[type="text"]');
+      if (clearBtn && searchInput) {
+        clearBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          searchInput.focus();
+        });
+      }
+    });
+  </script>
+</body></html>

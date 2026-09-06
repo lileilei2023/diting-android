@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#EAE8E0;font-family:'Noto Sans SC',PingFang SC,system-ui,sans-serif}a{color:#12A594}a:hover{color:#0E8578}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="01 封面" data-screen-label="01" data-speaker-notes="谛听：不只是录音转写，而是听懂、辨真、替你办。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;position:relative;overflow:hidden;box-sizing:border-box;padding:120px 140px;display:flex;flex-direction:column;justify-content:space-between">
+  <div style="display:flex;align-items:center;gap:20px"><div style="width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#12A594)"></div><span style="font-size:28px;letter-spacing:.2em;color:#636B63;font-weight:600">谛听 · DITING · v1.0 预研</span></div>
+  <div><div style="font-family:'Noto Serif SC',serif;font-size:120px;font-weight:600;line-height:1.15;letter-spacing:-.01em">听得见，更听得懂；<br>记得住，还替你办。</div><div style="font-size:34px;color:#636B63;margin-top:36px;line-height:1.6">AI 录音卡伴侣 · 产品与底层逻辑设计 · 22 页可点 Demo 提炼</div></div>
+  <div style="display:flex;gap:16px;align-items:center;font-size:24px;color:#636B63"><span style="width:14px;height:14px;border-radius:50%;background:#12A594"></span>薄荷 = 原声 / 理解<span style="width:14px;height:14px;border-radius:50%;background:#5B7380;margin-left:24px"></span>石板青 = 小谛生成<span style="width:14px;height:14px;border-radius:50%;background:#C9781E;margin-left:24px"></span>琥珀 = 行动 / 待确认</div>
+</section>
+
+<section data-label="02 定位" data-screen-label="02" data-speaker-notes="竞品止步于转写总结。谛听的差异从这条边界之后开始：听懂、主动、动手。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:48px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#12A594;font-weight:600">定位</div><div style="font-family:'Noto Serif SC',serif;font-size:64px;font-weight:600;line-height:1.3;margin-top:12px">竞品停在「录音 → 转写 → 总结」。<br>谛听从这条边界之后开始。</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:6px solid #12A594;border-radius:24px;padding:40px"><div style="font-family:'Noto Serif SC',serif;font-size:44px;font-weight:600">听懂</div><div style="font-size:28px;color:#636B63;line-height:1.6;margin-top:16px">构建"你所在世界"的记忆模型：人、承诺、决策、风险、反复诉求。</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:6px solid #5B7380;border-radius:24px;padding:40px"><div style="font-family:'Noto Serif SC',serif;font-size:44px;font-weight:600">主动</div><div style="font-size:28px;color:#636B63;line-height:1.6;margin-top:16px">不等你问：捕捉被忽略的提醒、反复被提的诉求、可沉淀的想法。</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:6px solid #C9781E;border-radius:24px;padding:40px"><div style="font-family:'Noto Serif SC',serif;font-size:44px;font-weight:600">动手</div><div style="font-size:28px;color:#636B63;line-height:1.6;margin-top:16px">确定 Todo 后直接执行——起草、整理、预约、检索，把结论变成"待确认"的成品。</div></div>
+  </div>
+  <div style="background:#1B2420;color:#E8ECE5;border-radius:24px;padding:36px 48px;display:flex;align-items:center;gap:24px;font-size:28px;flex-wrap:wrap"><span style="font-size:22px;letter-spacing:.2em;color:#37C9B6;font-weight:600">北极星闭环</span><span>录音卡记录</span><span style="color:#37C9B6">→</span><span>转写 + 记忆</span><span style="color:#37C9B6">→</span><span>调取原始上下文</span><span style="color:#37C9B6">→</span><span>真正结论</span><span style="color:#37C9B6">→</span><span>确定 Todo</span><span style="color:#37C9B6">→</span><span>直接执行</span><span style="color:#37C9B6">→</span><span>下一次继续复盘</span></div>
+</section>
+
+<section data-label="03 信息架构" data-screen-label="03" data-speaker-notes="四个一级 Tab 加全局录音键。22 个页面全部从 Tab 出发可达。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:40px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#12A594;font-weight:600">信息架构</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;margin-top:12px">4 个 Tab + 1 个录音键，22 个页面</div></div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;flex:1">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px"><div style="font-size:32px;font-weight:600;color:#12A594">今日谛听</div><div style="font-size:24px;line-height:1.9;color:#636B63;margin-top:14px">今日重点<br>今日捕捉<br>被忽略的提醒<br>明日待办<br>周日 · 复盘卡<br>AI 球 → 对话</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px"><div style="font-size:32px;font-weight:600;color:#12A594">记录</div><div style="font-size:24px;line-height:1.9;color:#636B63;margin-top:14px">会话列表<br>会话详情<br>· 转写 / 总结 / 导图<br>洞察三视图<br>可视化报告<br>周 / 月复盘</div></div>
+    <div style="background:#12A594;color:#fff;border-radius:24px;padding:32px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center"><div style="width:96px;height:96px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><div style="width:32px;height:32px;border-radius:50%;background:#12A594"></div></div><div style="font-size:30px;font-weight:600;margin-top:20px">录音键</div><div style="font-size:24px;line-height:1.7;opacity:.9;margin-top:8px">短按 快速捕捉<br>长按 会议模式</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px"><div style="font-size:32px;font-weight:600;color:#C9781E">任务</div><div style="font-size:24px;line-height:1.9;color:#636B63;margin-top:14px">碎念 / 观察 / 任务<br>任务详情<br>· 执行链路<br>· 工件与目的地<br>AI 对话</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px"><div style="font-size:32px;font-weight:600;color:#1B2420">我的</div><div style="font-size:24px;line-height:1.9;color:#636B63;margin-top:14px">成长卡<br>设备管理 / 配对<br>能力与订阅<br><b style="color:#1B2420">教小谛</b><br>· 热词 · 场景规则<br>· 模型与 Skill<br>· 目的地与通道<br>· 记忆与遗忘</div></div>
+  </div>
+  <div style="font-size:26px;color:#636B63">导航规则：任何产出页都有「↩ 回到原声」，回跳到源会话的时间点；主动卡从首页与系统通知双通道进入。</div>
+</section>
+
+<section data-label="04 底层逻辑" data-screen-label="04" data-speaker-notes="对原方案做的六处结构调整。" style="width:1920px;height:1080px;background:#1B2420;color:#E8ECE5;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:40px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#37C9B6;font-weight:600">底层逻辑</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;margin-top:12px">六条结构原则</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px 48px;flex:1">
+    <div style="display:flex;gap:24px"><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;color:#37C9B6;line-height:1">1</div><div><div style="font-size:32px;font-weight:600">只有一个真源：记忆图谱</div><div style="font-size:26px;color:#B8BDB6;line-height:1.6;margin-top:8px">Digest、洞察、主动卡、任务是图谱上的四个视图，不是四套产出。每张卡带 ↩ 回到原声。</div></div></div>
+    <div style="display:flex;gap:24px"><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;color:#E0A24A;line-height:1">2</div><div><div style="font-size:32px;font-weight:600">一种闸门，不是两种"待确认"</div><div style="font-size:26px;color:#B8BDB6;line-height:1.6;margin-top:8px">确认目标 → 确认产出 → 确认发布，同一条琥珀闸门；只有最后一步弹"真实副作用"二次确认。</div></div></div>
+    <div style="display:flex;gap:24px"><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;color:#37C9B6;line-height:1">3</div><div><div style="font-size:32px;font-weight:600">「待确认」也是记忆的写入口</div><div style="font-size:26px;color:#B8BDB6;line-height:1.6;margin-top:8px">点"确认"才入图谱，点"存疑"标为可证伪。AI 的不确定性不会悄悄变成事实。</div></div></div>
+    <div style="display:flex;gap:24px"><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;color:#E0A24A;line-height:1">4</div><div><div style="font-size:32px;font-weight:600">实时通道的成本让用户看得见</div><div style="font-size:26px;color:#B8BDB6;line-height:1.6;margin-top:8px">「实时中 / 已省电暂停」常驻；短按不联网，长按才开会议模式。触发策略不是后台黑盒。</div></div></div>
+    <div style="display:flex;gap:24px"><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;color:#37C9B6;line-height:1">5</div><div><div style="font-size:32px;font-weight:600">配置 = 教小谛，纠错即配置</div><div style="font-size:26px;color:#B8BDB6;line-height:1.6;margin-top:8px">首次教（朗读 3 句）· 随手教（改一个词入热词）· 深度教（听感 / 理解 / 行动 / 记忆）。响应规则挂在场景下。</div></div></div>
+    <div style="display:flex;gap:24px"><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;color:#E0A24A;line-height:1">6</div><div><div style="font-size:32px;font-weight:600">成长值奖励闭环，不奖励录音量</div><div style="font-size:26px;color:#B8BDB6;line-height:1.6;margin-top:8px">BP 只在确认事实 / 采用产出 / 纠正转写时加分，与"不常开实时"的成本原则一致。</div></div></div>
+  </div>
+</section>
+
+<section data-label="05 今日谛听" data-screen-label="05" data-speaker-notes="首页：收工一页看懂今天。今日重点、捕捉、被忽略的提醒、明日待办。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;gap:100px;align-items:center">
+  <div style="flex:1"><div style="font-size:24px;letter-spacing:.2em;color:#12A594;font-weight:600">首页 · 今日谛听</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;line-height:1.3;margin-top:12px">收工一页看懂今天，<br>漏掉的事小谛先捞出来。</div>
+    <div style="font-size:28px;line-height:1.9;color:#636B63;margin-top:36px">· 今日重点：跨会话捞出"最乱的一件事"<br>· 今日捕捉：要点 + 时间点，点即回原声<br>· <span style="color:#C9781E;font-weight:600">被忽略的提醒</span>：由图谱冲突 / 频次驱动，不是单条转写<br>· 明日待办：勾选即回写任务<br>· 周日自动出现「本周复盘」卡</div></div>
+  <div data-om-raster style="width:520px;height:880px;border-radius:56px;background:#F4F3EE;border:12px solid #1B2420;box-sizing:border-box;padding:56px 24px 24px;display:flex;flex-direction:column;gap:14px;overflow:hidden;font-size:18px">
+    <div style="font-family:'Noto Serif SC',serif;font-size:32px;font-weight:600">9月6日 · 周日</div>
+    <div style="background:rgba(18,165,148,.09);border:1px solid rgba(18,165,148,.25);border-radius:22px;padding:20px"><div style="font-size:13px;letter-spacing:.14em;color:#12A594;font-weight:600">今天最乱的事</div><div style="font-family:'Noto Serif SC',serif;font-size:22px;font-weight:600;line-height:1.4;margin-top:8px">Q4 定价要不要改成按席位——周会没吵完，客户下午又提了一次。</div><div style="display:flex;gap:8px;margin-top:12px"><span style="font-size:14px;background:#fff;border-radius:999px;padding:4px 12px;color:#12A594;font-weight:600">↩ 周会 09:41</span><span style="font-size:14px;background:#fff;border-radius:999px;padding:4px 12px;color:#12A594;font-weight:600">↩ 通话 14:23</span></div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:4px solid #12A594;border-radius:18px;padding:16px 18px"><div style="font-weight:600">今日捕捉</div><div style="color:#636B63;line-height:1.7;margin-top:6px"><span style="font-family:'IBM Plex Mono',monospace;color:#12A594">09:41</span> 决定周五前出三方案对比表<br><span style="font-family:'IBM Plex Mono',monospace;color:#12A594">14:23</span> 李总：导出别单独收费<br><span style="font-family:'IBM Plex Mono',monospace;color:#12A594">18:40</span> 配对必须一次成功</div></div>
+    <div style="background:rgba(201,120,30,.08);border:1px solid rgba(201,120,30,.2);border-left:4px solid #C9781E;border-radius:18px;padding:16px 18px"><div style="font-weight:600;color:#C9781E">被你忽略的提醒</div><div style="font-family:'Noto Serif SC',serif;line-height:1.6;margin-top:6px;border-left:2px solid rgba(201,120,30,.35);padding-left:10px">"9 月初把数据导出方案发给李总。" —— 你，8月20日</div><div style="color:#636B63;margin-top:6px;font-size:16px">今天是 9 月 6 日。这个词今天又被提了 3 次。</div></div>
+    <div style="background:#1B2420;color:#E8ECE5;border-radius:18px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12px;letter-spacing:.14em;opacity:.7">周日 · 本周复盘已就绪</div><div style="font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600;margin-top:2px">答应了 5 件事，兑现了 3 件。</div></div><span style="color:#37C9B6;font-weight:600">对表 ›</span></div>
+  </div>
+</section>
+
+<section data-label="06 会话详情" data-screen-label="06" data-speaker-notes="会话详情三视图；导图改为缩进树；色条区分原声与 AI 生成。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:40px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#12A594;font-weight:600">会话详情</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;margin-top:12px">转写 · 总结 · 导图，每一句都能回到原声</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;flex:1">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px"><div style="font-size:30px;font-weight:600;border-bottom:3px solid #12A594;padding-bottom:8px;align-self:flex-start">转写</div><div style="background:rgba(18,165,148,.09);border-radius:16px;padding:16px 20px;font-size:22px;line-height:1.6"><span style="color:#12A594;font-weight:600;font-size:18px">你 · 09:41</span><br>行，那就这么定：小张周五前出三种方案的对比表。</div><div style="font-size:22px;line-height:1.6;padding:0 20px"><span style="color:#C9781E;font-weight:600;font-size:18px">说话人 B · 14:20</span><br>李总那边一直在问数据导出……</div><div style="margin-top:auto;font-size:22px;color:#636B63;line-height:1.6">播放 ↔ 高亮联动<br>「欧艾斯艾斯 → OSS？」一点即纠正并入热词<br>中英对照做成局部开关</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px"><div style="font-size:30px;font-weight:600;padding-bottom:8px;align-self:flex-start">总结</div><div style="border-left:5px solid #5B7380;padding-left:16px;font-size:22px;line-height:1.6"><b>会议内容</b> <span style="color:#5B7380;font-size:18px">小谛整理</span><br>01 现行按用量计价导致账单波动 <span style="color:#12A594;font-size:18px">↩ 00:12</span><br>03 决策：周五前产出对比表 <span style="color:#12A594;font-size:18px">↩ 09:41</span></div><div style="display:flex;height:12px;border-radius:6px;overflow:hidden;gap:3px"><div style="width:58%;background:#12A594"></div><div style="width:30%;background:#C9781E"></div><div style="width:12%;background:#636B63"></div></div><div style="font-size:18px;color:#636B63">你 58% · 李总 30% · 小张 12%</div><div style="border-left:5px solid #C9781E;padding-left:16px;font-size:22px;line-height:1.6;margin-top:auto"><b style="color:#C9781E">待办事项</b><br>输出三方案对比表 · 小张 · 周五 <span style="color:#C9781E;font-size:18px">交给小谛办 ›</span></div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:12px"><div style="font-size:30px;font-weight:600;padding-bottom:8px;align-self:flex-start">导图（缩进树）</div><div style="background:#0E7D70;color:#fff;border-radius:14px;padding:12px 18px;font-size:22px;font-weight:600">产品周会 · Q4 定价</div><div style="margin-left:12px;border-left:3px solid #12A594;padding-left:14px;font-size:20px;line-height:1.7"><b>为什么要改定价</b><br>· 账单波动，续费难讲清 <span style="font-family:'IBM Plex Mono',monospace;color:#12A594;font-size:16px">▶ 00:12</span></div><div style="margin-left:12px;border-left:3px solid #5B7380;padding-left:14px;font-size:20px;line-height:1.7"><b>小谛归纳：分歧本质是客户分层</b><br>· 混合模型：席位 + 超额</div><div style="margin-left:12px;border-left:3px solid #C9781E;padding-left:14px;font-size:20px;line-height:1.7"><b>行动</b><br>· 周五前出三方案对比表 <span style="font-family:'IBM Plex Mono',monospace;color:#C9781E;font-size:16px">▶ 09:41</span></div></div>
+  </div>
+</section>
+
+<section data-label="07 任务闭环" data-screen-label="07" data-speaker-notes="任务状态机：默认待确认，人点确认才执行，外部副作用只在采用时发生。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:48px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#C9781E;font-weight:600">任务工作台 · 护城河</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;margin-top:12px">主动，但可控：每一步外部副作用都要你点头</div></div>
+  <div style="display:flex;align-items:stretch;gap:0">
+    <div style="flex:1;background:#fff;border:2px solid #C9781E;border-radius:24px;padding:32px"><div style="font-size:20px;letter-spacing:.14em;color:#C9781E;font-weight:600">闸门 ①</div><div style="font-size:34px;font-weight:600;margin-top:8px">待确认</div><div style="font-size:24px;color:#636B63;line-height:1.6;margin-top:10px">小谛依会话 / 记忆自动生成目标</div></div>
+    <div style="width:56px;display:flex;align-items:center;justify-content:center;font-size:40px;color:#9AA39C">→</div>
+    <div style="flex:1;background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px"><div style="font-size:20px;letter-spacing:.14em;color:#12A594;font-weight:600">自动</div><div style="font-size:34px;font-weight:600;margin-top:8px">规划 → 执行</div><div style="font-size:24px;color:#636B63;line-height:1.6;margin-top:10px">Agent 读原声 + 图谱，选 Skill 产出工件</div></div>
+    <div style="width:56px;display:flex;align-items:center;justify-content:center;font-size:40px;color:#9AA39C">→</div>
+    <div style="flex:1;background:#fff;border:2px solid #C9781E;border-radius:24px;padding:32px"><div style="font-size:20px;letter-spacing:.14em;color:#C9781E;font-weight:600">闸门 ②</div><div style="font-size:34px;font-weight:600;margin-top:8px">待确认结果</div><div style="font-size:24px;color:#636B63;line-height:1.6;margin-top:10px">工件回到你手里；可"让小谛改改"回到规划</div></div>
+    <div style="width:56px;display:flex;align-items:center;justify-content:center;font-size:40px;color:#9AA39C">→</div>
+    <div style="flex:1;background:#C9781E;color:#fff;border-radius:24px;padding:32px"><div style="font-size:20px;letter-spacing:.14em;font-weight:600;opacity:.85">闸门 ③ · 二次确认</div><div style="font-size:34px;font-weight:600;margin-top:8px">采用 / 发布</div><div style="font-size:24px;line-height:1.6;margin-top:10px;opacity:.9">真实副作用在此刻发生：发邮件、写日历、发群</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px 40px;font-size:26px;line-height:1.7"><b>任务从哪来</b><br>会话待办「交给小谛办」· 洞察「反复被提」· 对话里的祈使句（"帮我…"）· 碎念升级 · 周复盘建议。同一意图去抖，不反复起 Agent。</div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:32px 40px;font-size:26px;line-height:1.7"><b>采用后去哪 · 目的地路由</b><br>待办 → 日历 + 提醒 · 文档 → Notion · 邮件 → 邮箱 · 消息 → 飞书 · 多步执行 → 龙虾 OpenClaw（结果必须回到待确认）。</div>
+  </div>
+</section>
+
+<section data-label="08 教小谛" data-screen-label="08" data-speaker-notes="配置不是设置迷宫，而是三个时机的教。响应规则挂在场景下。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:40px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#12A594;font-weight:600">配置层</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;margin-top:12px">不做设置迷宫，做「教小谛」</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:36px"><div style="font-size:22px;letter-spacing:.14em;color:#12A594;font-weight:600">首次教 · 1 分钟</div><div style="font-size:34px;font-weight:600;margin-top:8px">朗读 3 句</div><div style="font-size:24px;color:#636B63;line-height:1.7;margin-top:12px">同时完成声纹注册（"说话人 A"= 你）、口音校准、首批热词；选 2–4 个场景；从通讯录 / 日历导入专名。</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:36px"><div style="font-size:22px;letter-spacing:.14em;color:#C9781E;font-weight:600">随手教 · 最重要</div><div style="font-size:34px;font-weight:600;margin-top:8px">纠错即配置</div><div style="font-size:24px;color:#636B63;line-height:1.7;margin-top:12px">转写里改一个词 → 自动入热词并回训口音；观察卡点"不重要" → 训练噪音阈值。大多数用户永远不进设置页。</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:36px"><div style="font-size:22px;letter-spacing:.14em;color:#5B7380;font-weight:600">深度教 · 四层</div><div style="font-size:34px;font-weight:600;margin-top:8px">听感 · 理解 · 行动 · 记忆</div><div style="font-size:24px;color:#636B63;line-height:1.7;margin-top:12px">声纹 / 热词 / 语言 → 场景与响应规则 / 忽略规则 / 提示词 → 模型 / Skill / 目的地 → 人物卡 / 遗忘。</div></div>
+  </div>
+  <div style="background:#1B2420;color:#E8ECE5;border-radius:24px;padding:36px 48px;display:flex;gap:48px;align-items:center"><div style="flex:none"><div style="font-size:22px;letter-spacing:.14em;color:#37C9B6;font-weight:600">关键重构</div><div style="font-size:32px;font-weight:600;margin-top:6px">响应规则挂在场景下，<br>不是全局开关</div></div><div style="flex:1;font-size:24px;line-height:1.8;color:#B8BDB6">"客户通话" = 说话人分离 + <span style="color:#E0A24A">承诺句 → 待办</span> + <span style="color:#E0A24A">祈使句 → 建任务</span> + 反复诉求 → 观察 + 闲聊 → 忽略 + 外语 → 翻译 + 自己的提示词。<br>录音时小谛自动识别场景，也可一个 chip 覆写"这场按 X 处理"。全局只留忽略规则：口令「小谛别记」、私人时段、敏感信息打码。</div></div>
+</section>
+
+<section data-label="09 时间粒度" data-screen-label="09" data-speaker-notes="日周月是三种动作。粒度越大越少转述、越多对表。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:48px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#12A594;font-weight:600">时间粒度</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;line-height:1.3;margin-top:12px">日 / 周 / 月是三种动作，<br>不是同一份报告放大</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;flex:1">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-top:8px solid #12A594;border-radius:24px;padding:40px"><div style="font-family:'Noto Serif SC',serif;font-size:48px;font-weight:600">日 · 整理</div><div style="font-size:26px;color:#636B63;line-height:1.7;margin-top:16px">说了什么、漏了什么。<br><br>今日重点 · 今日捕捉 · 被忽略的提醒 · 明日待办。</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-top:8px solid #C9781E;border-radius:24px;padding:40px"><div style="font-family:'Noto Serif SC',serif;font-size:48px;font-weight:600">周 · 对表</div><div style="font-size:26px;color:#636B63;line-height:1.7;margin-top:16px">说过的 vs 做了的。<br><br><b style="color:#1B2420">承诺兑现表</b>（答应了 5 件，兑现 3 件）· 反复被提的升降 · 决策落地 · 下周建议一键建任务。</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-top:8px solid #5B7380;border-radius:24px;padding:40px"><div style="font-family:'Noto Serif SC',serif;font-size:48px;font-weight:600">月 · 沉淀</div><div style="font-size:26px;color:#636B63;line-height:1.7;margin-top:16px">该留下什么、该忘掉什么。<br><br>图谱聚类主题 → 沉淀成文档 · <b style="color:#1B2420">决策回看</b>（当时 vs 现在：验证 / 落空 / 待验证）· 遗忘建议。</div></div>
+  </div>
+  <div style="font-size:28px;color:#636B63">粒度越大，AI 越少转述、越多对表。入口：记录 › 周 / 月；周日首页自动出复盘卡。</div>
+</section>
+
+<section data-label="10 记忆与遗忘" data-screen-label="10" data-speaker-notes="记住得越少提醒才越准。三层寿命，唯一例外是被引用即永久。四道噪音闸。" style="width:1920px;height:1080px;background:#1B2420;color:#E8ECE5;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:44px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#37C9B6;font-weight:600">数据沉淀 · 过期 · 噪音</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;margin-top:12px">记住得越少，提醒才越准</div></div>
+  <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:48px;flex:1">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="font-size:22px;letter-spacing:.14em;color:#B8BDB6;font-weight:600">三层存储</div>
+      <div style="background:rgba(255,255,255,.06);border-left:6px solid #37C9B6;border-radius:18px;padding:22px 28px;font-size:26px;line-height:1.6"><b>原声音频 · 30 天</b><br><span style="color:#B8BDB6">过期只删音频，转写与引用保留</span></div>
+      <div style="background:rgba(255,255,255,.06);border-left:6px solid #85959F;border-radius:18px;padding:22px 28px;font-size:26px;line-height:1.6"><b>转写文本 · 1 年</b><br><span style="color:#B8BDB6">未被引用的段落 90 天后压缩为摘要</span></div>
+      <div style="background:rgba(255,255,255,.06);border-left:6px solid #E0A24A;border-radius:18px;padding:22px 28px;font-size:26px;line-height:1.6"><b>记忆图谱 · 永久，但有温度</b><br><span style="color:#B8BDB6">180 天不出现的冷节点归档：可搜索，不再触发主动提醒</span></div>
+      <div style="background:#37C9B6;color:#1B2420;border-radius:18px;padding:22px 28px;font-size:28px;font-weight:600">唯一例外：被任务 / 洞察 / 报告引用过的片段，永不过期。</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="font-size:22px;letter-spacing:.14em;color:#B8BDB6;font-weight:600">噪音过滤 · 四道闸</div>
+      <div style="display:flex;gap:20px;align-items:baseline;font-size:26px;line-height:1.6"><span style="font-family:'Noto Serif SC',serif;font-size:40px;color:#85959F">一</span><div><b>设备端 VAD</b><br><span style="color:#B8BDB6">静音、环境音不进手机 · 本周挡下 2h14m</span></div></div>
+      <div style="display:flex;gap:20px;align-items:baseline;font-size:26px;line-height:1.6"><span style="font-family:'Noto Serif SC',serif;font-size:40px;color:#85959F">二</span><div><b>场景忽略规则</b><br><span style="color:#B8BDB6">闲聊 / 口令「小谛别记」/ 私人时段 · 37 句</span></div></div>
+      <div style="display:flex;gap:20px;align-items:baseline;font-size:26px;line-height:1.6"><span style="font-family:'Noto Serif SC',serif;font-size:40px;color:#85959F">三</span><div><b>"三无句"不入图谱</b><br><span style="color:#B8BDB6">无人名、无动词、无时间的单次出现 · 112 句</span></div></div>
+      <div style="display:flex;gap:20px;align-items:baseline;font-size:26px;line-height:1.6"><span style="font-family:'Noto Serif SC',serif;font-size:40px;color:#85959F">四</span><div><b>你的"不重要"</b><br><span style="color:#B8BDB6">在观察卡上点忽略，回训阈值 · 本周 4 次</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section data-label="11 目的地与通道" data-screen-label="11" data-speaker-notes="Todo 发布是目的地路由。Hermes 是通道不是目的地，只配触发和预算。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:40px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#C9781E;font-weight:600">Todo 发布 · 集成</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;margin-top:12px">目的地路由，Hermes 是通道不是目的地</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:30px"><div style="font-size:30px;font-weight:600">系统日历 · 邮箱 · 飞书</div><div style="font-size:24px;color:#636B63;line-height:1.7;margin-top:10px">待办 → 日历 + 提醒；邮件以你的名义、发送前必须预览；消息只 @ 任务里出现的人。</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:6px solid #5B7380;border-radius:24px;padding:30px"><div style="font-size:30px;font-weight:600">Notion</div><div style="font-size:24px;color:#636B63;line-height:1.7;margin-top:10px">数据库「谛听 · 任务」；字段映射：标题 / 状态 / 截止 / 原声链接；默认单向推送，双向状态同步可选。</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-left:6px solid #C9781E;border-radius:24px;padding:30px"><div style="font-size:30px;font-weight:600">龙虾 OpenClaw</div><div style="font-size:24px;color:#636B63;line-height:1.7;margin-top:10px">跑在你自己机器上的 Agent：Gateway + Token；转发类型（检索 / 整理 / 多步执行）；拿到的是意图 + 引用片段，不是全部记忆；<b style="color:#C9781E">结果必须回到待确认结果</b>。</div></div>
+  </div>
+  <div style="background:#fff;border:1px solid #E3E4DC;border-left:6px solid #5B7380;border-radius:24px;padding:36px 44px;display:flex;gap:48px;align-items:center">
+    <div style="flex:none"><div style="font-size:22px;letter-spacing:.14em;color:#5B7380;font-weight:600">通道</div><div style="font-size:36px;font-weight:600;margin-top:6px">Hermes 实时</div></div>
+    <div style="flex:1;font-size:24px;line-height:1.8;color:#636B63">只配三样：<b style="color:#1B2420">什么时候开</b>（唤醒词 / 手动 / 外语 / 祈使 / 高风险）· <b style="color:#1B2420">月度预算</b>（16 h / 200 h）· <b style="color:#1B2420">降级阈值</b>（电量 &lt; 20%、RTT &gt; 400ms 回本地转写）。不常开，静音超时自动关；摘要 / 报告 / 记忆走批处理。</div>
+  </div>
+  <div style="background:rgba(201,120,30,.08);border-left:6px solid #C9781E;border-radius:18px;padding:24px 36px;font-size:26px;line-height:1.6"><b>不变的底线：</b>任何目的地的写入都发生在你点「采用」之后；外部 Agent 的执行结果必须回到谛听的「待确认结果」，不能直接对外。</div>
+</section>
+
+<section data-label="12 路线与拍板" data-screen-label="12" data-speaker-notes="上线路线与待拍板问题。" style="width:1920px;height:1080px;background:#F4F3EE;color:#1B2420;font-family:'Noto Sans SC',sans-serif;box-sizing:border-box;padding:100px 140px;display:flex;flex-direction:column;gap:44px">
+  <div><div style="font-size:24px;letter-spacing:.2em;color:#12A594;font-weight:600">路线与拍板</div><div style="font-family:'Noto Serif SC',serif;font-size:56px;font-weight:600;margin-top:12px">MVP 能听懂 → V1 会主动 → V2 能动手</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:30px"><div style="font-size:22px;letter-spacing:.14em;color:#12A594;font-weight:600">MVP</div><div style="font-size:24px;color:#636B63;line-height:1.7;margin-top:8px">MR20 接入 · 离线转写 · 摘要 / 待办 · 今日谛听 · 会话详情 · 报告 · 首次引导 + 热词</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:30px"><div style="font-size:22px;letter-spacing:.14em;color:#5B7380;font-weight:600">V1</div><div style="font-size:24px;color:#636B63;line-height:1.7;margin-top:8px">记忆图谱 · 主动卡 · 任务工作台（待确认）· 周 / 月复盘 · 记忆与遗忘 · Farosh 适配</div></div>
+    <div style="background:#fff;border:1px solid #E3E4DC;border-radius:24px;padding:30px"><div style="font-size:22px;letter-spacing:.14em;color:#C9781E;font-weight:600">V2</div><div style="font-size:24px;color:#636B63;line-height:1.7;margin-top:8px">唤醒词 + Hermes · Agent / Skill 执行闭环 · 目的地路由（Notion / 龙虾）· 团队共享</div></div>
+  </div>
+  <div style="background:rgba(201,120,30,.08);border-left:6px solid #C9781E;border-radius:24px;padding:36px 44px;flex:1">
+    <div style="font-size:30px;font-weight:600;color:#C9781E">待你拍板</div>
+    <div style="font-size:26px;line-height:1.9;margin-top:12px;color:#1B2420">① 洞察是否并入会话详情第四个 Tab，减少一层导航？<br>② 「碎念」与 3 分钟快速捕捉是否是同一物？<br>③ BP / Lv 成长体系是否保留——与"克制、不打扰"的气质有张力。<br>④ 模型选择是否对普通用户暴露，还是只在 Unlimited / 团队版出现？<br>⑤ 首次朗读是否允许跳过——跳过会让"说话人 A = 你"失效。</div>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background text-on-surface antialiased" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>风险纪要 · 客户 Q2 预算审批决策</title>
+<!-- Google Fonts: Noto Serif SC, Plus Jakarta Sans, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Serif+SC:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-background": "#1b1c19",
+            "inverse-on-surface": "#f2f1ec",
+            "tertiary-fixed-dim": "#b9c9d3",
+            "tertiary-fixed": "#d5e5ef",
+            "outline-variant": "#bcc9c5",
+            "secondary-fixed": "#ffdcc0",
+            "background": "#faf9f4",
+            "primary": "#006b5f",
+            "on-surface-variant": "#3d4946",
+            "error-container": "#ffdad6",
+            "primary-fixed": "#7ef7e3",
+            "on-surface": "#1b1c19",
+            "on-error-container": "#93000a",
+            "secondary-fixed-dim": "#ffb876",
+            "surface-container-highest": "#e3e3de",
+            "secondary-container": "#ffa449",
+            "error": "#ba1a1a",
+            "on-primary-fixed-variant": "#005047",
+            "on-secondary-container": "#6f3d00",
+            "on-tertiary-fixed": "#0e1d25",
+            "primary-fixed-dim": "#5fdac7",
+            "surface-container": "#efeee9",
+            "tertiary-container": "#85959f",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed-variant": "#3a4951",
+            "on-secondary": "#ffffff",
+            "secondary": "#8d4f00",
+            "surface": "#faf9f4",
+            "inverse-primary": "#5fdac7",
+            "on-primary-container": "#00322c",
+            "surface-container-lowest": "#ffffff",
+            "tertiary": "#516169",
+            "surface-container-low": "#f5f4ef",
+            "on-secondary-fixed-variant": "#6b3b00",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#faf9f4",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e9e8e3",
+            "surface-variant": "#e3e3de",
+            "on-secondary-fixed": "#2d1600",
+            "primary-container": "#12a594",
+            "inverse-surface": "#30312e",
+            "on-tertiary-container": "#1f2e35",
+            "surface-dim": "#dbdad5",
+            "surface-tint": "#006b5f",
+            "outline": "#6d7a76",
+            "on-primary-fixed": "#00201c",
+            "amber-brand": "#C9781E",
+            "amber-soft": "rgba(201, 120, 30, 0.08)",
+            "mint-brand": "#12A594",
+            "paper-root": "#F4F3EE",
+            "paper-card": "#FAF9F5",
+            "paper-sunken": "#EBE9E1"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "1.25rem",
+            "space-xl": "1.5rem",
+            "space-2xl": "2rem",
+            "card-pad-mobile": "1rem",
+            "gutter-mobile": "1rem",
+            "space-3xl": "3rem",
+            "space-sm": "0.75rem",
+            "space-xxs": "0.25rem",
+            "gutter-desktop": "1.5rem",
+            "space-xs": "0.5rem",
+            "card-pad-desktop": "1.5rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "caption": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-sm": ["Noto Serif SC", "serif"],
+            "body-md-medium": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-md": ["Noto Serif SC", "serif"],
+            "code-stat": ["JetBrains Mono", "monospace"],
+            "display-lg": ["Noto Serif SC", "serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "code-timestamp": ["JetBrains Mono", "monospace"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "display-lg-mobile": ["Noto Serif SC", "serif"]
+          },
+          "fontSize": {
+            "caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "0", "fontWeight": "600" }],
+            "body-md-medium": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "500" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "code-stat": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0", "fontWeight": "400" }],
+            "code-timestamp": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .tactile-card {
+      background-color: #FAF9F5;
+      border: 1px solid rgba(43, 58, 66, 0.08);
+      box-shadow: 0 2px 8px -2px rgba(29, 36, 35, 0.04), 0 1px 2px rgba(29, 36, 35, 0.02);
+    }
+    .tactile-elevated {
+      background-color: #FFFFFF;
+      box-shadow: 0 8px 24px -4px rgba(29, 36, 35, 0.08), 0 2px 6px -1px rgba(29, 36, 35, 0.04);
+      border: 1px solid rgba(43, 58, 66, 0.09);
+    }
+    .sunken-well {
+      background-color: #EBE9E1;
+      box-shadow: inset 0 1px 2px rgba(29, 36, 35, 0.06);
+    }
+    .rail-amber {
+      border-left: 3px solid #C9781E;
+    }
+    .rail-mint {
+      border-left: 3px solid #12A594;
+    }
+    .rail-tertiary {
+      border-left: 3px solid #5B7380;
+    }
+    .rail-error {
+      border-left: 3px solid #D04838;
+    }
+    @keyframes pulseRipple {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .animate-pulse-slow {
+      animation: pulseRipple 2.6s infinite ease-in-out;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-paper-root text-on-surface font-body-md min-h-full flex flex-col justify-between selection:bg-mint-brand/20">
+<!-- Mobile Screen Container (Standard Phone Canvas max-w-md mx-auto) -->
+<div class="relative w-full max-w-md mx-auto min-h-screen flex flex-col pb-28 shadow-xl bg-background border-x border-outline-variant/20">
+<!-- 1. Header / Top Navigation Bar (Task-focused context: Clean, no global bottom nav) -->
+<header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md px-gutter-mobile pt-3 pb-2.5 flex items-center justify-between transition-all">
+<div class="flex items-center space-x-2">
+<button aria-label="返回会话" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all" onclick="history.back()">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<div>
+<div class="flex items-center space-x-1.5">
+<h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">风险纪要与合规拦截</h1>
+</div>
+<p class="font-caption text-caption text-on-surface-variant flex items-center space-x-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error inline-block"></span>
+<span>红线机制 · 人工二次确认 (Level P0)</span>
+</p>
+</div>
+</div>
+<div class="flex items-center space-x-1">
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all" title="分享/导出">
+<span class="material-symbols-outlined text-[20px]" data-icon="ios_share">ios_share</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-gutter-mobile pt-2 space-y-4 flex-1">
+<!-- 2. Session Context Header Card -->
+<section class="tactile-card rounded-2xl p-card-pad-mobile relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="space-y-1 pr-2">
+<div class="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-stat text-code-stat">
+<span class="material-symbols-outlined text-[13px] text-mint-brand" data-icon="fingerprint">fingerprint</span>
+<span>SESSION-240416-B8</span>
+</div>
+<h2 class="font-headline-sm text-[16px] leading-snug text-on-surface pt-0.5">客户 Q2 预算审批决策及安全白皮书</h2>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-caption text-[11px] font-medium whitespace-nowrap">
+            条款冲突待审
+          </span>
+</div>
+<div class="mt-3 pt-2.5 border-t border-outline-variant/30 space-y-1.5 text-on-surface-variant">
+<div class="flex items-center text-caption font-caption">
+<span class="material-symbols-outlined text-[15px] mr-1.5 text-outline" data-icon="schedule">schedule</span>
+<span>昨日 15:40 · 会话时长 32:40 (全程保密存证)</span>
+</div>
+<div class="flex items-center text-caption font-caption">
+<span class="material-symbols-outlined text-[15px] mr-1.5 text-outline" data-icon="group">group</span>
+<span class="truncate">华东区采购总监、商务VP、林溪 (产品架构师)</span>
+</div>
+</div>
+<!-- Waveform Excerpt Anchor -->
+<div class="mt-3 sunken-well rounded-xl p-2.5">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-brand animate-pulse-slow"></span>
+<span class="font-caption text-caption font-medium text-amber-brand">定位冲突原声锚点</span>
+<span class="font-code-timestamp text-code-timestamp text-on-surface-variant bg-surface px-1.5 py-0.2 rounded border border-outline-variant/30">24:18 - 24:33</span>
+</div>
+<span class="font-caption text-[11px] text-on-surface-variant">15s 片段精听</span>
+</div>
+<div class="flex items-center space-x-2">
+<button aria-label="播放原声切片" class="w-8 h-8 rounded-full bg-mint-brand text-on-primary flex items-center justify-center shrink-0 shadow-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="play_arrow" data-weight="fill" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<!-- Waveform visualization -->
+<div class="flex-1 flex items-center justify-between h-7 px-2 bg-surface rounded-lg relative overflow-hidden">
+<div class="flex items-center space-x-[2.5px] w-full h-full py-1">
+<!-- Bar segments with played & remaining contrast -->
+<span class="w-[2px] h-2 bg-mint-brand rounded-full"></span>
+<span class="w-[2px] h-3.5 bg-mint-brand rounded-full"></span>
+<span class="w-[2px] h-5 bg-mint-brand rounded-full"></span>
+<span class="w-[2px] h-3 bg-mint-brand rounded-full"></span>
+<span class="w-[2px] h-4 bg-mint-brand rounded-full"></span>
+<span class="w-[2px] h-6 bg-mint-brand rounded-full"></span>
+<!-- Action marker pin at conflict point -->
+<div class="relative flex items-center justify-center">
+<span class="w-[2.5px] h-6 bg-amber-brand rounded-full"></span>
+<span class="absolute -top-1 w-1.5 h-1.5 rounded-full bg-amber-brand ring-2 ring-white"></span>
+</div>
+<span class="w-[2px] h-4 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-5.5 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-3 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-4.5 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-2 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-3.5 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-5 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-2.5 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-4 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-3 bg-outline-variant rounded-full"></span>
+<span class="w-[2px] h-1.5 bg-outline-variant rounded-full"></span>
+</div>
+<span class="text-[10px] font-code-timestamp text-outline shrink-0 ml-1">0:15</span>
+</div>
+</div>
+<!-- Transcript Quote -->
+<div class="mt-2 text-[12.5px] leading-relaxed text-on-surface-variant bg-surface/80 rounded-lg p-2 border border-outline-variant/30 italic">
+<span class="text-amber-brand font-semibold not-italic">客户采购:</span> “...集团 Q2 预算池本月锁闭，财务审批流水只能走验收后60天归集，否则得推迟到下半年...”
+          </div>
+</div>
+</section>
+<!-- 3. Core Conflict & Tension Analysis (The High Contrast Amber Rail Card) -->
+<section class="tactile-card rail-amber rounded-2xl p-card-pad-mobile bg-[#FAF7F0] relative overflow-hidden">
+<div class="flex items-center justify-between pb-2 border-b border-amber-brand/20">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-amber-brand text-[20px]" data-icon="gavel">gavel</span>
+<h3 class="font-headline-sm text-[16px] text-on-surface tracking-tight">条款博弈 vs 现金流合规红线</h3>
+</div>
+<span class="text-caption font-code-stat text-amber-brand font-semibold px-2 py-0.5 rounded bg-amber-brand/10">
+            置信度 96%
+          </span>
+</div>
+<!-- Comparative Side-by-Side Cards -->
+<div class="grid grid-cols-1 gap-2.5 mt-3">
+<!-- Client Claim -->
+<div class="bg-surface rounded-xl p-3 border border-outline-variant/40 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="font-caption text-caption font-medium text-secondary flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                客户财务口径要求
+              </span>
+<span class="font-code-stat text-code-stat text-error font-semibold">Net 60</span>
+</div>
+<p class="font-body-md-medium text-body-md-medium text-on-surface">
+              验收合格后 <span class="text-secondary font-semibold">60 个工作日</span> 结款
+            </p>
+<p class="font-caption text-caption text-on-surface-variant mt-1">
+              理由：客户集团 Q2 预算节点调整，需跨季度归集进项发票与业务系统验收单。
+            </p>
+</div>
+<!-- Internal Policy Conflict -->
+<div class="bg-surface rounded-xl p-3 border border-outline-variant/40 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="font-caption text-caption font-medium text-primary flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5"></span>
+                标准合同红线 (谛听合规库)
+              </span>
+<span class="font-code-stat text-code-stat text-primary font-semibold">Net 30</span>
+</div>
+<p class="font-body-md-medium text-body-md-medium text-on-surface">
+              标准交付验收后 <span class="text-primary font-semibold">30 天内</span> 完成款项承兑
+            </p>
+<div class="mt-1.5 pt-1.5 border-t border-outline-variant/20 flex items-start text-caption text-on-surface-variant">
+<span class="material-symbols-outlined text-[15px] text-amber-brand mr-1 shrink-0 mt-0.5" data-icon="memory">memory</span>
+<span>关联记忆：李总于 4月10日商业战略例会明确强调「现金流指标收紧，首期 180 万回款必须在 4月30日前到账锁定」。</span>
+</div>
+</div>
+</div>
+<!-- Severity & Impact Assessment -->
+<div class="mt-3 p-2.5 rounded-xl bg-error-container/30 border border-error/20 flex items-start space-x-2">
+<span class="material-symbols-outlined text-error text-[18px] shrink-0 mt-0.5" data-icon="warning">warning</span>
+<p class="font-caption text-caption text-on-surface leading-snug">
+<strong class="text-error font-semibold">财务风险预测：</strong>若直接按 60 天签署，该笔 180 万首付款将直接延宕至 Q3 (7月中旬) 入账，直接触发集团 Q2 现金流警戒线。
+          </p>
+</div>
+</section>
+<!-- 4. 谛听记忆图谱穿透 (Knowledge & Context Graph) -->
+<section class="tactile-card rail-tertiary rounded-2xl p-card-pad-mobile">
+<div class="flex items-center justify-between mb-2.5">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-tertiary text-[19px]" data-icon="hub">hub</span>
+<h3 class="font-headline-sm text-[16px] text-on-surface">谛听记忆图谱穿透</h3>
+</div>
+<span class="text-caption font-caption text-outline">Cross-Session Link</span>
+</div>
+<div class="space-y-2">
+<!-- Graph item 1 -->
+<div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-start space-x-2.5">
+<div class="w-6 h-6 rounded-md bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="history_edu">history_edu</span>
+</div>
+<div>
+<div class="font-body-md-medium text-caption font-semibold text-on-surface">往期履约历史判例</div>
+<p class="font-caption text-caption text-on-surface-variant mt-0.5">
+                此前与该客户过往签署的 2 期协议（2023 框架与运维单）均严格执行 Net 30，客户历史平均付款周期为 26.4 天，履约信誉良好。
+              </p>
+</div>
+</div>
+<!-- Graph item 2 -->
+<div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-start space-x-2.5">
+<div class="w-6 h-6 rounded-md bg-amber-brand/10 text-amber-brand flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="psychology">psychology</span>
+</div>
+<div>
+<div class="font-body-md-medium text-caption font-semibold text-on-surface">决策人性格画像 (李总 · 业务线负责人)</div>
+<p class="font-caption text-caption text-on-surface-variant mt-0.5">
+                对账期延期持高度防御态度，曾在近 3 次跨组经营例会中对「超 30 天无担保账期」表达零容忍。
+              </p>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. 小谛 Agent 破局策略与待确认行动 (Actionable Resolution & Gate) -->
+<section class="space-y-2.5">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center space-x-1.5">
+<!-- AI Breathing Orb metaphor -->
+<div class="relative w-3.5 h-3.5 flex items-center justify-center">
+<span class="absolute inset-0 rounded-full bg-mint-brand/30 animate-ping"></span>
+<span class="w-2 h-2 rounded-full bg-mint-brand"></span>
+</div>
+<h3 class="font-headline-sm text-[16px] text-on-surface">小谛破局建议 · 3项化解动作</h3>
+</div>
+<span class="font-caption text-caption text-amber-brand bg-amber-soft px-2 py-0.5 rounded-full font-medium">需人工确认</span>
+</div>
+<!-- Action 1: Recommended Primary compromise -->
+<div class="tactile-elevated rounded-2xl p-card-pad-mobile border-l-4 border-l-mint-brand relative overflow-hidden transition-all">
+<div class="flex items-start justify-between">
+<div class="flex items-center space-x-2">
+<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary">推荐方案 A</span>
+<span class="font-body-md-medium text-body-md-medium font-semibold text-on-surface">起草《阶梯式付款折中补充协议》</span>
+</div>
+<label class="flex items-center space-x-1 cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-mint-brand focus:ring-mint-brand border-outline cursor-pointer" type="checkbox"/>
+</label>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-2 leading-relaxed">
+<strong class="text-on-surface">博弈平衡解：</strong>首付款 50%（90万元）仍按 <span class="text-primary font-medium">30 天支付</span> 以锁闭 Q2 现金流指标；尾款 50% 允许放宽至 <span class="text-secondary font-medium">45 天</span>，附带前置交付《端侧安全白皮书盖章件》作为催付凭据。
+          </p>
+<div class="mt-3 pt-2.5 border-t border-outline-variant/30 flex flex-wrap gap-2">
+<button class="inline-flex items-center px-2.5 py-1.5 rounded-lg text-caption font-body-md-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[15px] mr-1 text-mint-brand" data-icon="edit_note">edit_note</span>
+              查看 Agent 起草邮件草稿
+            </button>
+<button class="inline-flex items-center px-2.5 py-1.5 rounded-lg text-caption font-body-md-medium bg-mint-brand/10 text-primary hover:bg-mint-brand/20 transition-colors">
+<span class="material-symbols-outlined text-[15px] mr-1 text-mint-brand" data-icon="send">send</span>
+              一键派发至商务审核
+            </button>
+</div>
+</div>
+<!-- Action 2: Escalation / Quick sync decision -->
+<div class="tactile-card rounded-2xl p-card-pad-mobile relative border-l-4 border-l-amber-brand">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center space-x-2">
+<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-brand/15 text-amber-brand">方案 B</span>
+<span class="font-body-md-medium text-body-md-medium font-semibold text-on-surface">向李总发起 15 分钟临时风险特批决策</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-1.5">
+                状态：已自动匹配李总日历空闲窗口 <span class="font-code-stat text-on-surface font-semibold text-[11px] bg-surface px-1.5 py-0.5 rounded border border-outline-variant/30">今日 17:30 - 17:45</span>
+</p>
+</div>
+<input checked="" class="w-4 h-4 rounded text-amber-brand focus:ring-amber-brand border-outline cursor-pointer mt-1" type="checkbox"/>
+</div>
+<div class="mt-2.5 flex justify-end">
+<button class="inline-flex items-center px-3 py-1 rounded-full text-caption font-body-md-medium bg-surface border border-outline-variant/40 hover:bg-surface-container-high text-on-surface transition-all active:scale-95">
+<span class="material-symbols-outlined text-[14px] mr-1 text-outline" data-icon="event_available">event_available</span>
+              写入日历预定建议
+            </button>
+</div>
+</div>
+<!-- Action 3: Project Memory Lock -->
+<div class="tactile-card rounded-2xl p-card-pad-mobile relative border-l-4 border-l-tertiary">
+<div class="flex items-start justify-between">
+<div class="pr-2">
+<div class="flex items-center space-x-2">
+<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-tertiary/15 text-tertiary">标记图谱</span>
+<span class="font-body-md-medium text-body-md-medium font-semibold text-on-surface">标记此条款为「合同谈判待守红线」</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-1">
+                更新至客户认知图谱，后续会话凡触及 Net 45+ 均触发实时智能声振预警。
+              </p>
+</div>
+<input checked="" class="w-4 h-4 rounded text-tertiary focus:ring-tertiary border-outline cursor-pointer mt-1" type="checkbox"/>
+</div>
+</div>
+</section>
+<!-- Audit Metadata Footer -->
+<div class="pt-2 pb-4 text-center">
+<p class="font-caption text-[11px] text-outline flex items-center justify-center space-x-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="verified_user">verified_user</span>
+<span>谛听合规沙箱引擎已进行条款语意一致性复核 · SHA-256 存证完整</span>
+</p>
+</div>
+</main>
+<!-- 6. Bottom Action Bar (Fixed, floating tactile aesthetic) -->
+<aside class="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-md border-t border-outline-variant/30 py-2.5 px-gutter-mobile max-w-md mx-auto">
+<div class="flex items-center space-x-2.5">
+<!-- Secondary Button: Ask Agent to rework -->
+<button class="flex-1 h-11 px-3 rounded-full bg-paper-card border border-outline-variant/40 text-on-surface flex items-center justify-center space-x-1.5 active:scale-95 transition-all text-caption font-body-md-medium hover:bg-surface-container">
+<span class="material-symbols-outlined text-[18px] text-amber-brand" data-icon="auto_fix_high">auto_fix_high</span>
+<span class="truncate">修改化解策略</span>
+</button>
+<!-- Primary Button: Confirm & dispatch tasks -->
+<button class="flex-[1.4] h-11 px-4 rounded-full bg-mint-brand text-on-primary flex items-center justify-center space-x-1.5 shadow-md shadow-mint-brand/20 active:scale-95 transition-all text-body-md-medium font-semibold">
+<span class="material-symbols-outlined text-[19px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="truncate">确认采纳并流转 (2)</span>
+</button>
+</div>
+</aside>
+</div>
+</body></html>
