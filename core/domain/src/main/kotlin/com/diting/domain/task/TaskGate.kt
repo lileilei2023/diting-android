@@ -85,16 +85,32 @@ enum class Destination {
     /** 多步执行 → 龙虾 OpenClaw，结果必须回到「待确认结果」 */
     OPENCLAW,
 
+    /**
+     * 技术决策 → 开发 Agent (Claude Code / WorkBuddy)。
+     *
+     * Bounded by [DevAgentPolicy]: it may open an issue, draft an RFC or open a
+     * draft PR, and may not merge, push to the default branch, or deploy.
+     */
+    DEV_AGENT,
+
     /** Stays in 谛听 only. */
     NONE;
 
     /**
      * Whether adopting to this destination writes to a third-party service.
-     * [NONE] and [OPENCLAW] do not: OpenClaw hands its result back to gate ②
-     * rather than acting outward on its own.
+     *
+     * [NONE] and [OPENCLAW] do not: OpenClaw runs on the user's own machine and
+     * hands its result back to gate ② rather than acting outward.
+     *
+     * [DEV_AGENT] does, and this is the one that is easy to get wrong. It also
+     * runs on the user's own machine — but what it produces is an issue or a PR
+     * that appears in a shared repository the moment it is created. Colleagues
+     * see it. That is an external write, whatever the agent's IP address is, so
+     * adopting to it raises the second confirmation like any other.
      */
     val isExternalWrite: Boolean
-        get() = this == CALENDAR || this == NOTION || this == EMAIL || this == LARK
+        get() = this == CALENDAR || this == NOTION || this == EMAIL ||
+            this == LARK || this == DEV_AGENT
 }
 
 /** The kind of thing a task produces, which picks the default [Destination]. */
@@ -104,9 +120,28 @@ enum class ArtifactKind {
     DOCUMENT,
     EMAIL,
     MESSAGE,
-    MULTI_STEP;
+    MULTI_STEP,
 
-    /** The default routing table from the design. */
+    /** 技术决策 — routes to a development agent when one is configured. */
+    TECH_DECISION;
+
+    /**
+     * The default routing table from the design.
+     *
+     * ```
+     *   待办     → 日历 + 提醒
+     *   文档     → Notion
+     *   邮件     → 邮箱
+     *   消息     → 飞书
+     *   多步执行 → 龙虾 OpenClaw
+     *   技术决策 → 开发 Agent
+     * ```
+     *
+     * This is the *ideal* destination. [DestinationRouter] is what resolves it
+     * against what the user has actually connected — routing a technical
+     * decision to a dev agent that does not exist would leave the task stuck at
+     * gate ② with nowhere to go.
+     */
     val defaultDestination: Destination
         get() = when (this) {
             TODO -> Destination.CALENDAR
@@ -114,7 +149,47 @@ enum class ArtifactKind {
             EMAIL -> Destination.EMAIL
             MESSAGE -> Destination.LARK
             MULTI_STEP -> Destination.OPENCLAW
+            TECH_DECISION -> Destination.DEV_AGENT
         }
+}
+
+/**
+ * Resolves the routing table against what is actually connected.
+ *
+ * The spec states the one fallback it wants — 技术决策 「未启用则回落 Notion」 — and
+ * the reasoning generalises: a technical decision that cannot reach an agent is
+ * still a decision worth writing down, and a document is where a decision goes.
+ * Falling back beats leaving the task with no destination.
+ *
+ * Nothing else falls back. A to-do with no calendar connected stays a to-do
+ * bound for the calendar and simply cannot be adopted yet — silently rerouting
+ * someone's meeting invite into Notion would be worse than telling them the
+ * calendar is not set up.
+ */
+class DestinationRouter(
+    /** Destinations the user has actually connected. */
+    private val available: Set<Destination> = emptySet(),
+) {
+
+    /** Where an artefact of this kind should go, given what is connected. */
+    fun route(kind: ArtifactKind): Destination {
+        val ideal = kind.defaultDestination
+        if (available.contains(ideal)) return ideal
+
+        return when (ideal) {
+            // The one documented fallback.
+            Destination.DEV_AGENT -> Destination.NOTION
+            else -> ideal
+        }
+    }
+
+    /** True when [route] had to substitute, so the UI can say why. */
+    fun didFallBack(kind: ArtifactKind): Boolean = route(kind) != kind.defaultDestination
+
+    companion object {
+        /** Nothing connected — every kind resolves to its ideal but unusable target. */
+        val Unconfigured = DestinationRouter()
+    }
 }
 
 /** Where a task came from. Used to de-duplicate repeated intents. */

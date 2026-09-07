@@ -27,6 +27,15 @@ enum class ResponseAction {
     /** Translate inline. */
     TRANSLATE,
 
+    /**
+     * Hand it to a development agent, as a task at gate ① like everything else.
+     *
+     * "派给开发 Agent（待确认）" — the parenthetical is the important half. This
+     * action does not dispatch; it proposes. The agent only runs after the user
+     * confirms the goal, and what it produces still comes back to gate ②.
+     */
+    DISPATCH_TO_DEV_AGENT,
+
     /** Drop it: not transcribed into the graph. */
     IGNORE,
 }
@@ -118,6 +127,28 @@ data class Scene(
                     ResponseRule(Intent.IMPERATIVE, ResponseAction.CREATE_TASK),
                     ResponseRule(Intent.COMMITMENT, ResponseAction.CREATE_TODO),
                     ResponseRule(Intent.RECURRING_ASK, ResponseAction.TRACK_AS_OBSERVATION),
+                ),
+            ),
+            Scene(
+                id = "tech",
+                name = "技术会议",
+                isBuiltIn = true,
+                speakerSeparation = true,
+                // Repository and module names, plus interface/protocol vocabulary.
+                // Deliberately narrow: this is the only scene that can propose
+                // handing work to an agent, so a loose cue list would start
+                // routing ordinary meetings at a code repository.
+                cues = listOf(
+                    "接口", "协议", "字段", "重构", "迁移", "上线", "灰度",
+                    "分支", "合并", "回滚", "依赖", "版本号", "兼容",
+                ),
+                rules = listOf(
+                    ResponseRule(Intent.TECH_DECISION, ResponseAction.DISPATCH_TO_DEV_AGENT),
+                    ResponseRule(Intent.DECISION, ResponseAction.RECORD_IN_MINUTES),
+                    ResponseRule(Intent.COMMITMENT, ResponseAction.CREATE_TODO),
+                    ResponseRule(Intent.IMPERATIVE, ResponseAction.CREATE_TASK),
+                    ResponseRule(Intent.RISK, ResponseAction.RECORD_IN_MINUTES),
+                    ResponseRule(Intent.SMALL_TALK, ResponseAction.IGNORE),
                 ),
             ),
             Scene(

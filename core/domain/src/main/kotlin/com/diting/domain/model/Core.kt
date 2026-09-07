@@ -110,6 +110,17 @@ enum class Intent {
     /** 决策 — "那就这么定". Goes into the minutes. */
     DECISION,
 
+    /**
+     * 技术决策 — a decision about how something gets built: an interface, a
+     * protocol, a migration, a rollout order.
+     *
+     * Separate from [DECISION] because it routes differently. An ordinary
+     * decision belongs in the minutes; a technical one can be handed to a
+     * development agent that opens the issue or drafts the RFC — and that is a
+     * destination with a much narrower set of permitted actions.
+     */
+    TECH_DECISION,
+
     /** 反复诉求 — tracked for frequency, becomes an observation. */
     RECURRING_ASK,
 
@@ -121,6 +132,54 @@ enum class Intent {
 
     /** 外语 — translated. */
     FOREIGN_LANGUAGE,
+}
+
+/**
+ * What the record key was asked to do.
+ *
+ * Purely a client-side distinction — the three modes produce the same kind of
+ * [Session] and go through the same understanding pipeline afterwards. The
+ * enum exists so the recording screen and the session list can say which one a
+ * recording came from.
+ */
+@Serializable
+enum class SessionKind {
+    /** 会议模式 — long press. The default. */
+    MEETING,
+
+    /** 快速捕捉 — short press. Does not open the realtime channel. */
+    QUICK_CAPTURE,
+
+    /**
+     * 同传 — live two-way interpretation.
+     *
+     * Runs off the phone microphone rather than the recorder, and is metered
+     * against the realtime budget separately from ordinary transcription
+     * because it holds the channel open for the whole conversation.
+     *
+     * Not stored unless the user asks for it at the end; see [Session.source].
+     */
+    INTERPRETATION,
+}
+
+/** Where a session's audio came from. */
+@Serializable
+enum class SessionSource {
+    /** Synced off a paired recorder over BLE or its Wi-Fi AP. */
+    DEVICE_SYNC,
+
+    /** Captured on the phone's own microphone. */
+    PHONE_CAPTURE,
+
+    /**
+     * Imported from the Farosh cloud, transcript and summary included.
+     *
+     * Farosh is an import adapter, not a second recorder: 谛听 pulls finished
+     * recordings out of the Newsmy account rather than talking to the hardware.
+     * The practical consequence is [needsTranscription] — re-running ASR over
+     * an import would burn the user's quota to reproduce text they already have.
+     */
+    FAROSH_IMPORT,
 }
 
 /** One recording and everything derived from it. */
@@ -140,7 +199,20 @@ data class Session(
     val transcriptState: TranscriptState = TranscriptState.PENDING,
     /** Set when the user overrode the auto-detected scene with the recording chip. */
     val sceneOverridden: Boolean = false,
-)
+    val kind: SessionKind = SessionKind.MEETING,
+    val source: SessionSource = SessionSource.DEVICE_SYNC,
+) {
+    /**
+     * Whether the transcription worker should pick this session up.
+     *
+     * An import arrives with its transcript already written, so it is DONE from
+     * the moment it lands and must never be queued — that is the whole point of
+     * treating Farosh as an import adapter rather than a device.
+     */
+    val needsTranscription: Boolean
+        get() = source != SessionSource.FAROSH_IMPORT &&
+            transcriptState == TranscriptState.PENDING
+}
 
 @Serializable
 enum class TranscriptState {
