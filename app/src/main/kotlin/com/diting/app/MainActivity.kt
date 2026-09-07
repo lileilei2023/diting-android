@@ -1,12 +1,16 @@
 package com.diting.app
 
-import android.Manifest
-import android.os.Build
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,12 +54,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        requestPermissions.launch(requiredPermissions())
+        requestPermissions.launch(DitingPermissions.all())
 
         setContent {
             DitingTheme {
                 val gateCount by shellViewModel.gateCount.collectAsStateWithLifecycle()
                 val isRecording by CaptureService.isRecording.collectAsStateWithLifecycle()
+                val captureError by CaptureService.error.collectAsStateWithLifecycle()
 
                 DitingNavHost(
                     isRecording = isRecording,
@@ -63,29 +68,36 @@ class MainActivity : ComponentActivity() {
                     onStartCapture = { CaptureService.start(this) },
                     onStopCapture = { CaptureService.stop(this) },
                 )
+
+                // A capture that refused to start has no UI of its own — the
+                // service is gone by the time anyone could look at it — so the
+                // shell is the only place left to say why.
+                captureError?.let { message ->
+                    AlertDialog(
+                        onDismissRequest = CaptureService::clearError,
+                        title = { Text("无法录音") },
+                        text = { Text(message) },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                CaptureService.clearError()
+                                // Straight to this app's permission page: telling
+                                // someone to "go to Settings" and leaving them to
+                                // find it is where most people give up.
+                                startActivity(
+                                    Intent(
+                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                        Uri.fromParts("package", packageName, null),
+                                    )
+                                )
+                            }) { Text("去设置") }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = CaptureService::clearError) { Text("知道了") }
+                        },
+                    )
+                }
             }
         }
     }
 
-    /**
-     * The permission set differs sharply across versions: API 31 replaced the
-     * location-implying Bluetooth permissions, and 33 added notification consent
-     * that the foreground sync service depends on.
-     */
-    private fun requiredPermissions(): Array<String> = buildList {
-        add(Manifest.permission.RECORD_AUDIO)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            add(Manifest.permission.BLUETOOTH_SCAN)
-            add(Manifest.permission.BLUETOOTH_CONNECT)
-        } else {
-            // Below 31 the platform will not scan at all without a location grant,
-            // however unrelated that is to what the app actually does.
-            add(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            add(Manifest.permission.POST_NOTIFICATIONS)
-        }
-    }.toTypedArray()
 }

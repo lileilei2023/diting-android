@@ -9,6 +9,7 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.ParcelUuid
+import com.diting.app.DitingPermissions
 import com.diting.app.data.db.DeviceEntity
 import com.diting.app.data.db.DeviceDao
 import com.diting.app.device.ble.BleGattConnection
@@ -109,6 +110,15 @@ class Mr20DeviceManager @Inject constructor(
      */
     @SuppressLint("MissingPermission")
     fun scan(): Flow<DiscoveredDevice> = callbackFlow {
+        // startScan throws SecurityException without BLUETOOTH_SCAN, which takes
+        // the process with it. Closing the flow instead puts the reason in the
+        // dialog the pairing screen already shows.
+        val denied = runCatching { DitingPermissions.requireBluetooth(context) }.exceptionOrNull()
+        if (denied != null) {
+            close(denied)
+            return@callbackFlow
+        }
+
         val scanner = adapter?.bluetoothLeScanner
             ?: run {
                 close(IllegalStateException("蓝牙不可用，请先打开蓝牙"))
@@ -154,6 +164,11 @@ class Mr20DeviceManager @Inject constructor(
      */
     @SuppressLint("MissingPermission")
     suspend fun connect(address: String, existingKey: String?): String {
+        // Every BluetoothGatt call below needs BLUETOOTH_CONNECT. Checked once
+        // here rather than at each call so the failure arrives before a
+        // half-open connection has to be unwound.
+        DitingPermissions.requireBluetooth(context)
+
         disconnect()
 
         val adapter = adapter ?: throw IllegalStateException("蓝牙不可用")

@@ -54,14 +54,30 @@ jobs:
 
       # Run first: these are fast and cover the protocol and domain logic, so a
       # regression in them is reported without waiting on a full Android build.
+      #
+      # pipefail because the default shell is `bash -e` without it, and piping
+      # to tee would otherwise report Gradle's failure as tee's success.
       - name: Test the core modules
-        run: ./gradlew :core:protocol:test :core:domain:test :core:ai:test
+        run: |
+          set -o pipefail
+          ./gradlew :core:protocol:test :core:domain:test :core:ai:test 2>&1 \
+            | tee /tmp/gradle-test.log
 
       - name: Assemble the debug APK
-        run: ./gradlew :app:assembleDebug --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tee /tmp/gradle-app.log
 
       - name: Report the APK size
         run: ls -lh app/build/outputs/apk/debug/
+
+      # A run's log archive is served from a storage host that not every
+      # environment can reach; annotations come back from api.github.com with
+      # the check run, so the reason a build failed stays readable from
+      # anywhere the API is.
+      - name: Surface the failure as annotations
+        if: failure()
+        run: python3 .github/scripts/annotate_failures.py /tmp/gradle-test.log /tmp/gradle-app.log
 
       - name: Upload the APK
         uses: actions/upload-artifact@v4

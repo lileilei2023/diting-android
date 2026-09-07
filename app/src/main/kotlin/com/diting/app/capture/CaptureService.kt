@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.diting.app.DitingApp
+import com.diting.app.DitingPermissions
 import com.diting.app.MainActivity
 import com.diting.app.R
 import com.diting.app.data.repo.SessionRepository
@@ -58,26 +59,56 @@ class CaptureService : LifecycleService() {
     private fun start() {
         if (recorder != null) return
 
+        // Before anything else, and before going foreground: on Android 14+
+        // startForeground with FOREGROUND_SERVICE_TYPE_MICROPHONE throws
+        // SecurityException when RECORD_AUDIO is missing, and that exception
+        // kills the process rather than failing the call. The user denying a
+        // permission dialog must not crash the app.
+        if (!DitingPermissions.hasAudio(this)) {
+            _error.value = "需要麦克风权限才能录音。请在系统设置里开启后重试。"
+            stopSelf()
+            return
+        }
+
         goForeground(buildNotification("正在录音"))
         startedAtEpochMs = System.currentTimeMillis()
 
         val target = File(recordingsDir, "capture_$startedAtEpochMs.m4a")
         outputFile = target
 
-        recorder = buildRecorder().apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            // 16 kHz mono is what speech recognisers want; higher rates cost
-            // storage and upload time without improving the transcript.
-            setAudioSamplingRate(16_000)
-            setAudioChannels(1)
-            setAudioEncodingBitRate(64_000)
-            setOutputFile(target.absolutePath)
-            prepare()
-            start()
+        // prepare() and start() throw on a busy microphone — another app
+        // recording, or an in-progress call — and on any storage problem. Left
+        // uncaught they would take the process down for a condition the user can
+        // simply retry out of.
+        val started = runCatching {
+            buildRecorder().apply {
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                // 16 kHz mono is what speech recognisers want; higher rates cost
+                // storage and upload time without improving the transcript.
+                setAudioSamplingRate(16_000)
+                setAudioChannels(1)
+                setAudioEncodingBitRate(64_000)
+                setOutputFile(target.absolutePath)
+                prepare()
+                start()
+            }
         }
-        _isRecording.value = true
+
+        started.onSuccess {
+            recorder = it
+            _error.value = null
+            _isRecording.value = true
+        }.onFailure { failure ->
+            // Roll the whole thing back: no half-started recorder, no orphaned
+            // zero-byte file, and no foreground notification for a recording
+            // that is not happening.
+            target.delete()
+            outputFile = null
+            _error.value = "无法开始录音：${failure.message ?: "麦克风被其他应用占用"}"
+            stopSelf()
+        }
     }
 
     private suspend fun stopAndSave() {
@@ -158,6 +189,19 @@ class CaptureService : LifecycleService() {
 
         /** Observed by the recording screen so its UI matches the actual state. */
         val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+
+        private val _error = MutableStateFlow<String?>(null)
+
+        /**
+         * Why the last capture refused to start.
+         *
+         * A service has no way to show a dialog, and silently doing nothing when
+         * the record button is tapped is indistinguishable from a broken app —
+         * so the reason is published here for the shell to display.
+         */
+        val error: StateFlow<String?> = _error.asStateFlow()
+
+        fun clearError() { _error.value = null }
 
         fun start(context: Context) = context.startForegroundService(
             Intent(context, CaptureService::class.java).setAction(ACTION_START)
