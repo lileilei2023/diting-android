@@ -1,5 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
+    // Without a version: AGP is already on the root buildscript classpath (see
+    // the comment there), and Gradle rejects a version for a plugin it has
+    // already loaded. The version still comes from the catalog — the root block
+    // reads the same `agp` entry.
+    id("com.android.application")
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
