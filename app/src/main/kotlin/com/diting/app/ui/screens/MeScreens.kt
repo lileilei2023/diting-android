@@ -47,6 +47,7 @@ import com.diting.app.ui.components.RailCard
 import com.diting.app.ui.theme.ditingColors
 import com.diting.domain.growth.GrowthState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -251,17 +252,35 @@ class DevicesViewModel @Inject constructor(
     private val _connecting = MutableStateFlow(false)
     val connecting: StateFlow<Boolean> = _connecting.asStateFlow()
 
-    fun startScan() = viewModelScope.launch {
-        _discovered.value = emptyList()
-        _error.value = null
-        runCatching {
-            deviceManager.scan().collect { found ->
-                // Keep the strongest reading per address; a scan reports the same
-                // device many times as the user moves.
-                _discovered.value = (_discovered.value.filter { it.address != found.address } +
-                    found).sortedByDescending { it.rssi }
-            }
-        }.onFailure { _error.value = it.message }
+    /**
+     * Set once a device has actually paired, so the screen leaves on success
+     * rather than on the tap.
+     */
+    private val _paired = MutableStateFlow<String?>(null)
+    val paired: StateFlow<String?> = _paired.asStateFlow()
+
+    private var scanJob: Job? = null
+
+    fun startScan() {
+        scanJob?.cancel()
+        scanJob = viewModelScope.launch {
+            _discovered.value = emptyList()
+            _error.value = null
+            runCatching {
+                deviceManager.scan().collect { found ->
+                    // Keep the strongest reading per address; a scan reports the same
+                    // device many times as the user moves.
+                    _discovered.value =
+                        (_discovered.value.filter { it.address != found.address } + found)
+                            .sortedByDescending { it.rssi }
+                }
+            }.onFailure { _error.value = it.message }
+        }
+    }
+
+    fun stopScan() {
+        scanJob?.cancel()
+        scanJob = null
     }
 
     /**
@@ -272,16 +291,27 @@ class DevicesViewModel @Inject constructor(
      * assumed here.
      */
     fun connect(address: String) = viewModelScope.launch {
+        // Scanning while connecting measurably hurts the connection: the radio
+        // is time-slicing between the two, and the MR20's pairing exchange has a
+        // timeout. Stop looking as soon as the user has chosen.
+        stopScan()
+
         _connecting.value = true
         _error.value = null
         try {
             val existing = deviceDao.find(address)?.bindKey
             deviceManager.connect(address, existing)
+            _paired.value = address
         } catch (e: Exception) {
             _error.value = e.message ?: "连接失败"
         } finally {
             _connecting.value = false
         }
+    }
+
+    /** Consumed by the screen once it has acted on [paired]. */
+    fun clearPaired() {
+        _paired.value = null
     }
 
     fun disconnect() = deviceManager.disconnect()
@@ -400,9 +430,21 @@ fun PairingScreen(
     val discovered by viewModel.discovered.collectAsStateWithLifecycle()
     val connecting by viewModel.connecting.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
+    val paired by viewModel.paired.collectAsStateWithLifecycle()
     val colors = ditingColors
 
     LaunchedEffect(Unit) { viewModel.startScan() }
+
+    // Leave only once the device has actually paired. Pairing writes a key to
+    // the recorder and can take several seconds — navigating on the tap would
+    // mean the failure dialog below appears on a screen that is already gone,
+    // so a rejected pairing would look exactly like a successful one.
+    LaunchedEffect(paired) {
+        if (paired != null) {
+            viewModel.clearPaired()
+            onPaired()
+        }
+    }
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Text("添加设备", style = MaterialTheme.typography.headlineMedium)
@@ -414,7 +456,10 @@ fun PairingScreen(
         )
         Spacer(Modifier.height(16.dp))
 
-        if (connecting) LoadingBlock("正在连接并配对…")
+        // First pairing also re-derives the recorder's Wi-Fi credentials, which
+        // takes about ten seconds and a device reset. Ten silent seconds reads
+        // as a hang, so the wait is named rather than hidden.
+        if (connecting) LoadingBlock("正在配对：写入密钥、同步 Wi-Fi 凭据并对时，约需 10 秒…")
 
         if (discovered.isEmpty() && !connecting) {
             EmptyState(
@@ -427,10 +472,7 @@ fun PairingScreen(
             items(discovered, key = { it.address }) { found ->
                 RailCard(
                     rail = colors.railTranscript,
-                    onClick = {
-                        viewModel.connect(found.address)
-                        onPaired()
-                    },
+                    onClick = { viewModel.connect(found.address) },
                 ) {
                     Text(
                         found.name ?: "未命名录音卡",
