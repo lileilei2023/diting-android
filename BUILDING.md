@@ -16,7 +16,7 @@ JVM with no Android SDK:
 ./gradlew :core:protocol:test :core:domain:test :core:ai:test
 ```
 
-210 tests, all passing. They cover the MR20 wire protocol against a fake device
+240 tests, all passing. They cover the MR20 wire protocol against a fake device
 that speaks it, the Wi-Fi trailer handling across arbitrary packet boundaries,
 the task gate state machine, the retention rules, the noise gates, and the LLM /
 ASR clients against a mock HTTP server.
@@ -32,7 +32,35 @@ device or an emulator, so no screen has been rendered, no BLE session opened
 against a real MR20, and no Room query executed. Compilation and a valid Dagger
 graph rule out a large class of failures; they say nothing about behaviour.
 
-## Building
+The first-run path most likely to still be wrong is the one nothing here can
+exercise: `DitingApp.onCreate` enqueues two periodic workers before any screen
+exists, and `DeviceService` goes foreground the moment it is created. Both are
+worth watching in `logcat` on the first launch.
+
+## Getting an APK without an SDK
+
+`.github/workflows/android.yml` builds the debug APK on every push and uploads
+it as the `diting-debug-apk` artifact. Open the run, download it, and:
+
+```bash
+adb install -r app-debug.apk        # package: com.diting.app.debug
+adb logcat -c && adb logcat | grep -iE "diting|AndroidRuntime"
+```
+
+It is signed with the debug key, so it installs but is not distributable.
+
+This exists because the SDK and every androidx artifact come from
+`dl.google.com`, and an environment that cannot reach that host cannot produce
+an APK at all. A runner can, so the Android half of the build stays verifiable
+from anywhere.
+
+When a CI build fails, the reason is emitted as **check annotations**
+(`.github/scripts/annotate_failures.py`) as well as appearing in the log. The
+log archive is served from a storage host that not every environment can reach;
+annotations come back from `api.github.com` with the check run, so a red build
+is diagnosable wherever the API is.
+
+## Building locally
 
 ```bash
 # Point at your SDK, then:
@@ -50,6 +78,15 @@ core modules still build and test, which is what the conditional include in
 `settings.gradle.kts` only includes `:app` when it can find an SDK, which is what
 lets the core modules build in environments without one. With no SDK the build
 prints a note and skips it rather than failing to resolve the Android plugin.
+
+The root `build.gradle.kts` runs the *same* SDK probe to decide whether to put
+AGP on the buildscript classpath, and the two must agree. AGP has to be loaded
+there rather than in `:app` alone: plugin scopes are children of the root
+buildscript scope, so that is what makes AGP visible to the root-declared Kotlin
+plugin. Declaring AGP only in `:app` puts it in a sibling scope and applying
+`org.jetbrains.kotlin.android` fails with `NoClassDefFoundError:
+com/android/build/gradle/api/BaseVariant` — which is invisible in any
+environment that has no SDK to reach that code path with.
 
 ## Module layout
 
@@ -127,6 +164,19 @@ configuration in DataStore.
   `CONFIRMED` nodes may generate a proactive card.
 - **BP rewards closing loops, not recording.** Every scoring event is a
   confirmation, an adoption or a correction.
+
+## Permissions
+
+Checked at the point of use, in `DitingPermissions` — not once at launch. A
+grant can be denied at the dialog, revoked later in Settings, or auto-revoked by
+the system for an app left unused, and the platform does not fail these calls
+softly: `startForeground` with `FOREGROUND_SERVICE_TYPE_MICROPHONE` throws
+`SecurityException` without `RECORD_AUDIO`, and every scan and GATT call throws
+without `BLUETOOTH_SCAN` / `BLUETOOTH_CONNECT`. Each one kills the process.
+
+`@SuppressLint("MissingPermission")` remains on the call sites, because the
+check is one frame up and lint cannot see it. It is not a substitute for the
+check — that was the bug.
 
 ## Known gaps
 
