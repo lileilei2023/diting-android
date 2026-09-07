@@ -1,0 +1,81 @@
+##
+# Builds the debug APK on a machine that has the Android SDK.
+#
+# This exists because the SDK and every androidx artifact come from
+# dl.google.com, and some development environments cannot reach that host — the
+# conditional `include(":app")` in settings.gradle.kts lets them still build and
+# test the core modules, but it means the APK has to be produced somewhere else.
+# A GitHub runner is that somewhere: it ships the SDK, so the APK lands as a
+# downloadable artifact regardless of what the author's sandbox can reach.
+#
+# The APK is a *debug* build with a debug signing key, which is what makes
+# `adb install` work without any signing configuration. It is not distributable.
+##
+name: Android
+
+on:
+  push:
+    branches: ["main", "feat/**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  # A newer push to the same branch makes an in-flight build irrelevant.
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up the Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "platform-tools platforms;android-35 build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # settings.gradle.kts picks :app up from ANDROID_HOME, which the step above
+      # exports. Written anyway so a failure here is an obvious missing SDK
+      # rather than a confusing "task :app:assembleDebug not found".
+      - name: Point the build at the SDK
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+      # Run first: these are fast and cover the protocol and domain logic, so a
+      # regression in them is reported without waiting on a full Android build.
+      - name: Test the core modules
+        run: ./gradlew :core:protocol:test :core:domain:test :core:ai:test
+
+      - name: Assemble the debug APK
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Report the APK size
+        run: ls -lh app/build/outputs/apk/debug/
+
+      - name: Upload the APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: diting-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      # The HTML reports say which assertion failed; the console only says that
+      # one did.
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: "**/build/reports/tests/"
+          if-no-files-found: ignore
