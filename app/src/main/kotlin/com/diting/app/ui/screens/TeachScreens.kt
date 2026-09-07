@@ -651,6 +651,7 @@ fun Intent.chineseLabel(): String = when (this) {
     Intent.RISK -> "风险"
     Intent.SMALL_TALK -> "闲聊"
     Intent.FOREIGN_LANGUAGE -> "外语"
+    Intent.TECH_DECISION -> "技术决策"
 }
 
 fun ResponseAction.chineseLabel(): String = when (this) {
@@ -659,6 +660,9 @@ fun ResponseAction.chineseLabel(): String = when (this) {
     ResponseAction.RECORD_IN_MINUTES -> "写进纪要"
     ResponseAction.TRACK_AS_OBSERVATION -> "记为观察"
     ResponseAction.TRANSLATE -> "翻译"
+    // "（待确认）" is part of the label, not a footnote: this rule never
+    // dispatches on its own, it only proposes a task at gate ①.
+    ResponseAction.DISPATCH_TO_DEV_AGENT -> "派给开发 Agent（待确认）"
     ResponseAction.IGNORE -> "忽略"
 }
 

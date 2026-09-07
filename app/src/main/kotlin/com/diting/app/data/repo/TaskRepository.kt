@@ -195,5 +195,6 @@ val ArtifactKind.destinationLabel: String
         Destination.EMAIL -> "邮箱"
         Destination.LARK -> "飞书"
         Destination.OPENCLAW -> "龙虾 OpenClaw"
+        Destination.DEV_AGENT -> "开发 Agent"
         Destination.NONE -> "留在谛听"
     }

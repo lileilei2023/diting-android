@@ -570,6 +570,7 @@ fun Destination.chineseLabel(): String = when (this) {
     Destination.EMAIL -> "邮箱"
     Destination.LARK -> "飞书"
     Destination.OPENCLAW -> "龙虾 OpenClaw"
+    Destination.DEV_AGENT -> "开发 Agent"
     Destination.NONE -> "留在谛听"
 }
 
@@ -580,5 +581,11 @@ fun Destination.sideEffectWarning(): String = when (this) {
     Destination.EMAIL -> "会以你的名义发送这封邮件。发出后无法撤回。"
     Destination.LARK -> "会在飞书发出这条消息，并 @ 任务里出现的人。"
     Destination.OPENCLAW -> "会把意图和引用片段转发给你自己机器上的 Agent；执行结果仍会回到「待确认结果」。"
+    // Deliberately not softened into "只是在你自己机器上跑一下". The agent runs
+    // locally, but an issue or a draft PR is visible to everyone with access to
+    // the repository the moment it exists — which is what makes this an external
+    // write and not a local one.
+    Destination.DEV_AGENT -> "会在仓库里创建 issue 或草稿 PR，同事立刻能看到。" +
+        "Agent 不会合并、不会推主干、不会部署。"
     Destination.NONE -> "只保存在谛听，不会发送到任何地方。"
 }
