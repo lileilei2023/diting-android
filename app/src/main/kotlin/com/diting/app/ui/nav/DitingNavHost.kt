@@ -5,6 +5,7 @@ package com.diting.app.ui.nav
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diting.app.device.DeviceService
 import com.diting.app.ui.components.DitingBottomBar
+import com.diting.app.ui.screens.BrainScreen
 import com.diting.app.ui.screens.ChatScreen
 import com.diting.app.ui.screens.DestinationsScreen
 import com.diting.app.ui.screens.DevicesScreen
@@ -93,7 +95,8 @@ fun DitingNavHost(
             }
         }
     ) { padding ->
-        Box(Modifier.fillMaxSize().padding(padding)) {
+        // Keyboard: every screen with an input at the bottom must rise above it.
+        Box(Modifier.fillMaxSize().padding(padding).imePadding()) {
             NavHost(navController = navController, startDestination = Routes.TODAY) {
 
                 // -- tabs ---------------------------------------------------
@@ -106,6 +109,7 @@ fun DitingNavHost(
                             navController.navigate(Routes.review(ReviewPeriod.WEEK))
                         },
                         onOpenTask = { navController.navigate(Routes.taskDetail(it)) },
+                        onOpenTasks = { navController.navigate(Routes.TASKS) },
                         onOpenModels = { navController.navigate(Routes.MODELS) },
                         onSeek = seek,
                     )
@@ -123,15 +127,19 @@ fun DitingNavHost(
                     TasksScreen(
                         onOpenTask = { navController.navigate(Routes.taskDetail(it)) },
                         onOpenChat = { navController.navigate(Routes.CHAT) },
+                        onOpenGrowth = { navController.navigate(Routes.GROWTH) },
+                        onOpenSession = { navController.navigate(Routes.sessionDetail(it)) },
                     )
                 }
 
                 composable(Routes.ME) {
                     MeScreen(
                         onOpenDevices = { navController.navigate(Routes.DEVICES) },
+                        onOpenBrain = { navController.navigate(Routes.BRAIN) },
                         onOpenTeach = { navController.navigate(Routes.TEACH) },
                         onOpenSubscription = { navController.navigate(Routes.SUBSCRIPTION) },
                         onOpenGrowth = { navController.navigate(Routes.GROWTH) },
+                        onOpenPairing = { navController.navigate(Routes.PAIRING) },
                     )
                 }
 
@@ -160,10 +168,13 @@ fun DitingNavHost(
                 ) {
                     val sessionId = it.arguments?.getString("sessionId").orEmpty()
                     SessionDetailScreen(
+                        onBack = { navController.popBackStack() },
                         onSeek = seek,
                         onOpenTasks = { navController.navigate(Routes.TASKS) },
                         onOpenHotwords = { navController.navigate(Routes.HOTWORDS) },
                         onOpenReport = { navController.navigate(Routes.report(sessionId)) },
+                        onOpenInsights = { navController.navigate(Routes.INSIGHTS) },
+                        onOpenChat = { navController.navigate(Routes.CHAT) },
                     )
                 }
 
@@ -171,7 +182,10 @@ fun DitingNavHost(
 
                 composable(Routes.INSIGHTS) {
                     InsightsScreen(
+                        onBack = { navController.popBackStack() },
                         onSeek = seek,
+                        onOpenSession = { navController.navigate(Routes.sessionDetail(it)) },
+                        onOpenChat = { navController.navigate(Routes.CHAT) },
                         onOpenTask = { navController.navigate(Routes.taskDetail(it)) },
                         // A report is generated per session, so the insight list
                         // sends the user to pick one rather than guessing.
@@ -183,7 +197,7 @@ fun DitingNavHost(
                     route = Routes.REPORT,
                     arguments = listOf(navArgument("sessionId") { type = NavType.StringType }),
                 ) {
-                    ReportScreen(onSeek = seek, onShare = { })
+                    ReportScreen(onBack = { navController.popBackStack() }, onSeek = seek)
                 }
 
                 composable(
@@ -191,8 +205,14 @@ fun DitingNavHost(
                     arguments = listOf(navArgument("period") { type = NavType.StringType }),
                 ) {
                     ReviewScreen(
+                        onBack = { navController.popBackStack() },
                         onSeek = seek,
                         onOpenMemory = { navController.navigate(Routes.MEMORY) },
+                        onSwitchPeriod = { period ->
+                            navController.navigate(Routes.review(period)) {
+                                popUpTo(Routes.REVIEW) { inclusive = true }
+                            }
+                        },
                     )
                 }
 
@@ -203,6 +223,7 @@ fun DitingNavHost(
                     arguments = listOf(navArgument("taskId") { type = NavType.StringType }),
                 ) {
                     TaskDetailScreen(
+                        onBack = { navController.popBackStack() },
                         onSeek = seek,
                         onOpenDestinations = { navController.navigate(Routes.DESTINATIONS) },
                         onOpenModels = { navController.navigate(Routes.MODELS) },
@@ -210,7 +231,11 @@ fun DitingNavHost(
                 }
 
                 composable(Routes.CHAT) {
-                    ChatScreen(onOpenTask = { navController.navigate(Routes.taskDetail(it)) })
+                    ChatScreen(
+                        onBack = { navController.popBackStack() },
+                        onOpenTask = { navController.navigate(Routes.taskDetail(it)) },
+                        onOpenTasks = { navController.navigate(Routes.TASKS) },
+                    )
                 }
 
                 // -- 我的 branch --------------------------------------------
@@ -221,6 +246,8 @@ fun DitingNavHost(
                         // Runs in the foreground service so a multi-minute BLE
                         // transfer survives the user leaving this screen.
                         onSync = { DeviceService.sync(context) },
+                        onSyncAll = { DeviceService.sync(context, includeLarge = true) },
+                        onOpenBrain = { navController.navigate(Routes.BRAIN) },
                     )
                 }
 
@@ -237,16 +264,19 @@ fun DitingNavHost(
                     )
                 }
 
+                composable(Routes.BRAIN) { BrainScreen() }
+
                 composable(Routes.SUBSCRIPTION) {
-                    SubscriptionScreen(onOpenModels = { navController.navigate(Routes.MODELS) })
+                    SubscriptionScreen(onBack = { navController.popBackStack() }, onOpenModels = { navController.navigate(Routes.MODELS) }, onOpenBrain = { navController.navigate(Routes.BRAIN) })
                 }
 
-                composable(Routes.GROWTH) { GrowthScreen() }
+                composable(Routes.GROWTH) { GrowthScreen(onBack = { navController.popBackStack() }) }
 
                 // -- 教小谛 --------------------------------------------------
 
                 composable(Routes.TEACH) {
                     TeachScreen(
+                        onBack = { navController.popBackStack() },
                         onOpenOnboarding = { navController.navigate(Routes.ONBOARDING) },
                         onOpenHotwords = { navController.navigate(Routes.HOTWORDS) },
                         onOpenScenes = { navController.navigate(Routes.SCENES) },
@@ -260,11 +290,11 @@ fun DitingNavHost(
                     OnboardingScreen(onDone = { navController.popBackStack() })
                 }
 
-                composable(Routes.HOTWORDS) { HotwordsScreen() }
-                composable(Routes.SCENES) { ScenesScreen() }
-                composable(Routes.MODELS) { ModelsScreen() }
-                composable(Routes.DESTINATIONS) { DestinationsScreen() }
-                composable(Routes.MEMORY) { MemoryScreen() }
+                composable(Routes.HOTWORDS) { HotwordsScreen(onBack = { navController.popBackStack() }) }
+                composable(Routes.SCENES) { ScenesScreen(onBack = { navController.popBackStack() }) }
+                composable(Routes.MODELS) { ModelsScreen(onBack = { navController.popBackStack() }) }
+                composable(Routes.DESTINATIONS) { DestinationsScreen(onBack = { navController.popBackStack() }) }
+                composable(Routes.MEMORY) { MemoryScreen(onBack = { navController.popBackStack() }) }
             }
         }
     }

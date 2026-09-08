@@ -66,6 +66,9 @@ object Routes {
     /** 我的 › 设备管理. */
     const val DEVICES = "devices"
 
+    /** 我的 › 大脑账户 — login, device adoption, channel status. */
+    const val BRAIN = "brain"
+
     /** 设备管理 › 添加设备. */
     const val PAIRING = "pairing"
 
