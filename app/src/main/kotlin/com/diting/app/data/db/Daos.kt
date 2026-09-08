@@ -22,17 +22,32 @@ interface SessionDao {
 
     @Upsert suspend fun upsertAll(sessions: List<SessionEntity>)
 
-    @Query("SELECT * FROM sessions ORDER BY startedAtEpochMs DESC")
+    @Query("SELECT * FROM sessions WHERE mergedIntoId IS NULL ORDER BY startedAtEpochMs DESC")
     fun observeAll(): Flow<List<SessionEntity>>
 
     @Query(
         """
         SELECT * FROM sessions
-        WHERE startedAtEpochMs >= :fromEpochMs AND startedAtEpochMs < :toEpochMs
+        WHERE mergedIntoId IS NULL AND startedAtEpochMs >= :fromEpochMs AND startedAtEpochMs < :toEpochMs
         ORDER BY startedAtEpochMs DESC
         """
     )
     fun observeBetween(fromEpochMs: Long, toEpochMs: Long): Flow<List<SessionEntity>>
+
+    /** Recordings that were folded into [mergedId], oldest first. */
+    @Query("SELECT * FROM sessions WHERE mergedIntoId = :mergedId ORDER BY startedAtEpochMs")
+    suspend fun partsOf(mergedId: String): List<SessionEntity>
+
+    @Query("UPDATE sessions SET mergedIntoId = :into WHERE id IN (:ids)")
+    suspend fun markMerged(ids: List<String>, into: String)
+
+    /** Episodes still waiting for a whole-conversation read (the model was unreachable when they were stitched). */
+    @Query("SELECT id FROM sessions WHERE mergedIntoId IS NULL AND deviceFilePath LIKE 'episode/%' AND summaryJson IS NULL")
+    suspend fun episodesWithoutSummary(): List<String>
+
+    /** Episode candidates: transcribed, visible, with audio. */
+    @Query("SELECT * FROM sessions WHERE mergedIntoId IS NULL AND transcriptState = 'DONE' AND audioPath IS NOT NULL ORDER BY device, startedAtEpochMs")
+    suspend fun mergeCandidates(): List<SessionEntity>
 
     @Query("SELECT * FROM sessions WHERE id = :id")
     fun observe(id: String): Flow<SessionEntity?>
@@ -50,6 +65,10 @@ interface SessionDao {
     @Query("DELETE FROM sessions WHERE id = :id")
     suspend fun delete(id: String)
 
+    /** Recordings the brain found no speech in — accidental presses, pocket noise. */
+    @Query("SELECT * FROM sessions WHERE mergedIntoId IS NULL AND transcriptState = 'FAILED' AND summaryJson IS NULL AND isCited = 0 ORDER BY durationMs")
+    fun observeEmptyRecordings(): Flow<List<SessionEntity>>
+
     /** Audio past its window and uncited — the retention sweeper's work list. */
     @Query(
         """
@@ -64,6 +83,41 @@ interface SessionDao {
 
     @Query("UPDATE sessions SET isCited = 1 WHERE id = :id")
     suspend fun markCited(id: String)
+
+    /** Recordings the brain has not ingested yet, newest first. */
+    @Query(
+        """
+        SELECT * FROM sessions
+        WHERE mergedIntoId IS NULL AND brainUploadedAt IS NULL AND audioPath IS NOT NULL AND (startedAtEpochMs >= :sinceEpochMs OR deviceFilePath LIKE 'import/%')
+        ORDER BY startedAtEpochMs DESC LIMIT :limit
+        """
+    )
+    suspend fun pendingBrainUpload(sinceEpochMs: Long, limit: Int): List<SessionEntity>
+
+    @Query("SELECT audioPath FROM sessions WHERE audioPath IS NOT NULL")
+    suspend fun knownAudioPaths(): List<String>
+
+    /** Removes rows accidentally registered from uploader chunk files (`*.partNN.mp3`). */
+    @Query("DELETE FROM sessions WHERE deviceFilePath LIKE 'import/%.part__.%'")
+    suspend fun deleteImportedParts()
+
+    @Query("UPDATE sessions SET brainUploadedAt = :atEpochMs WHERE id = :id")
+    suspend fun markBrainUploaded(id: String, atEpochMs: Long)
+
+    @Query("SELECT COUNT(*) FROM sessions WHERE brainUploadedAt IS NOT NULL")
+    fun observeBrainUploadedCount(): Flow<Int>
+
+    /** Uploaded but never settled — left over from a worker that died mid-report. */
+    @Query(
+        """
+        UPDATE sessions SET transcriptState = 'FAILED', transcriptError = :reason
+        WHERE brainUploadedAt IS NOT NULL AND transcriptState = 'RUNNING'
+        """
+    )
+    suspend fun settleStaleBrainUploads(reason: String): Int
+
+    @Query("SELECT COUNT(*) FROM sessions WHERE brainUploadedAt IS NULL AND audioPath IS NOT NULL")
+    fun observeBrainPendingCount(): Flow<Int>
 
     /**
      * Device path -> bytes already stored, used to skip finished files and to
@@ -85,7 +139,7 @@ interface SessionDao {
     @Query(
         """
         SELECT id, summaryJson FROM sessions
-        WHERE startedAtEpochMs >= :fromEpochMs AND startedAtEpochMs < :toEpochMs
+        WHERE mergedIntoId IS NULL AND startedAtEpochMs >= :fromEpochMs AND startedAtEpochMs < :toEpochMs
           AND summaryJson IS NOT NULL
         ORDER BY startedAtEpochMs
         """
@@ -125,6 +179,13 @@ interface SegmentDao {
     @Query("SELECT * FROM segments WHERE id = :id")
     suspend fun find(id: String): SegmentEntity?
 
+    @Query("DELETE FROM segments WHERE sessionId = :sessionId")
+    suspend fun deleteForSession(sessionId: String)
+
+    /** Older brain uploads stored "说话人1"-style labels; the screen wants letters. */
+    @Query("UPDATE segments SET speakerLabel = :letter WHERE speakerLabel IN (:legacy)")
+    suspend fun relabelSpeaker(legacy: List<String>, letter: String): Int
+
     @Query("SELECT * FROM segments WHERE text LIKE '%' || :query || '%' ORDER BY startMs LIMIT 200")
     suspend fun search(query: String): List<SegmentEntity>
 
@@ -152,11 +213,25 @@ interface SegmentDao {
 interface SpeakerDao {
     @Upsert suspend fun upsertAll(speakers: List<SpeakerEntity>)
 
+    @Query("DELETE FROM speakers WHERE sessionId = :sessionId")
+    suspend fun deleteForSession(sessionId: String)
+
+    @Query("SELECT * FROM speakers WHERE sessionId = :sessionId")
+    suspend fun forSession(sessionId: String): List<SpeakerEntity>
+
     @Query("SELECT * FROM speakers WHERE sessionId = :sessionId")
     fun observeForSession(sessionId: String): Flow<List<SpeakerEntity>>
 
     @Query("UPDATE speakers SET personId = :personId, displayName = :name WHERE id = :id")
     suspend fun assignPerson(id: String, personId: String?, name: String?)
+
+    /** Who a diarisation label is, for one session: the owner, a named person, or back to unknown. */
+    @Query("UPDATE speakers SET displayName = :name, isOwner = :owner WHERE sessionId = :sessionId AND label = :label")
+    suspend fun setIdentity(sessionId: String, label: String, name: String?, owner: Boolean)
+
+    /** Every label ever marked as the owner, so a new session can be pre-labelled the same way. */
+    @Query("SELECT displayName FROM speakers WHERE displayName IS NOT NULL GROUP BY displayName ORDER BY COUNT(*) DESC LIMIT 12")
+    suspend fun knownNames(): List<String>
 }
 
 @Dao
@@ -258,6 +333,9 @@ interface MemoryDao {
 interface InsightDao {
     @Upsert suspend fun upsert(insight: InsightEntity)
 
+    @Query("DELETE FROM insights")
+    suspend fun deleteAll()
+
     @Query("SELECT * FROM insights WHERE dismissed = 0 ORDER BY createdAtEpochMs DESC")
     fun observeAll(): Flow<List<InsightEntity>>
 
@@ -301,6 +379,12 @@ interface HotwordDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIgnoring(hotword: HotwordEntity): Long
 
+    /** Drops auto-discovered candidates the user never accepted, so a graph rebuild can re-propose a cleaner set. */
+    @androidx.room.Update suspend fun update(hotword: HotwordEntity)
+
+    @Query("DELETE FROM hotwords WHERE source = 'DISCOVERED' AND enabled = 0")
+    suspend fun deleteDisabledDiscovered()
+
     @Query("SELECT * FROM hotwords ORDER BY createdAtEpochMs DESC")
     fun observeAll(): Flow<List<HotwordEntity>>
 
@@ -323,6 +407,9 @@ interface DeviceDao {
 
     @Query("SELECT * FROM devices WHERE id = :id")
     suspend fun find(id: String): DeviceEntity?
+
+    @Query("SELECT address FROM devices WHERE address IS NOT NULL")
+    suspend fun knownAddresses(): List<String>
 
     @Query("SELECT * FROM devices WHERE isDefault = 1 LIMIT 1")
     fun observeDefault(): Flow<DeviceEntity?>
@@ -353,7 +440,7 @@ interface DeviceDao {
         HotwordEntity::class,
         DeviceEntity::class,
     ],
-    version = 1,
+    version = 3,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -370,5 +457,18 @@ abstract class DitingDatabase : RoomDatabase() {
 
     companion object {
         const val NAME = "diting.db"
+
+        /** v1 → v2: the brain upload ledger column. */
+        val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE sessions ADD COLUMN brainUploadedAt INTEGER")
+            }
+        }
+
+        val MIGRATION_2_3 = object : androidx.room.migration.Migration(2, 3) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE sessions ADD COLUMN mergedIntoId TEXT")
+            }
+        }
     }
 }

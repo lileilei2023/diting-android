@@ -49,6 +49,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Diting"
+        android:usesCleartextTraffic="true"
         tools:targetApi="34">
 
         <activity
@@ -71,6 +72,16 @@
             android:name=".device.DeviceService"
             android:exported="false"
             android:foregroundServiceType="connectedDevice|dataSync" />
+
+        <!--
+          WorkManager's foreground host. The brain upload runs as foreground
+          work of type dataSync so a locked phone does not freeze it mid-file;
+          API 34 requires the type to be declared on the service itself.
+        -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
 
         <!-- Phone-microphone quick capture. -->
         <service

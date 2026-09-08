@@ -43,6 +43,13 @@ data class SessionEntity(
     /** Summary, once generated. */
     val summaryJson: String? = null,
     val isCited: Boolean = false,
+    /** Epoch ms when the brain accepted this recording through /upload; null = not yet. */
+    val brainUploadedAt: Long? = null,
+    /**
+     * Set when this recording was folded into a longer episode: the row stays for
+     * sync de-duplication and citations, but every list hides it.
+     */
+    val mergedIntoId: String? = null,
 )
 
 @Entity(

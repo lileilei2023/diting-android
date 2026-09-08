@@ -18,6 +18,7 @@ import com.diting.domain.memory.RetentionPolicy
 import com.diting.domain.model.Citation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -84,7 +85,10 @@ class MemoryRepository @Inject constructor(
             )
         } else {
             existing.copy(
-                lastSeenEpochMs = nowEpochMs,
+                // Sessions can be ingested out of order (imports, backfill), so
+                // the span is min/max rather than "now".
+                firstSeenEpochMs = minOf(existing.firstSeenEpochMs, nowEpochMs),
+                lastSeenEpochMs = maxOf(existing.lastSeenEpochMs, nowEpochMs),
                 mentionCount = existing.mentionCount + 1,
                 // A node that comes up again is warm again, so un-archive it.
                 archived = false,
@@ -93,6 +97,106 @@ class MemoryRepository @Inject constructor(
         }
         memoryDao.upsertNode(entity)
         return entity.toDomain()
+    }
+
+
+    // ---- feeding the graph from the brain's report ---------------------------
+
+    /**
+     * Turns one session's brain report into graph nodes.
+     *
+     * Facts arrive as `主体 · 关系 · 客体` triples. People become PERSON nodes,
+     * tasks and promises COMMITMENT, decisions DECISION, risks RISK, everything
+     * else a TOPIC keyed on the subject. Every node cites the whole session, so
+     * 反复被提 / 复盘 / 成长卡 can count across sessions and jump back to the audio.
+     *
+     * @return words worth offering as hotword candidates (names, product codes).
+     */
+    suspend fun ingestBrainFacts(
+        sessionId: String,
+        durationMs: Long,
+        facts: List<String>,
+        todos: List<Pair<String, String?>>,
+        nowEpochMs: Long = System.currentTimeMillis(),
+    ): List<String> {
+        val cite = listOf(Citation(sessionId, 0, durationMs.coerceAtLeast(0)))
+        val candidates = mutableSetOf<String>()
+        val touched = mutableListOf<MemoryNode>()
+
+        val seen = mutableSetOf<Pair<MemoryNodeType, String>>()
+        suspend fun mention(type: MemoryNodeType, label: String) {
+            val clean = label.trim().take(60)
+            if (clean.length < 2 || !seen.add(type to clean)) return
+            // One session counts once, however many facts name the same thing;
+            // otherwise a single long meeting would look like a recurring theme.
+            val existing = memoryDao.findNodeByLabel(clean, type)
+            if (existing != null && existing.citations().any { it.sessionId == sessionId }) return
+            touched += observeMention(type, clean, cite, nowEpochMs)
+        }
+
+        for (fact in facts) {
+            val parts = fact.split(" · ").map { it.trim() }.filter { it.isNotBlank() }
+            if (parts.size < 3) continue
+            val (subject, relation, obj) = Triple(parts[0], parts[1], parts.drop(2).joinToString(" · "))
+            // "说话人A · 观点 · …" names nobody; a diarisation label is not a person.
+            if (subject.startsWith("说话人") || subject.startsWith("对话者") || subject in setOf("A", "B", "用户")) continue
+            val subjectIsPerson = PERSON_RELATIONS.any { relation.contains(it) } || looksLikePersonName(subject)
+            val objectIsPerson = OBJECT_PERSON_RELATIONS.any { relation.contains(it) }
+
+            if (subjectIsPerson) { mention(MemoryNodeType.PERSON, subject); if (looksLikePersonName(subject)) candidates += subject }
+            else { mention(MemoryNodeType.TOPIC, subject); if (looksLikeProductName(subject)) candidates += subject }
+            if (objectIsPerson) { mention(MemoryNodeType.PERSON, obj); if (looksLikePersonName(obj)) candidates += obj }
+
+            when {
+                COMMITMENT_RELATIONS.any { relation.contains(it) } -> mention(MemoryNodeType.COMMITMENT, "$subject：$obj")
+                DECISION_RELATIONS.any { relation.contains(it) } -> mention(MemoryNodeType.DECISION, "$subject：$obj")
+                RISK_RELATIONS.any { relation.contains(it) } -> mention(MemoryNodeType.RISK, "$subject：$obj")
+            }
+        }
+
+        for ((task, owner) in todos) {
+            if (task.isBlank()) continue
+            mention(MemoryNodeType.COMMITMENT, task)
+            if (!owner.isNullOrBlank() && !owner.startsWith("说话人")) { mention(MemoryNodeType.PERSON, owner); if (looksLikePersonName(owner)) candidates += owner }
+        }
+
+        // A node that just crossed two sessions is an observation worth showing.
+        for (node in touched.distinctBy { it.id }) {
+            if (node.mentionCount == 2) {
+                insightDao.upsert(
+                    InsightEntity(
+                        id = "recurring:${node.id}",
+                        title = node.label,
+                        body = "在 ${node.mentionCount} 场会话里被提起。确认它是同一件事，小谛才会持续跟踪。",
+                        kind = "RECURRING",
+                        citationsJson = memoryDao.findNode(node.id)?.citationsJson ?: "[]",
+                        createdAtEpochMs = nowEpochMs,
+                    )
+                )
+            }
+        }
+        return candidates.filter { it.length in 2..8 && !it.contains(' ') && GENERIC_WORDS.none { g -> it.contains(g) } }
+    }
+
+    /** One-time rebuild for sessions summarised before the graph was wired. */
+    suspend fun isGraphEmpty(): Boolean = memoryDao.observeLiveCount().first() == 0 && memoryDao.observeArchivedCount().first() == 0
+
+    private fun looksLikePersonName(s: String): Boolean {
+        if (GENERIC_WORDS.any { s.contains(it) }) return false
+        val han = s.length in 2..4 && s.all { it in '一'..'鿿' }
+        return han && (PERSON_SUFFIXES.any { s.endsWith(it) } || s.startsWith("小") || s.startsWith("老") || s.startsWith("阿"))
+    }
+
+    private fun looksLikeProductName(s: String): Boolean = s.any { it.isLetterOrDigit() && it.code < 128 } && s.length <= 12
+
+    private companion object {
+        val PERSON_RELATIONS = listOf("任务", "承诺", "观点", "职位", "角色", "身份", "要求", "建议", "说")
+        val GENERIC_WORDS = listOf("负责人", "员工", "人事", "客户", "领导", "同事", "团队", "公司", "用户", "对方", "大家", "本人", "接收方", "参与者", "说话人", "对话者", "发言人")
+        val OBJECT_PERSON_RELATIONS = listOf("负责人", "接收方", "对接人", "汇报对象", "联系人")
+        val COMMITMENT_RELATIONS = listOf("任务", "承诺", "待办", "交付")
+        val DECISION_RELATIONS = listOf("决策", "决定", "结论")
+        val RISK_RELATIONS = listOf("风险", "问题", "分歧", "顾虑")
+        val PERSON_SUFFIXES = listOf("总", "哥", "姐", "工", "老师", "经理", "医生", "主任")
     }
 
     suspend fun link(fromId: String, toId: String, relation: String, weight: Float = 1f) =
@@ -192,7 +296,11 @@ class MemoryRepository @Inject constructor(
     suspend fun keepForever(sessionId: String) = sessionDao.markCited(sessionId)
 
     /** 「全部遗忘」 — behind a second confirmation in the UI. */
-    suspend fun forgetEverything() = memoryDao.forgetEverything()
+    /** Insights are derived from the graph, so they go with it. */
+    suspend fun forgetEverything() {
+        memoryDao.forgetEverything()
+        insightDao.deleteAll()
+    }
 }
 
 data class ExpiringItem(

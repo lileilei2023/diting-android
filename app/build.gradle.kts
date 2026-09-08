@@ -51,7 +51,10 @@ android {
 
     kotlinOptions { jvmTarget = "17" }
 
-    buildFeatures { compose = true }
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
 
     packaging {
         resources.excludes += setOf(
@@ -94,6 +97,9 @@ dependencies {
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.hilt.work)
+    // The androidx processor is what generates the @HiltWorker factories; without
+    // it WorkManager falls back to reflection and every worker fails to build.
+    ksp(libs.hilt.work.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)

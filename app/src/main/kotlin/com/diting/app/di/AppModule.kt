@@ -68,6 +68,7 @@ object AppModule {
             // No fallbackToDestructiveMigration: these are the user's recordings
             // and transcripts, and silently dropping them on a schema change is
             // not an acceptable failure mode. Ship a Migration instead.
+            .addMigrations(DitingDatabase.MIGRATION_1_2, DitingDatabase.MIGRATION_2_3)
             .build()
 
     @Provides fun provideSessionDao(db: DitingDatabase): SessionDao = db.sessions()

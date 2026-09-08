@@ -8,6 +8,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
+import com.diting.app.brain.BrainBridge
 import com.diting.app.data.sync.RetentionWorker
 import com.diting.app.data.sync.TranscriptionWorker
 import dagger.hilt.android.HiltAndroidApp
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class DitingApp : Application(), Configuration.Provider {
 
     @Inject lateinit var workerFactory: HiltWorkerFactory
+    @Inject lateinit var brainBridge: BrainBridge
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().setWorkerFactory(workerFactory).build()
@@ -40,6 +42,10 @@ class DitingApp : Application(), Configuration.Provider {
             ExistingPeriodicWorkPolicy.KEEP,
             RetentionWorker.periodicRequest(),
         )
+
+        // Opens the brain's device channel once credentials exist, and keeps
+        // it open for the life of the process.
+        brainBridge.start()
     }
 
     private fun createNotificationChannels() {
@@ -58,6 +64,15 @@ class DitingApp : Application(), Configuration.Provider {
 
         manager.createNotificationChannel(
             NotificationChannel(
+                CHANNEL_BRAIN,
+                getString(R.string.channel_brain_name),
+                // HIGH: this is the brain speaking to the user — the whole point.
+                NotificationManager.IMPORTANCE_HIGH,
+            ).apply { description = getString(R.string.channel_brain_desc) }
+        )
+
+        manager.createNotificationChannel(
+            NotificationChannel(
                 CHANNEL_CAPTURE,
                 getString(R.string.channel_capture_name),
                 NotificationManager.IMPORTANCE_LOW,
@@ -68,5 +83,6 @@ class DitingApp : Application(), Configuration.Provider {
     companion object {
         const val CHANNEL_DEVICE = "device_sync"
         const val CHANNEL_CAPTURE = "capture"
+        const val CHANNEL_BRAIN = "brain_say"
     }
 }
