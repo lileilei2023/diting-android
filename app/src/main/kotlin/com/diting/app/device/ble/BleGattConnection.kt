@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import com.diting.protocol.common.ByteStreamTransport
 import com.diting.protocol.common.PacketTransport
 import com.diting.protocol.common.TransportException
@@ -156,6 +157,7 @@ class BleGattConnection(
 
         val ack = CompletableDeferred<Unit>()
         pendingWrite = ack
+        Log.i(TAG, "→ a2: ${frame.toString(Charsets.UTF_8)}")
 
         val started = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             connection.writeCharacteristic(
@@ -352,6 +354,9 @@ class BleGattConnection(
     }
 
     private fun dispatchNotification(uuid: UUID, value: ByteArray) {
+        if (uuid == Mr20Protocol.COMMAND_NOTIFY_UUID) {
+            Log.i(TAG, "← a3: ${value.toString(Charsets.UTF_8)}")
+        }
         // Copy: the framework reuses its buffer on the pre-33 path.
         val frame = value.copyOf()
         val target = when (uuid) {
@@ -392,6 +397,7 @@ class BleGattConnection(
     }
 
     private companion object {
+        const val TAG = "BleGatt"
         const val DEFAULT_ATT_MTU = 23
         const val ATT_HEADER_BYTES = 3
 

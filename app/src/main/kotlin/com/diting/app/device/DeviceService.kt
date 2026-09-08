@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.diting.app.DitingApp
 import com.diting.app.MainActivity
 import com.diting.app.R
+import com.diting.app.brain.BrainUploadWorker
 import com.diting.app.data.prefs.SettingsStore
 import com.diting.app.data.repo.SessionRepository
 import com.diting.app.di.RecordingsDir
@@ -56,9 +57,15 @@ class DeviceService : LifecycleService() {
 
                     is SyncProgress.Listing -> updateNotification("正在读取设备文件列表", null)
                     is SyncProgress.Done -> updateNotification(
-                        if (progress.filesSynced == 0) "没有新录音" else "已同步 ${progress.filesSynced} 条录音",
+                        buildString {
+                            append(if (progress.filesSynced == 0) "没有新录音" else "已同步 ${progress.filesSynced} 条录音")
+                            if (progress.skippedLarge > 0) append("，${progress.skippedLarge} 条大文件待 Wi-Fi")
+                        },
                         null,
                     )
+
+                    is SyncProgress.FallingBackToBle ->
+                        updateNotification("Wi-Fi 不可用，改用蓝牙同步", null)
 
                     is SyncProgress.Failed -> updateNotification("同步失败：${progress.reason}", null)
                     SyncProgress.Idle -> updateNotification("已连接", null)
@@ -71,7 +78,10 @@ class DeviceService : LifecycleService() {
         super.onStartCommand(intent, flags, startId)
 
         when (intent?.action) {
-            ACTION_SYNC -> lifecycleScope.launch { runSync() }
+            ACTION_SYNC -> {
+                val includeLarge = intent.getBooleanExtra(EXTRA_INCLUDE_LARGE, false)
+                lifecycleScope.launch { runSync(includeLarge) }
+            }
             ACTION_STOP -> stopSelf()
         }
         // Restarting with a null intent would reconnect without being asked, and
@@ -79,8 +89,11 @@ class DeviceService : LifecycleService() {
         return START_NOT_STICKY
     }
 
-    private suspend fun runSync() {
-        val preferWifi = settings.preferWifiSync.first()
+    private suspend fun runSync(includeLarge: Boolean) {
+        // Wi-Fi sync is shelved (the card's AP never came up reliably on the
+        // test phone); the preference is kept in storage but not honoured.
+        val preferWifi = false
+        settings.preferWifiSync.first()
         val deleteAfter = settings.deleteAfterSync.first()
         val alreadyHave = sessions.syncedBytesByDevicePath(DeviceKind.MR20)
 
@@ -89,6 +102,7 @@ class DeviceService : LifecycleService() {
                 targetDir = recordingsDir,
                 alreadyHave = alreadyHave,
                 preferWifi = preferWifi,
+                includeLargeOverBle = includeLarge,
             ) { deviceFile, localFile ->
                 sessions.registerSyncedFile(
                     device = DeviceKind.MR20,
@@ -96,7 +110,7 @@ class DeviceService : LifecycleService() {
                     localFile = localFile,
                     durationSeconds = deviceFile.durationSeconds,
                     sizeBytes = deviceFile.sizeBytes,
-                    recordedAtEpochMs = recordedAtFrom(deviceFile.directory, localFile),
+                    recordedAtEpochMs = recordedAtFrom(deviceFile.directory, deviceFile.name, localFile),
                 )
 
                 // Only after the bytes are on disk and the row is written. Deleting
@@ -106,20 +120,34 @@ class DeviceService : LifecycleService() {
                 }
             }
         }
+
+        // Whatever landed, hand it to the brain. The worker is a no-op when the
+        // user is not logged in, so this costs nothing in standalone mode.
+        BrainUploadWorker.enqueue(androidx.work.WorkManager.getInstance(this))
     }
 
     /**
-     * The MR20 names its folders `yyyy-MM-dd` but gives no clock time per file, so
-     * the folder date is the best timestamp available. Falls back to the local
-     * file's mtime when the folder name does not parse.
+     * When the recording was made.
+     *
+     * On a real MR20 the file name *is* the start time — `2026-08-09 23-09-49`
+     * (confirmed on hardware by the Echo bridge). Folders are `yyyy-MM-dd`, so
+     * the folder date at noon is the fallback, and the local mtime the last
+     * resort. Getting this right is what keeps a batch synced tonight from all
+     * landing on "today" in the brain's timeline.
      */
-    private fun recordedAtFrom(directory: String, localFile: File): Long =
-        runCatching {
-            java.time.LocalDate.parse(directory)
-                .atStartOfDay(java.time.ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli()
+    private fun recordedAtFrom(directory: String, fileName: String, localFile: File): Long {
+        val zone = java.time.ZoneId.systemDefault()
+        FNAME_TIMESTAMP.find(fileName)?.let { m ->
+            val (y, mo, d, h, mi, s) = m.destructured
+            runCatching {
+                return java.time.LocalDateTime.of(y.toInt(), mo.toInt(), d.toInt(), h.toInt(), mi.toInt(), s.toInt())
+                    .atZone(zone).toInstant().toEpochMilli()
+            }
+        }
+        return runCatching {
+            java.time.LocalDate.parse(directory).atTime(12, 0).atZone(zone).toInstant().toEpochMilli()
         }.getOrElse { localFile.lastModified() }
+    }
 
     private fun buildNotification(text: String, progress: Float?): Notification {
         val openApp = PendingIntent.getActivity(
@@ -174,11 +202,19 @@ class DeviceService : LifecycleService() {
 
     companion object {
         private const val NOTIFICATION_ID = 1001
+
+        /** `2026-08-09 23-09-49`, and tolerant of other separators. */
+        private val FNAME_TIMESTAMP =
+            Regex("(\\d{4})\\D(\\d{2})\\D(\\d{2})\\D+(\\d{2})\\D(\\d{2})\\D(\\d{2})")
         const val ACTION_SYNC = "com.diting.app.SYNC"
         const val ACTION_STOP = "com.diting.app.STOP"
+        const val EXTRA_INCLUDE_LARGE = "include_large"
 
-        fun sync(context: Context) = context.startForegroundService(
-            Intent(context, DeviceService::class.java).setAction(ACTION_SYNC)
+        /** @param includeLarge also pull recordings over 5 MB across BLE (slow). */
+        fun sync(context: Context, includeLarge: Boolean = false) = context.startForegroundService(
+            Intent(context, DeviceService::class.java)
+                .setAction(ACTION_SYNC)
+                .putExtra(EXTRA_INCLUDE_LARGE, includeLarge)
         )
 
         fun stop(context: Context) = context.startService(

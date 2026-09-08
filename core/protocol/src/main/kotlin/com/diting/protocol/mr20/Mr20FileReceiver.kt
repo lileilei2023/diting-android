@@ -65,6 +65,15 @@ class Mr20FileReceiver(
     var failure: String? = null
         private set
 
+    /**
+     * BLE only: bytes that arrived on the data characteristic after the announced
+     * length had been reached. On a real MR20 that is the live MP3 stream — a
+     * recording card keeps pushing audio on the same characteristic — so it is
+     * counted, never written, and not treated as a failure.
+     */
+    var surplusBytes: Long = 0L
+        private set
+
     private val marker = Mr20Protocol.WIFI_EOF_MARKER
     private val expectsMarker = channel == Mr20TransferChannel.WIFI
 
@@ -174,12 +183,10 @@ class Mr20FileReceiver(
             if (expectsMarker) {
                 appendTrailer(chunk, extraOffset, extraLen)
             } else {
-                // BLE announced a length and then overran it. Trust the length —
-                // the surplus is not ours to write — but say so.
-                failure = "device sent $extraLen byte(s) past the announced " +
-                    "$expectedBytes-byte length"
-                state = State.FAILED
-                return
+                // BLE announced a length and then kept sending. Trust the length:
+                // the file is exactly [expectedBytes] long and the surplus is
+                // the card's live audio stream, which shares this characteristic.
+                surplusBytes += extraLen
             }
         }
 

@@ -63,10 +63,14 @@ class Mr20FileReceiverTest {
     }
 
     @Test
-    @DisplayName("BLE: bytes past the announced length are a protocol error")
-    fun bleOverrunFails() {
+    @DisplayName("BLE: bytes past the announced length are live audio — counted, not written, not fatal")
+    fun bleOverrunIsTolerated() {
         val r = Mr20FileReceiver(10, Mr20TransferChannel.BLE, ::sink)
-        assertEquals(Mr20FileReceiver.State.FAILED, r.onChunk(payload(20)))
+        assertEquals(Mr20FileReceiver.State.COMPLETE, r.onChunk(payload(20)))
+        assertEquals(10, out.toByteArray().size)
+        assertEquals(10L, r.surplusBytes)
+        // Anything after completion is ignored too.
+        assertEquals(Mr20FileReceiver.State.COMPLETE, r.onChunk(payload(5)))
         assertEquals(10, out.toByteArray().size)
     }
 

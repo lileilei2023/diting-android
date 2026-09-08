@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
+import android.util.Log
 import com.diting.protocol.mr20.Mr20FileReceiver
 import com.diting.protocol.mr20.Mr20Protocol
 import com.diting.protocol.mr20.Mr20TransferChannel
@@ -57,6 +58,7 @@ class Mr20WifiTransfer(private val context: Context) {
         ssid: String,
         password: String,
         timeoutMs: Long = JOIN_TIMEOUT_MS,
+        attempts: Int = JOIN_ATTEMPTS,
         block: suspend (Network) -> T,
     ): T {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -79,32 +81,97 @@ class Mr20WifiTransfer(private val context: Context) {
             .setNetworkSpecifier(specifier)
             .build()
 
-        val available = CompletableDeferred<Network>()
-        val callback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                available.complete(network)
-            }
-
-            override fun onUnavailable() {
-                available.completeExceptionally(
-                    WifiTransferException("无法加入设备热点 $ssid（用户取消或密码错误）")
-                )
-            }
+        // The user may already have joined the AP by hand in system settings —
+        // the reliable path on phones that refuse the in-app request. Look for
+        // a Wi-Fi network that can actually reach the recorder before asking.
+        findDeviceNetwork()?.let {
+            Log.i(TAG, "already on a network that reaches the recorder")
+            return block(it)
         }
 
-        connectivity.requestNetwork(request, callback)
-        return try {
-            val network = withTimeout(timeoutMs) { available.await() }
-            block(network)
-        } catch (e: WifiTransferException) {
-            throw e
-        } catch (e: Exception) {
-            throw WifiTransferException("加入设备热点失败：${e.message}", e)
+        // The system's approval dialog scans for the SSID itself and gives up
+        // (onUnavailable) about six seconds after its first empty scan. The AP
+        // has only just come up, so the first scan routinely misses it. Give the
+        // beacon a moment, then ask again a few times before declaring failure.
+        var lastFailure: String? = null
+        var callback: ConnectivityManager.NetworkCallback? = null
+        try {
+            repeat(attempts) { attempt ->
+                if (attempt == 0) kotlinx.coroutines.delay(BEACON_SETTLE_MS)
+                val available = CompletableDeferred<Network>()
+                val cb = object : ConnectivityManager.NetworkCallback() {
+                    override fun onAvailable(network: Network) {
+                        available.complete(network)
+                    }
+
+                    override fun onUnavailable() {
+                        available.completeExceptionally(
+                            WifiTransferException("系统没有找到或没有允许加入热点 $ssid")
+                        )
+                    }
+                }
+                callback = cb
+                Log.i(TAG, "requestNetwork $ssid attempt ${attempt + 1}/$attempts")
+                connectivity.requestNetwork(request, cb)
+                try {
+                    val joined = withTimeout(timeoutMs) { available.await() }
+                    Log.i(TAG, "joined $ssid")
+                    return block(joined)
+                } catch (e: Exception) {
+                    lastFailure = e.message
+                    Log.w(TAG, "attempt ${attempt + 1} failed: ${e.message}")
+                    runCatching { connectivity.unregisterNetworkCallback(cb) }
+                    callback = null
+                    findDeviceNetwork()?.let {
+                        Log.i(TAG, "found the recorder on an existing network")
+                        return block(it)
+                    }
+                    if (attempt < attempts - 1) kotlinx.coroutines.delay(RETRY_GAP_MS)
+                }
+            }
+            throw WifiTransferException(
+                "$lastFailure。可以到系统设置手动连接热点 $ssid（密码 $password），保持连接后回来再点同步。",
+            )
         } finally {
             // Releasing drops the AP and lets the phone go back to its normal
             // network; the device closes its own Wi-Fi 5s later.
-            runCatching { connectivity.unregisterNetworkCallback(callback) }
+            callback?.let { runCatching { connectivity.unregisterNetworkCallback(it) } }
         }
+    }
+
+    /**
+     * A Wi-Fi network through which the recorder answers on its socket port, or
+     * null. Probing by TCP avoids needing location permission to read the SSID.
+     */
+    suspend fun findDeviceNetwork(): Network? = withContext(Dispatchers.IO) {
+        connectivity.allNetworks.firstOrNull { network ->
+            val caps = connectivity.getNetworkCapabilities(network) ?: return@firstOrNull false
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) &&
+                runCatching { probe(network, attempts = 1) }.isSuccess
+        }
+    }
+
+    /**
+     * Opens and closes a socket to the recorder over [network]; throws if unreachable.
+     * Retries for a few seconds: `onAvailable` fires before DHCP has settled, and
+     * the card's socket server takes a moment after the AP reports state 2.
+     */
+    suspend fun probe(network: Network, attempts: Int = 4) = withContext(Dispatchers.IO) {
+        var last: Exception? = null
+        repeat(attempts) { i ->
+            try {
+                network.socketFactory.createSocket().use {
+                    it.connect(InetSocketAddress(Mr20Protocol.WIFI_HOST, Mr20Protocol.WIFI_PORT), PROBE_TIMEOUT_MS)
+                }
+                return@withContext
+            } catch (e: Exception) {
+                last = e
+                if (i < attempts - 1) kotlinx.coroutines.delay(1_500)
+            }
+        }
+        throw WifiTransferException(
+            "已加入热点，但 ${Mr20Protocol.WIFI_HOST}:${Mr20Protocol.WIFI_PORT} 没有应答：${last?.message}", last,
+        )
     }
 
     /**
@@ -160,7 +227,11 @@ class Mr20WifiTransfer(private val context: Context) {
     }
 
     private companion object {
+        const val TAG = "Mr20Wifi"
         const val JOIN_TIMEOUT_MS = 45_000L
+        const val JOIN_ATTEMPTS = 4
+        const val BEACON_SETTLE_MS = 4_000L
+        const val RETRY_GAP_MS = 2_000L
 
         /**
          * The device closes an idle AP after 30s, so a read gap longer than that
@@ -168,6 +239,7 @@ class Mr20WifiTransfer(private val context: Context) {
          */
         const val READ_TIMEOUT_MS = 30_000
         const val CONNECT_TIMEOUT_MS = 10_000
+        const val PROBE_TIMEOUT_MS = 2_000
         const val READ_BUFFER_BYTES = 32 * 1024
     }
 }

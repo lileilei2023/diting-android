@@ -277,10 +277,11 @@ class Mr20EventParserTest {
         }
 
         @Test
-        fun `state 2 is when the phone may associate`() {
+        fun `states 1 and 2 mean the AP is up - 2 waiting for us, 1 already joined by hand`() {
             assertTrue(Mr20WifiState.NOT_CONNECTED.isApReadyForClient)
-            assertFalse(Mr20WifiState.CONNECTED.isApReadyForClient)
+            assertTrue(Mr20WifiState.CONNECTED.isApReadyForClient)
             assertFalse(Mr20WifiState.WAITING_TO_OPEN.isApReadyForClient)
+            assertFalse(Mr20WifiState.OFF.isApReadyForClient)
         }
 
         @Test

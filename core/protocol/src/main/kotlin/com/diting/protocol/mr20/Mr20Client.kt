@@ -137,10 +137,27 @@ class Mr20Client(
      */
     private class ActiveTransfer(
         val receiver: Mr20FileReceiver,
+        val onProgress: ((Float?) -> Unit)? = null,
         val finished: CompletableDeferred<Unit> = CompletableDeferred(),
     ) {
+        private var lastReportedPercent = -1
+
         fun settleIfDone() {
             if (receiver.state != Mr20FileReceiver.State.RECEIVING) finished.complete(Unit)
+        }
+
+        /**
+         * Progress comes from the *data* channel — hundreds of packets a second —
+         * so it is reported only when the whole-percent changes. Reporting on the
+         * command channel alone (as before) left the bar at 0 for the entire file.
+         */
+        fun reportProgress() {
+            val fraction = receiver.progress ?: return
+            val percent = (fraction * 100).toInt()
+            if (percent != lastReportedPercent) {
+                lastReportedPercent = percent
+                onProgress?.invoke(fraction)
+            }
         }
     }
 
@@ -172,6 +189,7 @@ class Mr20Client(
                 val transfer = activeTransfer
                 if (transfer != null) {
                     transfer.receiver.onChunk(chunk)
+                    transfer.reportProgress()
                     transfer.settleIfDone()
                 } else {
                     _liveAudio.emit(chunk)
@@ -488,7 +506,8 @@ class Mr20Client(
                 expectedBytes = 0, // filled in by announceLength below
                 channel = Mr20TransferChannel.BLE,
                 sink = sink,
-            )
+            ),
+            onProgress = onProgress,
         )
         val receiver = transfer.receiver
         activeTransfer = transfer

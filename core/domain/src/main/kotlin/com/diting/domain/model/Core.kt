@@ -197,6 +197,8 @@ data class Session(
     val sceneId: String? = null,
     val speakers: List<Speaker> = emptyList(),
     val transcriptState: TranscriptState = TranscriptState.PENDING,
+    /** Why transcription failed, in the user's words; null unless [transcriptState] is FAILED. */
+    val transcriptError: String? = null,
     /** Set when the user overrode the auto-detected scene with the recording chip. */
     val sceneOverridden: Boolean = false,
     val kind: SessionKind = SessionKind.MEETING,

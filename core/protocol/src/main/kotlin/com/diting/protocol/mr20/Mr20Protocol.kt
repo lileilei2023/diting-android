@@ -127,9 +127,12 @@ enum class Mr20WifiState(val code: Char) {
     val isCloseInhibited: Boolean
         get() = this == CHANGING_PASSWORD || this == OTA || this == PASSWORD_CHANGED_AWAITING_RESET
 
-    /** Ready for the phone to associate to the AP and open the socket. */
+    /**
+     * The AP is up: either waiting for a client, or the phone is already on it
+     * (a manual join from system settings). Both mean "open the socket now".
+     */
     val isApReadyForClient: Boolean
-        get() = this == NOT_CONNECTED
+        get() = this == NOT_CONNECTED || this == CONNECTED
 
     companion object {
         fun fromCode(code: Char): Mr20WifiState? = entries.firstOrNull { it.code == code }
