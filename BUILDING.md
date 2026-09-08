@@ -9,6 +9,10 @@ documents in `project/uploads/`.
 
 ## What is verified and what is not
 
+> 2026-09-08 update: the app has since run on a real phone against a real MR20 and the live
+> brain; see `STATUS.md` for what is verified now. The paragraphs below describe the state at
+> hand-off and are kept for the build details.
+
 **Verified here** — the pure-Kotlin modules build and their tests run on a plain
 JVM with no Android SDK:
 

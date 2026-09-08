@@ -1,3 +1,5 @@
+> **当前状态与接手指南见 [`STATUS.md`](STATUS.md) 和 [`CLAUDE.md`](CLAUDE.md)。** 下面是 Claude Design 交接包的原始说明。
+
 # CODING AGENTS: READ THIS FIRST
 
 This is a **handoff bundle** from Claude Design (claude.ai/design).
